@@ -16,10 +16,14 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function DetailsScreen() {
+function DetailsScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Details Screen</Text>
+      <Button
+        title="Go to swipe"
+        onPress={() => navigation.navigate("Swipe")}
+      />
     </View>
   );
 }
@@ -69,9 +73,9 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Swipe" component={SwipeScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="Swipe" component={SwipeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
