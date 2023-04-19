@@ -4,6 +4,25 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 
+import { Dimensions, PixelRatio } from "react-native";
+const {width, height} = Dimensions.get("window");
+const pixelRatio = PixelRatio.get();
+
+//template on figma is width 360, height 800
+const widthCalculation = (difference) => {
+  const ratio = difference/360;
+  return Math.round(width*ratio);
+}
+const heightCalculation = (difference) => {
+  const ratio = difference/800;
+  return Math.round(height*ratio);
+}
+const scaleFont = (fontSize) => {
+  const scale = Math.min(width / 375, height / 812); // use 375 x 812 as a reference
+  const adjustedFontSize = Math.round(fontSize * scale * pixelRatio);
+  return adjustedFontSize;
+};
+
 const DayHomePage = () => {
   const navigation = useNavigation();
 
@@ -246,32 +265,31 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   cloudyIcon: {
-    top: 84,
+    top: heightCalculation(80),
     width: 101,
     height: 83,
-    left: 10,
-    position: "absolute",
+    left: widthCalculation(10)
   },
   solna: {
-    top: 27,
-    left: 48,
+    top: heightCalculation(37),
+    left: widthCalculation(50),
     fontFamily: FontFamily.alataRegular,
-    width: 63,
+    width: 70,
     color: Color.gray_100,
-    textAlign: "center",
-    fontSize: FontSize.heading1Medium_size,
+    textAlign: "left",
+    fontSize: scaleFont(7),
   },
   icon1: {
     overflow: "hidden",
   },
   plus: {
-    left: 13,
-    top: 30,
+    left: widthCalculation(20),
+    top: heightCalculation(40),
     width: 28,
   },
   cloudy: {
-    left: 149,
-    fontSize: 30,
+    left: widthCalculation(149),
+    fontSize: heightCalculation(30),
     fontFamily: FontFamily.alegreyaSansBold,
     fontWeight: "700",
     top: 31,
