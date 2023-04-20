@@ -26,7 +26,7 @@ export function getWindString() {
 export function getHumidityString() {
   data = getData();
   const stringHumidity = data.hourly_units
-    ? data.hourly_units.relativehumidity_2m
+    ? data.hourly.relativehumidity_2m[0]
     : "";
   return stringHumidity;
 }

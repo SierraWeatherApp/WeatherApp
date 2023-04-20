@@ -14,7 +14,7 @@ const DayHomePage = () => {
   const navigation = useNavigation();
 
   const weatherString = getWeatherString();
-  const tempString = getTempString();
+  const tempString = Math.round(getTempString());
   const windString = getWindString();
   const humidityString = getHumidityString();
 
@@ -95,7 +95,7 @@ Clothing`}</Text>
       <View style={styles.temperature}>
         <Text style={[styles.cloudy, styles.cFlexBox]}>{weatherString}</Text>
         <Text style={[styles.humidity45Wind, styles.cFlexBox]}>
-          {windString} m/s {humidityString} humidity{" "}
+          {windString} m/s {humidityString}% humidity{" "}
         </Text>
         <Text style={styles.text}>{tempString}</Text>
         <Text style={[styles.c, styles.cFlexBox]}>°C</Text>
