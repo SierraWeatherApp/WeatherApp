@@ -1,11 +1,28 @@
-import * as React from "react";
-import { Image, StyleSheet, Text, View, Pressable } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontSize, FontFamily } from "../GlobalStyles";
+import {
+  getHumidityString,
+  getWeatherString,
+  getWindString,
+  getTempString,
+} from "./ApiToString";
 
 const DayHomePage = () => {
   const navigation = useNavigation();
+
+  const weatherString = getWeatherString();
+  const tempString = getTempString();
+  const windString = getWindString();
+  const humidityString = getHumidityString();
 
   return (
     <LinearGradient
@@ -73,7 +90,7 @@ Clothing`}</Text>
         resizeMode="cover"
         source={require("../assets/cloudy.png")}
       />
-      <Text style={[styles.solna, styles.cClr]}>Solna</Text>
+      <Text style={[styles.solna, styles.cClr]}> Place here </Text>
       <Pressable
         style={styles.plus}
         onPress={() => navigation.navigate("LocationScreen")}
@@ -85,11 +102,12 @@ Clothing`}</Text>
         />
       </Pressable>
       <View style={styles.temperature}>
-        <Text style={[styles.cloudy, styles.cFlexBox]}>Cloudy</Text>
-        <Text style={[styles.humidity45Wind, styles.cFlexBox]}>{`Humidity: 45%
-Wind: 6m/s`}</Text>
+        <Text style={[styles.cloudy, styles.cFlexBox]}>{weatherString} </Text>
+        <Text style={[styles.humidity45Wind, styles.cFlexBox]}>
+          {windString + "m/s  " + humidityString + " Humidity"}
+        </Text>
         <View style={styles.parent}>
-          <Text style={[styles.text, styles.textTypo]}>21</Text>
+          <Text style={[styles.text, styles.textTypo]}> {tempString} </Text>
           <Text style={[styles.c, styles.cFlexBox]}>°C</Text>
         </View>
       </View>
