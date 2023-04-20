@@ -8,11 +8,14 @@ import {
   getWeatherString,
   getWindString,
   getTempString,
+  logData,
+  getPosition
 } from "./ApiToString";
 
 const DayHomePage = () => {
   const navigation = useNavigation();
-
+  //console.log(logData());
+  const positionString = getPosition();
   const weatherString = getWeatherString();
   const tempString = Math.round(getTempString());
   const windString = getWindString();
@@ -80,7 +83,7 @@ Clothing`}</Text>
         source={require("../assets/cloudy.png")}
       />
       <View style={[styles.cityInfo, styles.solnaLayout]}>
-        <Text style={[styles.solna, styles.cTypo]}>Solna</Text>
+        <Text style={[styles.solna, styles.cTypo]}>{positionString}</Text>
         <Pressable
           style={styles.plus}
           onPress={() => navigation.navigate("LocationScreen")}
@@ -95,7 +98,8 @@ Clothing`}</Text>
       <View style={styles.temperature}>
         <Text style={[styles.cloudy, styles.cFlexBox]}>{weatherString}</Text>
         <Text style={[styles.humidity45Wind, styles.cFlexBox]}>
-          {windString} m/s {humidityString}% humidity{" "}
+          {windString} m/s {"\n"}
+          {humidityString}% humidity
         </Text>
         <Text style={styles.text}>{tempString}</Text>
         <Text style={[styles.c, styles.cFlexBox]}>°C</Text>

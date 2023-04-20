@@ -1,6 +1,17 @@
 import { getWeather } from "./CodeToWeather";
 import { getData } from "./Fetcher";
 
+export function logData() {
+  data = getData();
+  data ? console.log(data) : "";
+}
+
+export function getPosition() {
+  data = getData();
+  const poString = data ? data.latitude : "";
+  return poString;
+}
+
 export function getWeatherString() {
   data = getData();
   const stringWeather = data.current_weather
