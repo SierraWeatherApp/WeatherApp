@@ -3,9 +3,20 @@ import { Image, StyleSheet, Text, View, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import {
+  getHumidityString,
+  getWeatherString,
+  getWindString,
+  getTempString,
+} from "./ApiToString";
 
 const DayHomePage = () => {
   const navigation = useNavigation();
+
+  const weatherString = getWeatherString();
+  const tempString = getTempString();
+  const windString = getWindString();
+  const humidityString = getHumidityString();
 
   return (
     <LinearGradient
@@ -82,10 +93,11 @@ Clothing`}</Text>
         </Pressable>
       </View>
       <View style={styles.temperature}>
-        <Text style={[styles.cloudy, styles.cFlexBox]}>Cloudy</Text>
-        <Text style={[styles.humidity45Wind, styles.cFlexBox]}>{`Humidity: 45%
-Wind: 1m/s`}</Text>
-        <Text style={styles.text}>21</Text>
+        <Text style={[styles.cloudy, styles.cFlexBox]}>{weatherString}</Text>
+        <Text style={[styles.humidity45Wind, styles.cFlexBox]}>
+          {windString} m/s {humidityString} humidity{" "}
+        </Text>
+        <Text style={styles.text}>{tempString}</Text>
         <Text style={[styles.c, styles.cFlexBox]}>°C</Text>
       </View>
       <Pressable
