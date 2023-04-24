@@ -16,6 +16,7 @@ import SwitchCity from "./screens/SwitchCity";
 import Settings from "./screens/Settings";
 import ClothingRecommendation from "./screens/ClothingRecommendation";
 import LocationScreen from "./screens/LocationScreen";
+import AddCity from "./screens/AddCity";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
@@ -49,6 +50,11 @@ const App = () => {
               name="DayHomePage"
               component={DayHomePage}
               options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AddCity"
+              component={AddCity}
+              options={{ headerShown: false, animationEnabled: false, animation: 'none' }}
             />
             <Stack.Screen
               name="FAQ"
@@ -113,7 +119,7 @@ const App = () => {
             <Stack.Screen
               name="LocationScreen"
               component={LocationScreen}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, animation:'slide_from_left'}}
             />
           </Stack.Navigator>
         ) : null}

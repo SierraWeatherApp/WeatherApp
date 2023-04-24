@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Image, Pressable, ScrollView, Dimensions  } fro
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontSize, FontFamily, Border } from "../GlobalStyles";
 
-const LocationScreen = () => {
+const AddCity = () => {
   const navigation = useNavigation();
   const createCityList = (cities) => {
     return cities.map((item, index)=>(
@@ -50,7 +50,7 @@ const LocationScreen = () => {
         </View>
         <ScrollView style={[styles.scrollView]}>
           <View style={[styles.cityList]}>
-            {createCityList([{city: 'Stockholm', temp: 20},{city: 'Hamburg', temp: 10},{city: 'Hamburg', temp: 10},{city: 'Hamburg', temp: 9},{city: 'Hamburg', temp: 9},{city: 'Hamburg', temp: 9},{city: 'Hamburg', temp: 9}])}
+            {createCityList([{city: 'Stockholm', temp: 20}])}
           </View>
         </ScrollView>
       </View>
@@ -138,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LocationScreen;
+export default AddCity;
