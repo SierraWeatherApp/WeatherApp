@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Image, StyleSheet, Text, View, Pressable } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "@react-navigation/native";
-import { Color, FontSize, FontFamily } from "../GlobalStyles";
 
 export function getWeather(weathercode) {
   const wmoTable = {
     0: "clear sky",
     1: "mainly clear",
+    2: "cloudy",
     3: "overcast",
     4: "smoke",
     5: "haze",
@@ -105,6 +101,6 @@ export function getWeather(weathercode) {
     97: "heavy thunderstorm",
     98: "thunderstorm with dust or sand storm",
     99: "thunderstorm with heavy hail",
-  };
+    };
   return wmoTable[weathercode];
 }
