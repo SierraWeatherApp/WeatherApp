@@ -1,113 +1,135 @@
 import * as React from "react";
-import { StyleSheet, View, Text, Image, Pressable } from "react-native";
+import { StyleSheet, View, Text, Image, Pressable, ScrollView, Dimensions  } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontSize, FontFamily, Border } from "../GlobalStyles";
 
 const LocationScreen = () => {
   const navigation = useNavigation();
-
+  const createCityList = (cities) => {
+    return cities.map((item)=>(
+      <View style={[styles.cityListItem]}>
+        <View style={[styles.cityListRight]}>
+          <Text style={[styles.cityListCityName]}>{item.city}</Text>
+          <Text style={[styles.cityListCond]}>Cloudy</Text>
+        </View>
+        <View style={[styles.cityListLeft]}>
+          <Text style={[styles.cityListTemp]}>{item.temp}°</Text>
+          <Image
+            style={[styles.cityListIcon]}
+            resizeMode="cover"
+            source={require("../assets/cloudy1.png")}
+          />
+        </View>
+      </View>
+    ));
+  };
   return (
-    <View style={[styles.locationScreen, styles.icon2Layout]}>
-      <View style={[styles.stockholm, styles.cityLayout1]}>
-        <View style={[styles.city, styles.cityPosition1]}>
-          <View style={[styles.cityChild, styles.cityChildPosition]} />
-          <Text style={[styles.cityName, styles.cloudyFlexBox]}>Stockholm</Text>
-          <Text style={[styles.cloudy, styles.cloudyFlexBox]}>Sunny</Text>
-          <Text style={styles.text}>4°</Text>
-        </View>
-        <Image
-          style={styles.icon}
-          resizeMode="cover"
-          source={require("../assets/11.png")}
-        />
-        <Text style={[styles.text1, styles.text1Position]}>21°</Text>
-      </View>
-      <View style={[styles.editCity, styles.cityLayout]}>
-        <View style={[styles.editCityChild, styles.cityLayout]} />
-        <Text style={[styles.editCities, styles.addCity1Typo]}>
-          Edit Cities
-        </Text>
-      </View>
-      <Pressable
-        style={[styles.addCity, styles.cityLayout]}
-        onPress={() => navigation.navigate("SwitchCity")}
-      >
-        <View style={[styles.editCityChild, styles.cityLayout]} />
-        <Text style={[styles.addCity1, styles.addCity1Typo]}>Add City</Text>
-      </Pressable>
-      <View style={[styles.bangkok, styles.cityLayout1]}>
-        <View style={styles.bangkok1}>
-          <View style={[styles.city, styles.cityPosition1]}>
-            <View style={[styles.cityChild, styles.cityChildPosition]} />
-            <Text style={[styles.cityName, styles.cloudyFlexBox]}>Bangkok</Text>
-            <Text style={[styles.cloudy, styles.cloudyFlexBox]}>Cloudy</Text>
-            <Text style={styles.text}>4°</Text>
+     <View style={[styles.locationScreen, styles.icon2Layout]}>
+        <View style={[styles.topBar]}>
+        <View style={[styles.editCity, styles.cityLayout]}>
+            <View style={[styles.editCityChild, styles.cityLayout]} />
+            <Text style={[styles.editCities, styles.addCity1Typo]}>
+              Edit Cities
+            </Text>
           </View>
-          <Text style={[styles.text1, styles.text1Position]}>31°</Text>
+          <Pressable
+            style={[styles.addCity, styles.cityLayout]}
+            onPress={() => navigation.navigate("SwitchCity")}
+          >
+            <View style={[styles.editCityChild, styles.cityLayout]} />
+            <Text style={[styles.addCity1, styles.addCity1Typo]}>Add City</Text>
+          </Pressable>
+          
+          <View style={[styles.myLocationBar, styles.locationLayout]}>
+            <View style={[styles.myLocationBarChild, styles.locationLayout]} />
+            <Text style={[styles.myLocation, styles.cloudyFlexBox]}>
+              My Location
+            </Text>
+            <Image
+              style={[styles.locationOnIcon, styles.iconLayout]}
+              resizeMode="cover"
+              source={require("../assets/location-on1.png")}
+            />
+          </View>
+          <Pressable
+            style={styles.arrow}
+            onPress={() => navigation.navigate("DayHomePage")}
+          >
+            <Image
+              style={[styles.icon2, styles.icon2Layout]}
+              resizeMode="cover"
+              source={require("../assets/arrow1.png")}
+            />
+          </Pressable>
         </View>
-        <Image
-          style={[styles.icon1, styles.text1Position]}
-          resizeMode="cover"
-          source={require("../assets/2.png")}
-        />
-        <Image
-          style={[styles.cloudsIcon, styles.iconLayout]}
-          resizeMode="cover"
-          source={require("../assets/clouds1.png")}
-        />
+        <ScrollView style={[styles.scrollView]}>
+          <View style={[styles.cityList]}>
+            {createCityList([{city: 'Stockholm', temp: 20},{city: 'Hamburg', temp: 10},{city: 'Hamburg', temp: 10},{city: 'Hamburg', temp: 9},{city: 'Hamburg', temp: 9},{city: 'Hamburg', temp: 9},{city: 'Hamburg', temp: 9}])}
+          </View>
+        </ScrollView>
       </View>
-      <View style={[styles.myLocationBar, styles.locationLayout]}>
-        <View style={[styles.myLocationBarChild, styles.locationLayout]} />
-        <Text style={[styles.myLocation, styles.cloudyFlexBox]}>
-          My Location
-        </Text>
-        <Image
-          style={[styles.locationOnIcon, styles.iconLayout]}
-          resizeMode="cover"
-          source={require("../assets/location-on1.png")}
-        />
-      </View>
-      <Pressable
-        style={styles.arrow}
-        onPress={() => navigation.navigate("DayHomePage")}
-      >
-        <Image
-          style={[styles.icon2, styles.icon2Layout]}
-          resizeMode="cover"
-          source={require("../assets/arrow1.png")}
-        />
-      </Pressable>
-    </View>
   );
 };
 
+const screenWidth = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
+  cityListItem: {
+    height: 91,
+    width: screenWidth - 40,
+    backgroundColor: Color.lightskyblue,
+    marginBottom: 20,
+    borderRadius: 11,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    alignItems: 'center',
+  },
+  scrollView: {
+  },
+  cityList: {
+    position: "relative",
+    flex: 1,
+    alignItems: 'center',
+  },
+  cityListCityName: {
+    fontFamily: FontFamily.heading1Medium,
+    fontSize: 18,
+    color: Color.black,
+  },
+  cityListCond: {
+    fontSize: 8,
+    fontWeight: "300",
+    fontFamily: FontFamily.montserratLight,
+  },
+  cityListTemp: {
+    fontSize: 40,
+    color: Color.white,
+    fontFamily: FontFamily.montserratSemibold,
+    fontWeight: "600",
+  },
+  cityListLeft: {
+    flexDirection: 'row',
+  },
+  cityListRight: {
+    paddingBottom: 20,
+  },
+  cityListIcon: {
+    margin: 5,
+    width: 38,
+    aspectRatio: 1, 
+  },
   icon2Layout: {
     width: "100%",
     overflow: "hidden",
   },
-  cityLayout1: {
-    height: 91,
-    width: 310,
-    position: "absolute",
-  },
-  cityPosition1: {
-    backgroundColor: Color.white,
-    left: 0,
-    top: 0,
-  },
-  cityChildPosition: {
-    backgroundColor: Color.lightskyblue,
-    left: 0,
-    top: 0,
+  topBar: {
+    position: "relative",
+    height: 150,
   },
   cloudyFlexBox: {
     textAlign: "left",
     color: Color.black,
-    position: "absolute",
-  },
-  text1Position: {
-    top: 28,
     position: "absolute",
   },
   cityLayout: {
@@ -131,18 +153,6 @@ const styles = StyleSheet.create({
     height: 39,
     width: 329,
     position: "absolute",
-  },
-  cityChild: {
-    height: 91,
-    width: 310,
-    position: "absolute",
-  },
-  cityName: {
-    top: 23,
-    fontFamily: FontFamily.heading1Medium,
-    fontSize: 18,
-    color: Color.black,
-    left: 18,
   },
   cloudy: {
     top: 46,
@@ -181,19 +191,6 @@ const styles = StyleSheet.create({
     height: 26,
     position: "absolute",
   },
-  text1: {
-    left: 213,
-    fontSize: FontSize.size_13xl,
-    color: Color.white,
-    fontFamily: FontFamily.montserratSemibold,
-    fontWeight: "600",
-    top: 28,
-    textAlign: "left",
-  },
-  stockholm: {
-    top: 146,
-    left: 25,
-  },
   editCityChild: {
     borderRadius: Border.br_4xs,
     backgroundColor: Color.lightskyblue,
@@ -212,9 +209,9 @@ const styles = StyleSheet.create({
       height: 4,
     },
     shadowColor: "rgba(0, 0, 0, 0.25)",
-    top: 432,
+    top: 40,
     width: 116,
-    left: 25,
+    left: 60,
   },
   addCity1: {
     left: 28,
@@ -229,29 +226,8 @@ const styles = StyleSheet.create({
       height: 4,
     },
     shadowColor: "rgba(0, 0, 0, 0.25)",
-    top: 432,
+    top: 40,
     width: 116,
-  },
-  bangkok1: {
-    left: 0,
-    top: 0,
-    height: 91,
-    width: 310,
-    position: "absolute",
-  },
-  icon1: {
-    left: 271,
-    width: 25,
-    height: 24,
-  },
-  cloudsIcon: {
-    top: 37,
-    left: 258,
-    height: 22,
-  },
-  bangkok: {
-    top: 255,
-    left: 25,
   },
   myLocationBarChild: {
     borderRadius: Border.br_mid,
