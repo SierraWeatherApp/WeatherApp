@@ -20,7 +20,7 @@ import AddCity from "./screens/AddCity";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import SideScreen from "./screens/SideScreen";
 import HomeTabs from "./screens/Hometabs";
-
+import DragAndDropList from "./screens/tempSwipeScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 
@@ -56,6 +56,11 @@ const App = () => {
             <Stack.Screen
               name="Home"
               component={() => <HomeTabs cities={cities} />}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="temp"
+              component={DragAndDropList}
               options={{ headerShown: false }}
             />
             <Stack.Screen
