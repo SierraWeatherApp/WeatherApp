@@ -52,7 +52,7 @@ const WeatherScreen = ( {latitude, longitude} ) => {
             resizeMode="cover"
             source={require("../assets/frame-88.png")}
           />
-          <Text style={[styles.profile, styles.textFlexBox]}>Profile</Text>
+          <Text style={[styles.profile, styles.textFlexBox]}>Settings</Text>
         </Pressable>
         <Pressable
           style={[styles.clothesIcon, styles.iconPosition]}
@@ -119,7 +119,7 @@ Wind: {windString}m/s</Text>
       </View>
       <Pressable
         style={styles.avatar}
-        onPress={() => navigation.navigate("AvatarChangeClothing")}
+        onPress={() => navigation.push("AvatarChangeClothing", {screenName: "AvatarChangeClothing"})}
       >
         <Image
           style={[styles.icon1, styles.iconLayout]}

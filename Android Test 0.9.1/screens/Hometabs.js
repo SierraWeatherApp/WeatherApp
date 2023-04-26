@@ -3,6 +3,8 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import DayHomePage from "./DayHomePage";
 import SideScreen from "./SideScreen";
 import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from '@react-navigation/native';
+import { useState } from 'react';
 
 const Tab = createMaterialTopTabNavigator();
 

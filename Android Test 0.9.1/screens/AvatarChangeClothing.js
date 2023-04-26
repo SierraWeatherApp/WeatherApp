@@ -52,7 +52,7 @@ const AvatarChangeClothing = () => {
       />
       <Pressable
         style={styles.arrow}
-        onPress={() => navigation.navigate("DayHomePage")}
+        onPress={() => navigation.pop()}
       >
         <Image
           style={[styles.icon, styles.iconLayout]}
