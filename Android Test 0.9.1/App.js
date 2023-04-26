@@ -1,4 +1,5 @@
 const Stack = createNativeStackNavigator();
+import { LogBox } from 'react-native';
 import React, { useState, useCallback } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -21,18 +22,16 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import SideScreen from "./screens/SideScreen";
 import HomeTabs from "./screens/Hometabs";
 
+
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 
+LogBox.ignoreAllLogs(true)
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
-  const [cities, setCities] = useState(["New York", "London", "Paris", "Tokyo", "Chicity"]);
-
-  const updateCities = useCallback((newCities) => {
-    setCities(newCities);
-  }, []);
-
+  const cities = ["New York", "London", "Paris", "Tokyo", "Chicity"];
+  
   const [fontsLoaded, error] = useFonts({
     Montserrat_light: require("./assets/fonts/Montserrat_light.ttf"),
     Montserrat_regular: require("./assets/fonts/Montserrat_regular.ttf"),
@@ -58,7 +57,7 @@ const App = () => {
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" options={{ headerShown: false }}>
-          {() => <HomeTabs cities={cities} updateCities={updateCities} />}
+          {() => <HomeTabs cities={cities} />}
           </Stack.Screen>
             <Stack.Screen
               name="AddCity"
