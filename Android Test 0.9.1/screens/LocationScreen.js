@@ -71,7 +71,6 @@ const LocationScreen = () => {
           order: i + 1})
       }
       const params = {cities: cityArray}
-      console.log(params)
       fetch(url, {
         method: 'PUT',
         headers: headers,
@@ -82,7 +81,6 @@ const LocationScreen = () => {
       fetchCities();
     else if(dragged){
       changeOrder(data)
-      console.log('dragged')
       setDragged(false)
     }
   }, [isLoading, dragged]);
@@ -138,7 +136,6 @@ const LocationScreen = () => {
       const oldData = data
       var newData = []
       oldData.forEach((element) => {
-        console.log(element)
         if(element['city_id'] != id)
           newData.push(element)
       });
