@@ -21,8 +21,6 @@ import AddCity from "./screens/AddCity";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import SideScreen from "./screens/SideScreen";
 import HomeTabs from "./screens/Hometabs";
-
-
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 

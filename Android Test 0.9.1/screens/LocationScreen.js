@@ -1,58 +1,94 @@
-import React, { useState, useEffect  } from "react";
-import { StyleSheet, View, Text, Image, Pressable, ScrollView, Dimensions, Button} from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { TouchableOpacity, StyleSheet, View, Text, Image, Pressable, PanResponder, Animated , ScrollView, Dimensions, Button} from "react-native";
 import { useNavigation, useFocusEffect  } from "@react-navigation/native";
 import { Color, FontSize, FontFamily, Border } from "../GlobalStyles";
-import { getData } from "./FetchLocationScreen"
 import { getIP, getDevice } from "../assets/fetchIP" 
 import { getWeather } from "./CodeToWeather";
+import DraggableFlatList from 'react-native-draggable-flatlist';
 import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
 const LocationScreen = () => {
   const [data, setData] = useState([{}]);
   const [isLoading, setIsLoading] = useState(true);
-    useEffect(() => {
-      const fetchWeather = async (lat, long) => {
-          const url = `http://${getIP()}:8080//api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true`;
-          const device_id = getDevice()
-          const headers = {
-            'Content-Type': 'application/json',
-            'x-device-id': device_id,
-          };
-          return fetch(url, {
+  const [dragged, setDragged] = useState(false);
+  const navigation = useNavigation();
+  useEffect(() => {
+    const fetchWeather = async (lat, long) => {
+      const url = `http://${getIP()}:8080//api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true`;
+      const device_id = getDevice()
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-device-id': device_id,
+      };
+      return fetch(url, {
+        method: 'GET',
+        headers: headers,
+        body: JSON.stringify(),
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        return data;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    };
+    const fetchCities = async () => {
+      const response = await fetch(
+        `http://${getIP()}:8080/api/v1/user/cities`, {
             method: 'GET',
-            headers: headers,
-            body: JSON.stringify(),
-          })
-          .then(response => {
-            return response.json();
-          })
-          .then(data => {
-            return data;
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
-        };
-        const fetchCities = async () => {
-            const response = await fetch(
-              `http://${getIP()}:8080/api/v1/user/cities`, {
-                method: 'GET',
-                headers: {'x-device-id': getDevice()}
-                }
-            );
-            const jsonData = await response.json();
-            var cityArray = []
-            for(var i = 0; i < jsonData['cities'].length; i++){
-              weather = await fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
-              cityArray.push({city: jsonData['cities'][i]['city_name'], country: jsonData['cities'][i]['country'], city_id: jsonData['cities'][i]['id'], temp: weather['temperature'], weather: getWeather(weather['weathercode'])})
-            }
-            setData(cityArray)
-            setIsLoading(false);
-          };
-      if(isLoading)
-        fetchCities();
-      else{
+            headers: {'x-device-id': getDevice()}
+          }
+      );
+      const jsonData = await response.json();
+      var cityArray = []
+      for(var i = 0; i < jsonData['cities'].length; i++){
+        weather = await fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
+        cityArray.push({city: jsonData['cities'][i]['city_name'], 
+          key: i + 1, 
+          country: jsonData['cities'][i]['country'],
+          id: jsonData['cities'][i]['id'], 
+          city_id: jsonData['cities'][i]['id'], 
+          temp: weather['temperature'], 
+          weather: getWeather(weather['weathercode'])})
       }
-    }, [isLoading]);
+      setData(cityArray)
+      setIsLoading(false);
+    };
+    const changeOrder = async (cities) => {
+      const url = `http://${getIP()}:8080/api/v1/user/cities/city_order`;
+      const device_id = getDevice()
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-device-id': device_id,
+      };
+      var cityArray = []
+      for(var i = 0; i < cities.length; i++){
+        cityArray.push({id: cities[i].id, 
+          order: i + 1})
+      }
+      const params = {cities: cityArray}
+      console.log(params)
+      fetch(url, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(params),
+      });
+    };
+    if(isLoading)
+      fetchCities();
+    else if(dragged){
+      changeOrder(data)
+      console.log('dragged')
+      setDragged(false)
+    }
+  }, [isLoading, dragged]);
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsLoading(true);
+    }, [])
+  );
   const deleteCity = async (cityId) => {
     const device_id = getDevice()
     const response = await fetch(`http://${getIP()}:8080/api/v1/user/cities/${cityId}`, {
@@ -73,8 +109,7 @@ const LocationScreen = () => {
     console.log(`City with ID ${cityId} was deleted.`);
   };
   
-  const navigation = useNavigation();
-  const createCityList = (cities) => {
+  const createCityList = ({ item, drag }) => {
     let prevOpenedRow;
     let row = [];
     const closeRow = (index) => {
@@ -96,11 +131,6 @@ const LocationScreen = () => {
         </View>
       );
     };
-    useFocusEffect(
-      React.useCallback(() => {
-        setIsLoading(true);
-      }, [])
-    );
     const deleteItem = (item) => {
       const id = item['city_id']
       const oldData = data
@@ -113,32 +143,36 @@ const LocationScreen = () => {
       setData(newData)
       deleteCity(item['city_id'])
     }
-    return cities.map((item, index)=>(
-      <GestureHandlerRootView key={index}>
-      <Swipeable renderRightActions={() =>renderRightActions(item)} key={index}
-      onSwipeableOpen={() => closeRow(index)}
-      ref={(ref) => (row[index] = ref)}
-      rightOpenValue={-50}>
-        <View style={[styles.cityListItem]} >
-          <View style={[styles.cityListRight]}>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={[styles.cityListCityName]}>{item.city} </Text>
-              <Text style={[styles.cityListCountry]}>({item.country})</Text>
+    return (
+      <TouchableOpacity onLongPress={drag}>
+        <GestureHandlerRootView>
+        <Swipeable renderRightActions={() =>renderRightActions(item)}
+        rightOpenValue={-50}>
+          <View style={[styles.cityListItem] } >
+            <View style={[styles.cityListRight]}>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.cityListCityName]}>{item.city} </Text>
+                <Text style={[styles.cityListCountry]}>({item.order})</Text>
+              </View>
+              <Text style={[styles.cityListCond]}>{item.weather}</Text>
             </View>
-            <Text style={[styles.cityListCond]}>{item.weather}</Text>
+            <View style={[styles.cityListLeft]}>
+              <Text style={[styles.cityListTemp]}>{item.temp}°</Text>
+              <Image
+                style={[styles.cityListIcon]}
+                resizeMode="cover"
+                source={require("../assets/cloudy1.png")}
+              />
+            </View>
           </View>
-          <View style={[styles.cityListLeft]}>
-            <Text style={[styles.cityListTemp]}>{item.temp}°</Text>
-            <Image
-              style={[styles.cityListIcon]}
-              resizeMode="cover"
-              source={require("../assets/cloudy1.png")}
-            />
-          </View>
-        </View>
-      </Swipeable>
-      </GestureHandlerRootView>
-    ));
+        </Swipeable>
+        </GestureHandlerRootView>
+      </TouchableOpacity>
+    );
+  };
+  const onDragEnd = ({ data }) => {
+    setData(data);
+    setDragged(true)
   };
   return (
      <View style={[styles.locationScreen]}>
@@ -165,11 +199,16 @@ const LocationScreen = () => {
             />
           </Pressable>
         </View>
-        <ScrollView style={[styles.scrollView]}>
           <View style={[styles.cityList]}>
-          {createCityList(data)}
+            <GestureHandlerRootView>
+              <DraggableFlatList
+                data={data}
+                renderItem={createCityList}
+                keyExtractor={(item) => item.key}
+                onDragEnd={onDragEnd}
+              />
+            </GestureHandlerRootView>
           </View>
-        </ScrollView>
       </View>
   );
 };
