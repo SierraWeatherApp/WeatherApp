@@ -51,7 +51,9 @@ const LocationScreen = () => {
           id: jsonData['cities'][i]['id'], 
           city_id: jsonData['cities'][i]['id'], 
           temp: weather['temperature'], 
-          weather: getWeather(weather['weathercode'])})
+          weather: getWeather(weather['weathercode']),
+          weathercode: weather['weathercode']
+        })
       }
       setData(cityArray)
       setIsLoading(false);
@@ -143,6 +145,35 @@ const LocationScreen = () => {
       setData(newData)
       deleteCity(item['city_id'])
     }
+    const getWeatherIcon = (weathercode) => {
+      if(weathercode <= 1){
+        return (require("../assets/sunny.png"))
+      }
+      else if(weathercode <= 2){
+        return (require("../assets/cloudy.png"))
+      }
+      else if(weathercode <= 5){
+        return (require("../assets/overcast.png"))
+      }
+      else if(weathercode <= 7 || (weathercode >= 30 && weathercode <= 35)){
+        return (require("../assets/sandstorm.png"))
+      }
+      else if((weathercode >= 70 && weathercode <= 79)||
+        (weathercode >= 75 && weathercode <= 76)){
+        return (require("../assets/snow.png"))
+      }
+      else if((weathercode >= 95 && weathercode <= 99)||
+        weathercode == 17 || weathercode == 29 || weathercode == 13){
+        return (require("../assets/thunder.png"))
+      }
+      else if(weathercode <= 16 || (weathercode >= 40 && weathercode <= 49)){
+        return (require("../assets/overcast.png"))
+      }
+      else{
+        return (require("../assets/rain.png"))
+      }
+    };
+    const path = getWeatherIcon(item.weathercode)
     return (
       <TouchableOpacity onLongPress={drag}>
         <GestureHandlerRootView>
@@ -152,7 +183,7 @@ const LocationScreen = () => {
             <View style={[styles.cityListRight]}>
               <View style={{flexDirection: 'row'}}>
                 <Text style={[styles.cityListCityName]}>{item.city} </Text>
-                <Text style={[styles.cityListCountry]}>({item.order})</Text>
+                <Text style={[styles.cityListCountry]}>({item.country})</Text>
               </View>
               <Text style={[styles.cityListCond]}>{item.weather}</Text>
             </View>
@@ -161,7 +192,7 @@ const LocationScreen = () => {
               <Image
                 style={[styles.cityListIcon]}
                 resizeMode="cover"
-                source={require("../assets/cloudy1.png")}
+                source={path}
               />
             </View>
           </View>
