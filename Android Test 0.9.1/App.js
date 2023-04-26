@@ -17,9 +17,14 @@ import Settings from "./screens/Settings";
 import ClothingRecommendation from "./screens/ClothingRecommendation";
 import LocationScreen from "./screens/LocationScreen";
 import AddCity from "./screens/AddCity";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import SideScreen from "./screens/SideScreen";
+import HomeTabs from "./screens/Hometabs";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
+
+
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -37,6 +42,8 @@ const App = () => {
     "Montserrat Alternates_regular": require("./assets/fonts/Montserrat_Alternates_regular.ttf"),
   });
 
+  const cities = ["New York", "London", "Paris", "Tokyo", "Chicity"];
+
   if (!fontsLoaded && !error) {
     return null;
   }
@@ -47,14 +54,18 @@ const App = () => {
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen
-              name="DayHomePage"
-              component={DayHomePage}
+              name="Home"
+              component={() => <HomeTabs cities={cities} />}
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="AddCity"
               component={AddCity}
-              options={{ headerShown: false, animationEnabled: false, animation: 'none' }}
+              options={{
+                headerShown: false,
+                animationEnabled: false,
+                animation: "none",
+              }}
             />
             <Stack.Screen
               name="FAQ"
@@ -119,7 +130,7 @@ const App = () => {
             <Stack.Screen
               name="LocationScreen"
               component={LocationScreen}
-              options={{ headerShown: false, animation:'slide_from_left'}}
+              options={{ headerShown: false, animation: "slide_from_left" }}
             />
           </Stack.Navigator>
         ) : null}
