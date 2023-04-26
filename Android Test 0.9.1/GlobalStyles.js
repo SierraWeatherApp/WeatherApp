@@ -36,11 +36,13 @@ export const FontSize = {
 export const Color = {
   white: "#fff",
   black: "#000",
+  link: '#3366BB',
   gainsboro_100: "#dedede",
   gainsboro_200: "#d9d9d9",
   red: "#ff0000",
   lightskyblue: "#6fb1ee",
   darkslategray: "#343844",
+  light_gray: '#E8E8E8',
   gray_100: "#888",
   gray_200: "#332821",
   gray_300: "rgba(255, 255, 255, 0)",
