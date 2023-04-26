@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from 'react';
 
-export function getData( {latitude, longitude}) {
+export function getData({ latitude, longitude }) {
   const [data, setData] = useState([]);
+
+  const memoizedData = useMemo(() => {
+    return data;
+  }, [data]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -12,6 +16,7 @@ export function getData( {latitude, longitude}) {
       setData(jsonData);
     };
     fetchData();
-  }, []);
-  return data;
+  }, [latitude, longitude]);
+
+  return memoizedData;
 }

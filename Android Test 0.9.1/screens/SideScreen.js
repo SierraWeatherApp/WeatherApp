@@ -36,11 +36,13 @@ const WeatherScreen = ( {latitude, longitude, name} ) => {
   const windString = getWindString({latitude, longitude});
   const humidityString = getHumidityString({latitude, longitude});
 
+  const randcolor = (Math.random() * 255);
+
   return (
     <LinearGradient
       style={styles.dayHomePage}
       locations={[0, 1]}
-      colors={["#95b2c2", "rgba(320, 30, 30, 0)"]}
+      colors={["#95b2c2", "rgba(130, 40, 255, 0)"]}
     >
     <Image
         style={styles.cloudyIcon}
