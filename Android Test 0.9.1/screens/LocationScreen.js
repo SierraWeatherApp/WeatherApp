@@ -9,30 +9,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
 
-async function fahreneheit(dID) {
-  const url = `http://${getIP()}:8080/api/v1/user`;
-  const device_id = dID
-  const headers = {
-    'Content-Type': 'application/json',
-    'x-device-id': device_id,
-  };
-  
-  fetch(url, {
-    method: 'PATCH',
-    headers: headers,
-    body: JSON.stringify({temp_unit: "fahrenheit"}),
-  })
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-}
-
-
 const LocationScreen = () => {
   const [dID, setdID] = useState('123');
   useEffect(() => {
@@ -73,7 +49,8 @@ const LocationScreen = () => {
           id: jsonData['cities'][i]['id'], 
           temp: weather['temperature'], 
           weather: getWeather(weather['weathercode']),
-          weathercode: weather['weathercode']
+          weathercode: weather['weathercode'],
+          unit: jsonData['user_temp_unit']
         })
       }
       setData(cityArray)
@@ -98,7 +75,6 @@ const LocationScreen = () => {
       });
     };
     if(isLoading && dID != '123'){
-      fahreneheit(dID)
       fetchCities();
     }
     else if(dragged){
@@ -194,6 +170,14 @@ const LocationScreen = () => {
         return (require("../assets/rain.png"))
       }
     };
+    const getUnit = (unit) =>{
+      if(unit === 'fahrenheit'){
+        return ('F')
+      }
+      else{
+        return ('C')
+      }
+    }
     const path = getWeatherIcon(item.weathercode)
     return (
       <TouchableOpacity onLongPress={drag} key={item.key}>
@@ -209,7 +193,7 @@ const LocationScreen = () => {
               <Text style={[styles.cityListCond]}>{item.weather}</Text>
             </View>
             <View style={[styles.cityListLeft]}>
-              <Text style={[styles.cityListTemp]}>{item.temp}°</Text>
+              <Text style={[styles.cityListTemp]}>{item.temp}°{getUnit(item.unit)}</Text>
               <Image
                 style={[styles.cityListIcon]}
                 resizeMode="cover"
@@ -326,7 +310,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.montserratLight,
   },
   cityListTemp: {
-    fontSize: 40,
+    fontSize: 35,
     color: Color.white,
     fontFamily: FontFamily.montserratSemibold,
     fontWeight: "600",
