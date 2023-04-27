@@ -172,7 +172,7 @@ const LocationScreen = () => {
     };
     const path = getWeatherIcon(item.weathercode)
     return (
-      <TouchableOpacity onLongPress={drag}>
+      <TouchableOpacity onLongPress={drag} key={item.key}>
         <GestureHandlerRootView>
         <Swipeable renderRightActions={() =>renderRightActions(item)}
         rightOpenValue={-50}>
