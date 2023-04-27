@@ -3,6 +3,9 @@ import { KeyboardAvoidingView, StyleSheet, TextInput, View, Text, Image, Pressab
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Color, FontSize, FontFamily, Border } from "../GlobalStyles";
 import { getIP, getDevice } from "../assets/fetchIP" 
+import uuid from 'react-native-uuid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const defaultCities = [{
         city_id: 2673729,
         city_name: 'Stockholm',
@@ -32,9 +35,9 @@ const defaultCities = [{
         city_id: 1819729
     },
 ]
-async function addCity(data) {
+async function addCity(data, dID) {
     const url = `http://${getIP()}:8080/api/v1/user/cities`;
-    const device_id = getDevice()
+    const device_id = dID
     const headers = {
       'Content-Type': 'application/json',
       'x-device-id': device_id,
@@ -55,6 +58,22 @@ async function addCity(data) {
     });
   }
 const AddCity = () => {
+  const [dID, setdID] = useState('123');
+  useEffect(() => {
+      const getUsername = async () => {
+        var id = await AsyncStorage.getItem('key');
+        if(id){
+          setdID(id)
+        }
+        else{
+          const newID = uuid.v4();
+          await AsyncStorage.setItem('key', newID);
+          setdID(newID)
+        }
+      };
+      getUsername();
+  }, []);
+  console.log(dID)
     const [text, setText] = useState('');
     const [data, setData] = useState([{}]);
     const createCityList = (cities) => {
@@ -134,7 +153,7 @@ const AddCity = () => {
       };
   const navigation = useNavigation();
   const add = (data) => {
-    addCity(data)
+    addCity(data, dID)
     navigation.navigate("LocationScreen")
   }
   const addObject = (data) => {
@@ -145,7 +164,7 @@ const AddCity = () => {
         latitude: data.latitude,
         longitude: data.longitude,
     }
-    addCity(city)
+    addCity(city, dID)
     navigation.navigate("LocationScreen")
   }
   useEffect(() => {

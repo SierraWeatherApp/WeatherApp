@@ -1,12 +1,30 @@
 import React, { useState, useEffect, useRef } from "react";
-import { TouchableOpacity, StyleSheet, View, Text, Image, Pressable, PanResponder, Animated , ScrollView, Dimensions, Button} from "react-native";
+import { TouchableOpacity, StyleSheet, View, Text, Image, Pressable, Dimensions, Button} from "react-native";
 import { useNavigation, useFocusEffect  } from "@react-navigation/native";
 import { Color, FontSize, FontFamily, Border } from "../GlobalStyles";
 import { getIP, getDevice } from "../assets/fetchIP" 
 import { getWeather } from "./CodeToWeather";
+import uuid from 'react-native-uuid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
 const LocationScreen = () => {
+  const [dID, setdID] = useState('123');
+  useEffect(() => {
+      const getUsername = async () => {
+        var id = await AsyncStorage.getItem('key');
+        if(id){
+          setdID(id)
+        }
+        else{
+          const newID = uuid.v4();
+          await AsyncStorage.setItem('key', newID);
+          setdID(newID)
+        }
+      };
+      getUsername();
+  }, []);
+  console.log(dID)
   const [data, setData] = useState([{}]);
   const [isLoading, setIsLoading] = useState(true);
   const [dragged, setDragged] = useState(false);
@@ -14,7 +32,7 @@ const LocationScreen = () => {
   useEffect(() => {
     const fetchWeather = async (lat, long) => {
       const url = `http://${getIP()}:8080//api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true`;
-      const device_id = getDevice()
+      const device_id = dID
       const headers = {
         'Content-Type': 'application/json',
         'x-device-id': device_id,
@@ -38,13 +56,20 @@ const LocationScreen = () => {
       const response = await fetch(
         `http://${getIP()}:8080/api/v1/user/cities`, {
             method: 'GET',
-            headers: {'x-device-id': getDevice()}
+            headers: {'x-device-id': dID}
           }
       );
       const jsonData = await response.json();
+      var weatherPromises = []
+      for(var i = 0; i < jsonData['cities'].length; i++){
+        const promise = fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
+        weatherPromises.push(promise)
+      }
+      const weatherData = await Promise.all(weatherPromises)
       var cityArray = []
       for(var i = 0; i < jsonData['cities'].length; i++){
-        weather = await fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
+        weather = weatherData[i]
+        //weather = await fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
         cityArray.push({city_name: jsonData['cities'][i]['city_name'], 
           key: i + 1, 
           country: jsonData['cities'][i]['country'],
@@ -59,7 +84,7 @@ const LocationScreen = () => {
     };
     const changeOrder = async (cities) => {
       const url = `http://${getIP()}:8080/api/v1/user/cities/city_order`;
-      const device_id = getDevice()
+      const device_id = dID
       const headers = {
         'Content-Type': 'application/json',
         'x-device-id': device_id,
@@ -76,13 +101,13 @@ const LocationScreen = () => {
         body: JSON.stringify(params),
       });
     };
-    if(isLoading)
+    if(isLoading && dID != '123')
       fetchCities();
     else if(dragged){
       changeOrder(data)
       setDragged(false)
     }
-  }, [isLoading, dragged]);
+  }, [isLoading, dragged, dID]);
   useFocusEffect(
     React.useCallback(() => {
       setIsLoading(true);
@@ -90,7 +115,7 @@ const LocationScreen = () => {
   );
   
   const deleteCity = async (cityId) => {
-    const device_id = getDevice()
+    const device_id = dID
     const response = await fetch(`http://${getIP()}:8080/api/v1/user/cities/${cityId}`, {
       method: 'DELETE',
       headers: {
