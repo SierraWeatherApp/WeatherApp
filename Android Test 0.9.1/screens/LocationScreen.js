@@ -45,11 +45,10 @@ const LocationScreen = () => {
       var cityArray = []
       for(var i = 0; i < jsonData['cities'].length; i++){
         weather = await fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
-        cityArray.push({city: jsonData['cities'][i]['city_name'], 
+        cityArray.push({city_name: jsonData['cities'][i]['city_name'], 
           key: i + 1, 
           country: jsonData['cities'][i]['country'],
           id: jsonData['cities'][i]['id'], 
-          city_id: jsonData['cities'][i]['id'], 
           temp: weather['temperature'], 
           weather: getWeather(weather['weathercode']),
           weathercode: weather['weathercode']
@@ -89,6 +88,7 @@ const LocationScreen = () => {
       setIsLoading(true);
     }, [])
   );
+  
   const deleteCity = async (cityId) => {
     const device_id = getDevice()
     const response = await fetch(`http://${getIP()}:8080/api/v1/user/cities/${cityId}`, {
@@ -108,7 +108,7 @@ const LocationScreen = () => {
     // Success! City was deleted.
     console.log(`City with ID ${cityId} was deleted.`);
   };
-  
+
   const createCityList = ({ item, drag }) => {
     let prevOpenedRow;
     let row = [];
@@ -132,15 +132,15 @@ const LocationScreen = () => {
       );
     };
     const deleteItem = (item) => {
-      const id = item['city_id']
+      const id = item['id']
       const oldData = data
       var newData = []
       oldData.forEach((element) => {
-        if(element['city_id'] != id)
+        if(element['id'] != id)
           newData.push(element)
       });
       setData(newData)
-      deleteCity(item['city_id'])
+      deleteCity(item['id'])
     }
     const getWeatherIcon = (weathercode) => {
       if(weathercode <= 1){
@@ -179,7 +179,7 @@ const LocationScreen = () => {
           <View style={[styles.cityListItem] } >
             <View style={[styles.cityListRight]}>
               <View style={{flexDirection: 'row'}}>
-                <Text style={[styles.cityListCityName]}>{item.city} </Text>
+                <Text style={[styles.cityListCityName]}>{item.city_name} </Text>
                 <Text style={[styles.cityListCountry]}>({item.country})</Text>
               </View>
               <Text style={[styles.cityListCond]}>{item.weather}</Text>
