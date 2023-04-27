@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Image, StyleSheet, Pressable, Text, View, Modal } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute  } from "@react-navigation/native";
 import FrameComponent from "../components/FrameComponent";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 
@@ -8,10 +8,15 @@ const Settings = () => {
   const [temperatureCelciusCVisible, setTemperatureCelciusCVisible] =
     useState(false);
   const navigation = useNavigation();
+  
+  const route = useRoute();
+  const temperatureUnit = route.params?.temperatureUnit ?? 'Celcius °C'; // set a default value if temperatureUnit is undefined
 
   const openTemperatureCelciusC = useCallback(() => {
     setTemperatureCelciusCVisible(true);
   }, []);
+  
+  
 
   const closeTemperatureCelciusC = useCallback(() => {
     setTemperatureCelciusCVisible(false);
@@ -79,9 +84,18 @@ const Settings = () => {
             >
               <Text style={styles.text}>
                 <Text style={styles.temperature}>{`Temperature
-`}</Text>
-                <Text style={styles.celciusC}>{`Celcius C° `}</Text>
+`}
+    <Text style={styles.celciusC}>
+
+      
+    
+        {`${temperatureUnit}`}
+      
+
+      </Text>        
               </Text>
+
+           </Text>
             </Pressable>
           </View>
         </View>
@@ -111,6 +125,7 @@ const Settings = () => {
             style={[styles.privacyFrame, styles.framePosition]}
             onPress={() => navigation.navigate("Privacy")}
           >
+            
             <Text style={[styles.privacy, styles.privacyTypo]}>Privacy</Text>
           </Pressable>
         </View>
