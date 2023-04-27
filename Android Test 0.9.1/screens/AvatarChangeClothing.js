@@ -27,7 +27,7 @@ const AvatarChangeClothing = () => {
               // Pass and merge params back to home screen
               navigation.navigate({
                 name: 'ClothingScreen',
-                params: { type: 'hat' },
+                params: { type: 'Hat' },
                 merge: true,
               });
             }}
@@ -39,24 +39,34 @@ const AvatarChangeClothing = () => {
               // Pass and merge params back to home screen
               navigation.navigate({
                 name: 'ClothingScreen',
-                params: { type: 'shirt' },
+                params: { type: 'Shirt' },
                 merge: true,
               });
             }}
           >
             <Text style={[styles.clothingBoxText]}>Shirt</Text>
+            <Image
+              style={[styles.clothingImage]}
+              resizeMode="cover"
+              source={require("../assets/upper-limb1-square.png")}
+            />
           </Pressable>
           <Pressable style={[styles.clothingBox]}
             onPress={() => {
               // Pass and merge params back to home screen
               navigation.navigate({
                 name: 'ClothingScreen',
-                params: { type: 'pants' },
+                params: { type: 'Pants' },
                 merge: true,
               });
             }}
           >
             <Text style={[styles.clothingBoxText]}>Pants</Text>
+            <Image
+              style={[styles.clothingImage]}
+              resizeMode="cover"
+              source={require("../assets/pants1-square.png")}
+            />
           </Pressable>
         </View>
         <View style={[styles.avatar]}>
@@ -76,7 +86,7 @@ const AvatarChangeClothing = () => {
               // Pass and merge params back to home screen
               navigation.navigate({
                 name: 'ClothingScreen',
-                params: { type: 'body' },
+                params: { type: 'Body' },
                 merge: true,
               });
             }}
@@ -85,7 +95,7 @@ const AvatarChangeClothing = () => {
             <Image
               style={[styles.clothingImage]}
               resizeMode="cover"
-              source={require("../assets/sun-glasses.png")}
+              source={require("../assets/sun-glasses-square.png")}
             />
           </Pressable>
           <Pressable style={[styles.clothingBox]}
@@ -93,24 +103,34 @@ const AvatarChangeClothing = () => {
               // Pass and merge params back to home screen
               navigation.navigate({
                 name: 'ClothingScreen',
-                params: { type: 'jacket' },
+                params: { type: 'Jacket' },
                 merge: true,
               });
             }}
           >
             <Text style={[styles.clothingBoxText]}>Jacket</Text>
+            <Image
+              style={[styles.clothingImage]}
+              resizeMode="cover"
+              source={require("../assets/upper-limb3-square.png")}
+            />
           </Pressable>
           <Pressable style={[styles.clothingBox]}
             onPress={() => {
               // Pass and merge params back to home screen
               navigation.navigate({
                 name: 'ClothingScreen',
-                params: { type: 'shoes' },
+                params: { type: 'Shoes' },
                 merge: true,
               });
             }}
           >
             <Text style={[styles.clothingBoxText]}>Shoes</Text>
+            <Image
+              style={[styles.clothingImage]}
+              resizeMode="cover"
+              source={require("../assets/shoes-square.png")}
+            />
           </Pressable>
         </View>
       </View>
@@ -126,7 +146,10 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
   },
   clothingImage:{
-    marginTop: 20,
+    marginTop: 10,
+    height:50,
+    aspectRatio:1,
+
   },
   sunGlassesAvatar:{
     position: 'absolute',

@@ -3,32 +3,32 @@ import { Image, StyleSheet, View, Text, Pressable, Dimensions } from "react-nati
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
 const categories = {
-    shoes: {
+    Shoes: {
         first: 'Sandals',
         second: 'Boots',
         third: 'Sneakers'
     },
-    pants: {
+    Pants: {
         first: 'Jeans',
         second: 'Cargo Pants',
         third: 'Shorts'
     },
-    shirt: {
+    Shirt: {
         first: 'Long Sleeved',
         second: 'T-Shirt',
         third: 'Hoodie'
     },
-    jacket: {
+    Jacket: {
         first: 'Winter Jacket',
         second: 'Casual Jacket',
         third: 'Rain Coat'
     },
-    hats: {
+    Hat: {
         first: 'Cap',
         second: 'Hat',
         third: 'Top Hat'
     },
-    body: {
+    Body: {
         first: 'Umbrella',
         second: 'Glasses',
         third: 'Skin'
@@ -50,6 +50,7 @@ const AvatarChangeClothing = ({route}) => {
             source={require("../assets/arrow1.png")}
           />
         </Pressable>
+        <Text style={[styles.text]}>{route.params.type}</Text>
       </View>
         <View style={[styles.categories]}>
             <Text style={[styles.categoriesHeader]}>{categories[route.params.type]['first']}</Text>
@@ -71,6 +72,13 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.black,
     fontFamily: FontFamily.heading1Medium,
+  },
+  text: {
+    fontSize: FontSize.heading1Medium_size,
+    textAlign: "left",
+    color: Color.black,
+    fontFamily: FontFamily.heading1Medium,
+    alignSelf: 'center'
   },
   categories:{
     marginHorizontal: 20,
