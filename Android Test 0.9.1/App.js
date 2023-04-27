@@ -18,6 +18,7 @@ import Settings from "./screens/Settings";
 import ClothingRecommendation from "./screens/ClothingRecommendation";
 import LocationScreen from "./screens/LocationScreen";
 import AddCity from "./screens/AddCity";
+import ClothingScreen from "./screens/ClothingScreen";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import SideScreen from "./screens/SideScreen";
 import HomeTabs from "./screens/Hometabs";
@@ -75,6 +76,15 @@ const App = () => {
               name="About"
               component={About}
               options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ClothingScreen"
+              component={ClothingScreen}
+              options={{
+                headerShown: false,
+                animationEnabled: false,
+                animation: "none",
+              }}
             />
             <Stack.Screen
               name="ContactUs"

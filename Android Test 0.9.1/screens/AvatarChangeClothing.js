@@ -22,16 +22,42 @@ const AvatarChangeClothing = () => {
       </View>
       <View style={[styles.outerBox]}>
         <View style={[styles.columnBoxes]}>
-          <View style={[styles.clothingBox]}>
-            <Text style={[styles.clothingBoxText]}>Hats</Text>
-
-          </View>
-          <View style={[styles.clothingBox]}>
+          <Pressable style={[styles.clothingBox]}
+            onPress={() => {
+              // Pass and merge params back to home screen
+              navigation.navigate({
+                name: 'ClothingScreen',
+                params: { type: 'hat' },
+                merge: true,
+              });
+            }}
+          >
+            <Text style={[styles.clothingBoxText]}>Hat</Text>
+          </Pressable>
+          <Pressable style={[styles.clothingBox]}
+            onPress={() => {
+              // Pass and merge params back to home screen
+              navigation.navigate({
+                name: 'ClothingScreen',
+                params: { type: 'shirt' },
+                merge: true,
+              });
+            }}
+          >
             <Text style={[styles.clothingBoxText]}>Shirt</Text>
-          </View>
-          <View style={[styles.clothingBox]}>
+          </Pressable>
+          <Pressable style={[styles.clothingBox]}
+            onPress={() => {
+              // Pass and merge params back to home screen
+              navigation.navigate({
+                name: 'ClothingScreen',
+                params: { type: 'pants' },
+                merge: true,
+              });
+            }}
+          >
             <Text style={[styles.clothingBoxText]}>Pants</Text>
-          </View>
+          </Pressable>
         </View>
         <View style={[styles.avatar]}>
           <Image
@@ -45,20 +71,47 @@ const AvatarChangeClothing = () => {
           />
       </View>
         <View style={[styles.columnBoxes]}>
-          <View style={[styles.clothingBox]}>
-            <Text style={[styles.clothingBoxText]}>Skin</Text>
+          <Pressable style={[styles.clothingBox]}
+            onPress={() => {
+              // Pass and merge params back to home screen
+              navigation.navigate({
+                name: 'ClothingScreen',
+                params: { type: 'body' },
+                merge: true,
+              });
+            }}
+          >
+            <Text style={[styles.clothingBoxText]}>Body</Text>
             <Image
               style={[styles.clothingImage]}
               resizeMode="cover"
               source={require("../assets/sun-glasses.png")}
             />
-          </View>
-          <View style={[styles.clothingBox]}>
+          </Pressable>
+          <Pressable style={[styles.clothingBox]}
+            onPress={() => {
+              // Pass and merge params back to home screen
+              navigation.navigate({
+                name: 'ClothingScreen',
+                params: { type: 'jacket' },
+                merge: true,
+              });
+            }}
+          >
             <Text style={[styles.clothingBoxText]}>Jacket</Text>
-          </View>
-          <View style={[styles.clothingBox]}>
+          </Pressable>
+          <Pressable style={[styles.clothingBox]}
+            onPress={() => {
+              // Pass and merge params back to home screen
+              navigation.navigate({
+                name: 'ClothingScreen',
+                params: { type: 'shoes' },
+                merge: true,
+              });
+            }}
+          >
             <Text style={[styles.clothingBoxText]}>Shoes</Text>
-          </View>
+          </Pressable>
         </View>
       </View>
     </View>
