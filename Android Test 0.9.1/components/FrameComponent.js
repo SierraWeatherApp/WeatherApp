@@ -1,20 +1,57 @@
 import * as React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 
-const FrameComponent = ({ onClose }) => {
+const FrameComponent = ({ onClose, temperatureUnit, onToggleTemperatureUnit }) => {
+  const [isFahrenheitPressed, setIsFahrenheitPressed] = React.useState(
+    temperatureUnit === "fahrenheit"
+  );
+  const handleFahrenheitPress = () => {
+    setIsFahrenheitPressed(true);
+  };
+
+  const handleCelciusPress = () => {
+    setIsFahrenheitPressed(false);
+  };
+
   return (
     <View style={styles.frameParent}>
-      <View style={[styles.fahrenheitFWrapper, styles.wrapperLayout]}>
-        <Text style={[styles.fahrenheitF, styles.celciusCTypo]}>
+      <TouchableOpacity
+        style={[
+          styles.fahrenheitFWrapper,
+          styles.wrapperLayout,
+          isFahrenheitPressed && styles.buttonPressed,
+        ]}
+        onPress={handleFahrenheitPress}
+      >
+        <Text
+          style={[
+            styles.fahrenheitF,
+            styles.celciusCTypo,
+            isFahrenheitPressed && styles.textPressed,
+          ]}
+        >
           Fahrenheit F
         </Text>
-      </View>
-      <View style={[styles.celciusCWrapper, styles.wrapperLayout]}>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.celciusCWrapper,
+          styles.wrapperLayout,
+          !isFahrenheitPressed && styles.buttonPressed,
+        ]}
+        onPress={handleCelciusPress}
+      >
         <Text
-          style={[styles.celciusC, styles.celciusCTypo]}
-        >{`Celcius C° `}</Text>
-      </View>
+          style={[
+            styles.celciusC,
+            styles.celciusCTypo,
+            !isFahrenheitPressed && styles.textPressed,
+          ]}
+        >
+          {`Celcius C° `}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
