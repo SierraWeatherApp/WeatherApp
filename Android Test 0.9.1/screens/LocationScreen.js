@@ -8,6 +8,31 @@ import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
+
+async function fahreneheit(dID) {
+  const url = `http://${getIP()}:8080/api/v1/user`;
+  const device_id = dID
+  const headers = {
+    'Content-Type': 'application/json',
+    'x-device-id': device_id,
+  };
+  
+  fetch(url, {
+    method: 'PATCH',
+    headers: headers,
+    body: JSON.stringify({temp_unit: "fahrenheit"}),
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+
 const LocationScreen = () => {
   const [dID, setdID] = useState('123');
   useEffect(() => {
@@ -24,51 +49,23 @@ const LocationScreen = () => {
       };
       getUsername();
   }, []);
-  console.log(dID)
   const [data, setData] = useState([{}]);
   const [isLoading, setIsLoading] = useState(true);
   const [dragged, setDragged] = useState(false);
   const navigation = useNavigation();
   useEffect(() => {
-    const fetchWeather = async (lat, long) => {
-      const url = `http://${getIP()}:8080//api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true`;
-      const device_id = dID
-      const headers = {
-        'Content-Type': 'application/json',
-        'x-device-id': device_id,
-      };
-      return fetch(url, {
-        method: 'GET',
-        headers: headers,
-        body: JSON.stringify(),
-      })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        return data;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    };
     const fetchCities = async () => {
       const response = await fetch(
-        `http://${getIP()}:8080/api/v1/user/cities`, {
+        `http://${getIP()}:8080/api/v1/user?temperature=true&weathercode=true`, {
             method: 'GET',
             headers: {'x-device-id': dID}
           }
       );
       const jsonData = await response.json();
-      var weatherPromises = []
-      for(var i = 0; i < jsonData['cities'].length; i++){
-        const promise = fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
-        weatherPromises.push(promise)
-      }
-      const weatherData = await Promise.all(weatherPromises)
+      console.log(jsonData['user_temp_unit'])
       var cityArray = []
       for(var i = 0; i < jsonData['cities'].length; i++){
-        weather = weatherData[i]
+        weather = jsonData['cities'][i]['weather']
         //weather = await fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
         cityArray.push({city_name: jsonData['cities'][i]['city_name'], 
           key: i + 1, 
@@ -83,7 +80,7 @@ const LocationScreen = () => {
       setIsLoading(false);
     };
     const changeOrder = async (cities) => {
-      const url = `http://${getIP()}:8080/api/v1/user/cities/city_order`;
+      const url = `http://${getIP()}:8080/api/v1/user/cities/change_order`;
       const device_id = dID
       const headers = {
         'Content-Type': 'application/json',
@@ -91,18 +88,19 @@ const LocationScreen = () => {
       };
       var cityArray = []
       for(var i = 0; i < cities.length; i++){
-        cityArray.push({id: cities[i].id, 
-          order: i + 1})
+        cityArray.push(cities[i].id)
       }
-      const params = {cities: cityArray}
+      const params = {cities_ids: cityArray}
       fetch(url, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: headers,
         body: JSON.stringify(params),
       });
     };
-    if(isLoading && dID != '123')
+    if(isLoading && dID != '123'){
+      fahreneheit(dID)
       fetchCities();
+    }
     else if(dragged){
       changeOrder(data)
       setDragged(false)
@@ -116,13 +114,14 @@ const LocationScreen = () => {
   
   const deleteCity = async (cityId) => {
     const device_id = dID
-    const response = await fetch(`http://${getIP()}:8080/api/v1/user/cities/${cityId}`, {
-      method: 'DELETE',
+    const response = await fetch(`http://${getIP()}:8080/api/v1/user/cities/destroy`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'x-device-id': device_id,
         // Add any additional headers as needed, such as authorization headers.
       },
+      body: JSON.stringify({city_id: cityId})
     });
     if (!response.ok) {
       // Handle error cases here, such as showing an error message to the user.
@@ -205,7 +204,7 @@ const LocationScreen = () => {
             <View style={[styles.cityListRight]}>
               <View style={{flexDirection: 'row'}}>
                 <Text style={[styles.cityListCityName]}>{item.city_name} </Text>
-                <Text style={[styles.cityListCountry]}>({item.country})</Text>
+                <Text style={[styles.cityListCountry]}>{item.country}</Text>
               </View>
               <Text style={[styles.cityListCond]}>{item.weather}</Text>
             </View>

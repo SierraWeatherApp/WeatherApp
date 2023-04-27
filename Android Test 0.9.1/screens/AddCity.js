@@ -7,36 +7,36 @@ import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const defaultCities = [{
-        city_id: 2673729,
-        city_name: 'Stockholm',
+        weather_id: 2673729,
+        name: 'Stockholm',
         country: 'Sweden',
         latitude: 59.33459,
         longitude: 18.06324,
     },
     {
-        city_name:"Hamburg",
+        name:"Hamburg",
         latitude:53.55073,
         longitude:9.99302,
         country: "Germany",
-        city_id: 2911298
+        weather_id: 2911298
     },
     {
-        city_name:"Berlin",
+        name:"Berlin",
         latitude:52.52437,
         longitude:13.41053,
         country: "Germany",
-        city_id: 2950159
+        weather_id: 2950159
     },
     {
-        city_name:"Hong Kong",
+        name:"Hong Kong",
         latitude:22.27832,
         longitude:114.17469,
         country: "China",
-        city_id: 1819729
+        weather_id: 1819729
     },
 ]
 async function addCity(data, dID) {
-    const url = `http://${getIP()}:8080/api/v1/user/cities`;
+    const url = `http://${getIP()}:8080/api/v1/user/cities/add`;
     const device_id = dID
     const headers = {
       'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ async function addCity(data, dID) {
     };
     
     fetch(url, {
-      method: 'POST',
+      method: 'PUT',
       headers: headers,
       body: JSON.stringify(data),
     })
@@ -73,14 +73,13 @@ const AddCity = () => {
       };
       getUsername();
   }, []);
-  console.log(dID)
     const [text, setText] = useState('');
     const [data, setData] = useState([{}]);
     const createCityList = (cities) => {
         return cities.map((item, index)=>(
           <View key={index}>
             <Pressable style={styles.addCityButton} onPress={() => add(item)}>
-                <Text style={styles.addCityButtonText}>{item.city_name}</Text>
+                <Text style={styles.addCityButtonText}>{item.name}</Text>
             </Pressable>
           </View>
         ));
@@ -158,8 +157,8 @@ const AddCity = () => {
   }
   const addObject = (data) => {
     const city = {
-        city_id: data.id,
-        city_name: data.name,
+        weather_id: data.id,
+        name: data.name,
         country: data.country,
         latitude: data.latitude,
         longitude: data.longitude,
