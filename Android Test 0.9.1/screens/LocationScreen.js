@@ -38,7 +38,6 @@ const LocationScreen = () => {
           }
       );
       const jsonData = await response.json();
-      console.log(jsonData['user_temp_unit'])
       var cityArray = []
       for(var i = 0; i < jsonData['cities'].length; i++){
         weather = jsonData['cities'][i]['weather']
@@ -120,14 +119,17 @@ const LocationScreen = () => {
     };
     const renderRightActions = (item) => {
       return (
-        <View
-          style={{
-            margin: 0,
-            alignContent: 'center',
-            justifyContent: 'center',
-            width: 70,
-          }}>
-          <Button color="red" onPress={() =>deleteItem(item)} title="DELETE"></Button>
+        <View style={[styles.delete]}>
+          <Pressable
+            style={[styles.deleteButton]}
+            onPress={() =>deleteItem(item)}
+          >
+            <Image
+              style={[]}
+              resizeMode="cover"
+              source={require("../assets/trashcan.png")}
+            />
+          </Pressable>
         </View>
       );
     };
@@ -251,6 +253,13 @@ const LocationScreen = () => {
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
+  deleteButton: {
+    marginLeft: 10,
+    backgroundColor: Color.gray_100,
+    borderRadius: 100,
+    padding: 10,
+    marginTop: 26
+  },
   locationScreen: {
     overflow: "hidden",
     height: screenHeight,

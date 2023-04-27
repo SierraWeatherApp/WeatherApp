@@ -61,12 +61,14 @@ const AvatarChangeClothing = ({route}) => {
         <View style={[styles.categories]}>
             <Text style={[styles.categoriesHeader]}>{categories[route.params.type]['third']}</Text>
         </View>
+
     </View>
   );
 };
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
+
   categoriesHeader:{
     fontSize: FontSize.heading1Medium_size,
     textAlign: "left",

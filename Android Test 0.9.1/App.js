@@ -129,7 +129,7 @@ const App = () => {
             <Stack.Screen
               name="Settings"
               component={Settings}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, animation: "slide_from_right" }}
             />
             <Stack.Screen
               name="ClothingRecommendation"
