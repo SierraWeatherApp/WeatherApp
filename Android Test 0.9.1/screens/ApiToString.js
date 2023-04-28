@@ -40,5 +40,6 @@ export function getHumidityString({latitude, longitude}) {
   const stringHumidity = data[0]
     ? data[0].humidity
     : "";
+  //const stringHumidity = "-1"
   return stringHumidity;
 }

@@ -21,7 +21,7 @@ export function getData({ latitude, longitude }) {
       getUsername();
   }, []);
   const [data, setData] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
   const memoizedData = useMemo(() => {
     return data;
   }, [data]);
@@ -29,7 +29,7 @@ export function getData({ latitude, longitude }) {
   useEffect(() => {
     const fetchCities = async () => {
       const response = await fetch(
-        `http://${getIP()}:8080/api/v1/user?temperature=true&weathercode=true&windspeed=true&`, {
+        `http://${getIP()}:8080/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
             method: 'GET',
             headers: {'x-device-id': dID}
           }
@@ -47,15 +47,17 @@ export function getData({ latitude, longitude }) {
           weather: getWeather(weather['weathercode']),
           weathercode: weather['weathercode'],
           unit: jsonData['user_temp_unit'],
-          humidity: weather['humidity'],
+          humidity: weather['relativehumidity_2m'],
           windspeed: weather['windspeed']
         })
       }
       setData(cityArray)
+      setIsLoading(false)
     };
-    if(dID != '123')
-      fetchCities()
-  }, [dID]);
+    if(isLoading && dID != '123'){
+      fetchCities();
+    }
+  }, [dID, isLoading]);
 
   return memoizedData;
 }
