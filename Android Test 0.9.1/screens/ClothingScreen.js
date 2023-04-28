@@ -21,7 +21,7 @@ const categories = {
     Jacket: {
         first: 'Winter Jacket',
         second: 'Casual Jacket',
-        third: 'Rain Coat'
+        third: ''
     },
     Hat: {
         first: 'Cap',

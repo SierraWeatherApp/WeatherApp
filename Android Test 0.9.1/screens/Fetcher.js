@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getIP, getDevice } from "../assets/fetchIP" 
 import { getWeather } from "./CodeToWeather";
 
-export function getData({ latitude, longitude }) {
+export function getData() {
   const [dID, setdID] = useState('123');
   useEffect(() => {
       const getUsername = async () => {
@@ -28,6 +28,7 @@ export function getData({ latitude, longitude }) {
 
   useEffect(() => {
     const fetchCities = async () => {
+      console.log('hi')
       const response = await fetch(
         `http://${getIP()}:8080/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
             method: 'GET',

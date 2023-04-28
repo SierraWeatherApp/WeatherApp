@@ -9,8 +9,10 @@ import {
   getWindString,
   getTempString,
   logData,
-  getPosition
+  getPosition,
+  getAllData
 } from "./ApiToString";
+import { getWeather } from "./CodeToWeather";
 
 //For scaling [default dimension: 360x800]
 const { width, height } = Dimensions.get('window');
@@ -30,11 +32,18 @@ const scaleFont = (fontSize) => {
 
 const WeatherScreen = ( {latitude, longitude} ) => {
   const navigation = useNavigation({latitude, longitude});
+  const allData = getAllData()
+  const positionString = allData.city_name;
+  const weatherString = getWeather(allData.weathercode);
+  const tempString = Math.round(allData.temperature);
+  const windString = allData.windspeed;
+  const humidityString = allData.humidity;
+  /*
   const positionString = getPosition({latitude, longitude});
   const weatherString = getWeatherString({latitude, longitude});
   const tempString = Math.round(getTempString({latitude, longitude}));
   const windString = getWindString({latitude, longitude});
-  const humidityString = getHumidityString({latitude, longitude});
+  const humidityString = getHumidityString({latitude, longitude});*/
 
   return (
     <LinearGradient
@@ -43,7 +52,7 @@ const WeatherScreen = ( {latitude, longitude} ) => {
       colors={["#95b2c2", "rgba(105, 184, 228, 0)"]}
     >
       <View style={[styles.mainPageLayout]}>
-        <View>
+        <View style={[styles.upperBox]}>
           <View style={[styles.topbar]}>
             <View style={[styles.topbarLeft]}>
             <Pressable
@@ -95,9 +104,9 @@ const WeatherScreen = ( {latitude, longitude} ) => {
             onPress={() => navigation.navigate("ClothingRecommendation")}
           >
             <Image
-              style={[]}
+              style={[styles.botBarIcon]}
               resizeMode="cover"
-              source={require("../assets/frame-88.png")}
+              source={require("../assets/clothing-icon.png")}
             />
             <Text style={[]}>Clothing</Text>
           </Pressable>
@@ -111,9 +120,9 @@ const WeatherScreen = ( {latitude, longitude} ) => {
             onPress={() => navigation.navigate("Settings")}
           >
             <Image
-              style={[]}
+              style={[styles.botBarIcon]}
               resizeMode="cover"
-              source={require("../assets/frame-88.png")}
+              source={require("../assets/profile-icon.png")}
             />
             <Text style={[]}>Settings</Text>
           </Pressable>
@@ -124,6 +133,12 @@ const WeatherScreen = ( {latitude, longitude} ) => {
 };
 
 const styles = StyleSheet.create({
+  upperBox:{
+    marginHorizontal: 10,
+  },
+  botBarIcon:{
+    alignSelf: 'center',
+  },
   appName:{
     fontFamily: FontFamily.alataRegular,
     fontSize: 18,
@@ -137,7 +152,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'column',
     height: height,
-    marginHorizontal: 10,
   },
   topbar:{
     flexDirection: 'row',
@@ -154,20 +168,22 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.alataRegular,
   },
   temperature:{
-    fontSize: 64,
+    fontSize: 75,
+    fontWeight: "700",
   },
   tempUnit:{
     fontSize: 20,
-    marginTop:25,
+    marginTop:20,
     marginLeft: 5,
   },
   weatherInfoTempBox:{
     flexDirection:'row',
   },
   weatherCond:{
-    marginTop:18,
-    fontSize: 20,
-    marginLeft: 5,
+    marginTop:19,
+    fontSize: 25,
+    marginLeft: 10,
+    fontWeight: "700",
   },
   avatar:{
     alignSelf: 'flex-end',
@@ -177,6 +193,7 @@ const styles = StyleSheet.create({
   botBar:{
     flexDirection:'row',
     justifyContent: 'space-evenly',
+    backgroundColor: Color.gainsboro_100,
   },
 });
 
