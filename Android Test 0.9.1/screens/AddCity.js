@@ -7,7 +7,7 @@ import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const defaultCities = [{
-        weather_id: 2673729,
+        weather_id: 2673730,
         name: 'Stockholm',
         country: 'Sweden',
         latitude: 59.33459,

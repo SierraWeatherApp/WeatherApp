@@ -8,36 +8,37 @@ export function logData({latitude, longitude}) {
 
 export function getPosition({latitude, longitude}) {
   data = getData({latitude, longitude});
-  const poString = data ? data.latitude : "";
+  const poString = data[0] ? data[0].city_name : "";
+  //const poString = 'City'
   return poString;
 }
 
 export function getWeatherString({latitude, longitude}) {
   data = getData({latitude, longitude});
-  const stringWeather = data.current_weather
-    ? getWeather(data.current_weather.weathercode)
+  const stringWeather = data[0]
+    ? getWeather(data[0].weathercode)
     : "";
   return stringWeather;
 }
 
 export function getTempString({latitude, longitude}) {
   data = getData({latitude, longitude});
-  const stringTemp = data.current_weather
-    ? data.current_weather.temperature
+  const stringTemp = data[0]
+    ? data[0].temperature
     : "";
   return stringTemp;
 }
 
 export function getWindString({latitude, longitude}) {
   data = getData({latitude, longitude});
-  const stringWind = data.current_weather ? data.current_weather.windspeed : "";
+  const stringWind = data[0] ? data[0].windspeed : "";
   return stringWind;
 }
 
 export function getHumidityString({latitude, longitude}) {
   data = getData({latitude, longitude});
-  const stringHumidity = data.hourly_units
-    ? data.hourly.relativehumidity_2m[0]
+  const stringHumidity = data[0]
+    ? data[0].humidity
     : "";
   return stringHumidity;
 }
