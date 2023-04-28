@@ -105,18 +105,9 @@ const LocationScreen = () => {
     }
   
     // Success! City was deleted.
-    console.log(`City with ID ${cityId} was deleted.`);
   };
 
   const createCityList = ({ item, drag }) => {
-    let prevOpenedRow;
-    let row = [];
-    const closeRow = (index) => {
-      if (prevOpenedRow && prevOpenedRow !== row[index]) {
-        prevOpenedRow.close();
-      }
-      prevOpenedRow = row[index];
-    };
     const renderRightActions = (item) => {
       return (
         <View style={[styles.delete]}>

@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
   },
   clothingImage:{
-    marginTop: 10,
+    marginTop: 8,
     height:50,
     aspectRatio:1,
 
@@ -168,10 +168,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   clothingBoxText:{
-    fontSize: FontSize.size_5xs_1,
+    fontSize: 10,
     marginTop: 2,
     color: Color.black,
-    fontFamily: FontFamily.heading1Medium,
+    fontFamily: FontFamily.montserratBold,
   },
   text: {
     fontSize: FontSize.heading1Medium_size,

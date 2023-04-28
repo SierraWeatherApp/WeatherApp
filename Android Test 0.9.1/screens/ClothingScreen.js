@@ -61,7 +61,6 @@ const AvatarChangeClothing = ({route}) => {
         <View style={[styles.categories]}>
             <Text style={[styles.categoriesHeader]}>{categories[route.params.type]['third']}</Text>
         </View>
-
     </View>
   );
 };
