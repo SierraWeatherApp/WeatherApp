@@ -11,6 +11,7 @@ export function getData() {
         var id = await AsyncStorage.getItem('key');
         if(id){
           setdID(id)
+          console.log(id + dID)
         }
         else{
           const newID = uuid.v4();
@@ -19,7 +20,7 @@ export function getData() {
         }
       };
       getUsername();
-  }, []);
+  }, [dID]);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const memoizedData = useMemo(() => {
@@ -58,7 +59,10 @@ export function getData() {
     if(isLoading && dID != '123'){
       fetchCities();
     }
+    else{
+      console.log('hi' + dID)
+      console.log(isLoading)
+    }
   }, [dID, isLoading]);
-
   return memoizedData;
 }

@@ -3,7 +3,7 @@ import { getData } from "./Fetcher";
 
 export function getAllData(){
   data = getData();
-  const city1 = data[0] ? data[0] : "";
+  const city1 = data? data : "";
   return city1
 }
 export function logData() {

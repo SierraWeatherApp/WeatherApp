@@ -27,7 +27,7 @@ const Settings = () => {
       <View style={[styles.settings, styles.iconLayout]}>
         <Pressable
           style={styles.x}
-          onPress={() => navigation.navigate("DayHomePage")}
+          onPress={() => navigation.navigate("0")}
         >
           <Image
             style={[styles.icon, styles.iconLayout]}

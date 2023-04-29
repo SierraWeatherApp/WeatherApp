@@ -1,45 +1,31 @@
 import * as React from "react";
 import { Image, StyleSheet, Text, View, Pressable, Dimensions, PixelRatio} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Color, FontSize, FontFamily } from "../GlobalStyles";
 import {
-  getHumidityString,
-  getWeatherString,
-  getWindString,
-  getTempString,
-  logData,
-  getPosition,
   getAllData
 } from "./ApiToString";
 import { getWeather } from "./CodeToWeather";
 
 //For scaling [default dimension: 360x800]
 const { width, height } = Dimensions.get('window');
-const widthScaling = (widthCoordinate) => {
-  const ratio = widthCoordinate / 360;
-  return width * ratio;
-}
-const heightScaling = (heightCoordinate) => {
-  const ratio = heightCoordinate / 800;
-  return height * ratio;
-}
-const scaleFont = (fontSize) => {
-  const scale = Math.min(width / 375, height / 812); // use 375 x 812 as a reference
-  const adjustedFontSize = Math.round(fontSize * scale * PixelRatio.get());
-  return adjustedFontSize;
-};
 
-const WeatherScreen = ( {latitude, longitude, name} ) => {
-  const navigation = useNavigation({latitude, longitude});
-  const allData = getAllData()
-  const positionString = allData.city_name;
-  const weatherString = getWeather(allData.weathercode);
-  const tempString = Math.round(allData.temperature);
-  const windString = allData.windspeed;
-  const humidityString = allData.humidity;
+const WeatherScreen = ( { city} ) => {
+  const navigation = useNavigation();
+  const positionString = city.city_name;
+  const weatherString = getWeather(city.weathercode);
+  const tempString = Math.round(city.temperature);
+  const windString = city.windspeed;
+  const humidityString = city.humidity;
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('asdsa')
+        //updateParent();
+    }, [])
+  );
+  
 
-  const randcolor = (Math.random() * 255);
 
   return (
     <LinearGradient

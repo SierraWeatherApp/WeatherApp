@@ -11,29 +11,39 @@ const Tab = createMaterialTopTabNavigator();
 const CityScreen = React.memo(({ city }) => {
   return (
     <SideScreen
-      latitude={Math.random() * 90}
-      longitude={Math.random() * 90}
-      name={city}
+      city={city}
     />
   );
 });
-
+const getC = (city, i) => {
+  if(city != null){
+    const name = i.toString()
+    const id = city.id
+    return (
+      <Tab.Screen
+        key={id}
+        name={name}
+        component={React.useCallback(
+          () => (
+            <CityScreen city={city}/>
+          ),
+          [city]
+        )}
+      />
+      )
+  }
+}
+const getAllC = (cities) => {
+  var array = []
+  for(var i = 0; i < cities.length; i++){
+    array.push(getC(cities[i], i))
+  }
+  return array
+}
 const HomeTabs = ({ cities }) => {
   return (
     <Tab.Navigator tabBar={() => null}>
-      <Tab.Screen name="DayHomePage" component={DayHomePage} />
-      {cities.map((city) => (
-        <Tab.Screen
-          key={city}
-          name={city}
-          component={React.useCallback(
-            () => (
-              <CityScreen city={city} />
-            ),
-            [city]
-          )}
-        />
-      ))}
+      {getAllC(cities)}
     </Tab.Navigator>
   );
 };

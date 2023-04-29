@@ -11,7 +11,7 @@ const AvatarChangeClothing = () => {
       <View style={[styles.topBar]}>
         <Pressable
           style={styles.arrow}
-          onPress={() => navigation.navigate("DayHomePage")}
+          onPress={() => navigation.navigate("0")}
         >
           <Image
             resizeMode="cover"

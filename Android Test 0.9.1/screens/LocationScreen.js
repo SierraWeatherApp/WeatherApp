@@ -11,6 +11,7 @@ import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler'
 
 const LocationScreen = () => {
   const [dID, setdID] = useState('123');
+  const [updated, setUpdated] = useState(false)
   useEffect(() => {
       const getUsername = async () => {
         var id = await AsyncStorage.getItem('key');
@@ -54,6 +55,7 @@ const LocationScreen = () => {
       }
       setData(cityArray)
       setIsLoading(false);
+      setUpdated(true)
     };
     const changeOrder = async (cities) => {
       const url = `http://${getIP()}:8080/api/v1/user/cities/change_order`;
@@ -103,7 +105,7 @@ const LocationScreen = () => {
       console.log(`Error deleting city with ID ${cityId}: ${response.status}`);
       return;
     }
-  
+    setUpdated(true)
     // Success! City was deleted.
   };
 
@@ -203,12 +205,13 @@ const LocationScreen = () => {
     setData(data);
     setDragged(true)
   };
+  console.log(updated)
   return (
      <View style={[styles.locationScreen]}>
         <View style={[styles.topBar]}>
         <Pressable
             style={styles.arrow}
-            onPress={() => navigation.navigate("DayHomePage")}
+            onPress={() => navigation.navigate("Home")}
         >
           <Image
             style={[]}
