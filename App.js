@@ -22,7 +22,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getIP } from "./assets/fetchIP" 
+import { getIP } from "./screens/fetchIP" 
 import { getWeather } from "./screens/CodeToWeather";
 
 LogBox.ignoreAllLogs(true)

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { TouchableOpacity, StyleSheet, View, Text, Image, Pressable, Dimensions, Button} from "react-native";
 import { useNavigation, useFocusEffect  } from "@react-navigation/native";
 import { Color, FontSize, FontFamily, Border } from "../GlobalStyles";
-import { getIP, getDevice } from "../assets/fetchIP" 
+import { getIP, getDevice } from "./fetchIP" 
 import { getWeather } from "./CodeToWeather";
 import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';

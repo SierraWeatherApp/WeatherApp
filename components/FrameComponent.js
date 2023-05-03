@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getIP } from "../assets/fetchIP" 
+import { getIP } from "../screens/fetchIP" 
 async function setUnit(unit, dID) {
   const url = `http://${getIP()}:8080/api/v1/user`;
   const device_id = dID
