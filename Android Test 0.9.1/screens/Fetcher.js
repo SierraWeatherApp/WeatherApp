@@ -51,7 +51,7 @@ export function getData() {
           weathercode: weather['weathercode'],
           unit: jsonData['user_temp_unit'],
           humidity: weather['humidity'],
-          windspeed: weather['windspeed']
+          windspeed: weather['windspeed'],
         })
       }
       setData(cityArray)

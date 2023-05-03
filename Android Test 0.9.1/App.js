@@ -76,7 +76,13 @@ const App = () => {
           weathercode: weather['weathercode'],
           unit: jsonData['user_temp_unit'],
           humidity: weather['humidity'],
-          windspeed: weather['windspeed']
+          windspeed: weather['windspeed'],
+          head: 'empty',
+          shirt: 'long-sleeved',
+          jacket: 'winter-jacket',
+          pants: 'pants',
+          shoes: 'sneakers',
+          umbrella: 'false',
         })
       }
       setData(cityArray)

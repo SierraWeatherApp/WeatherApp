@@ -20,7 +20,7 @@ const categories = {
     },
     Jacket: {
         first: 'Winter Jacket',
-        second: 'Casual Jacket',
+        second: 'Light Jacket',
         third: ''
     },
     Hat: {
