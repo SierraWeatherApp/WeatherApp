@@ -13,7 +13,8 @@ import { getWinterJackets,
          getUmbrella,
          getRainBoots,
          getSneakers,
-         getShorts, } from "./getClothing";
+         getShorts,
+         getLightJacket } from "./getClothing";
 
 //For scaling [default dimension: 360x800]
 const { width, height } = Dimensions.get('window');
@@ -46,7 +47,7 @@ const WeatherScreen = ( { city} ) => {
   else{
     hat = require('../assets/empty.png')
   }
-  if(city.shirt === 'long-sleved'){
+  if(city.shirt === 'long-sleeved'){
     shirt = getlongSleeved()[0]
   }
   else if(city.shirt === 'hoodie'){
@@ -58,8 +59,8 @@ const WeatherScreen = ( { city} ) => {
   if(city.jacket === 'winter-jacket'){
     jacket = getWinterJackets()[0]
   }
-  else if(city.jacket){
-
+  else if(city.jacket === 'light-jacket'){
+    jacket = getLightJacket()[0]
   }
   else{
     jacket = require('../assets/empty.png')
@@ -167,7 +168,7 @@ const WeatherScreen = ( { city} ) => {
                 <Image
                   style={[styles.avatarBodyHead]}
                   resizeMode="cover"
-                  source={require("../assets/male-body/male-head-gas-mask.png")}
+                  source={require("../assets/male-body/male-head.png")}
                 />
                 <Image
                   style={[styles.avatarBodyUpperBody]}
@@ -322,7 +323,7 @@ const styles = StyleSheet.create({
   },
   jacket:{
     zIndex: 2,
-    top: 63,
+    top: 64,
   },
   pants:{
     top: 150,
@@ -334,7 +335,7 @@ const styles = StyleSheet.create({
   },
   umbrella:{
     zIndex: 100,
-    top: 150,
+    top: 152,
     right: 70
   },
   botBar:{

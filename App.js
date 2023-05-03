@@ -75,10 +75,10 @@ const App = () => {
           windspeed: weather['windspeed'],
           head: 'empty',
           shirt: 'long-sleeved',
-          jacket: 'winter-jacket',
+          jacket: 'light-jacket',
           pants: 'shorts',
           shoes: 'rain',
-          umbrella: 'false',
+          umbrella: 'true',
         })
       }
       setData(cityArray)
