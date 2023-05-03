@@ -41,6 +41,7 @@ export function getData() {
       for(var i = 0; i < jsonData['cities'].length; i++){
         weather = jsonData['cities'][i]['weather']
         //weather = await fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
+        console.log(weather)
         cityArray.push({city_name: jsonData['cities'][i]['city_name'], 
           key: i + 1, 
           country: jsonData['cities'][i]['country'],
@@ -49,7 +50,7 @@ export function getData() {
           weather: getWeather(weather['weathercode']),
           weathercode: weather['weathercode'],
           unit: jsonData['user_temp_unit'],
-          humidity: weather['relativehumidity_2m'],
+          humidity: weather['humidity'],
           windspeed: weather['windspeed']
         })
       }

@@ -156,6 +156,8 @@ const AddCity = () => {
     navigation.navigate("LocationScreen")
   }
   const addObject = (data) => {
+    if(data.country == null)
+      data.country = 'N.A.'
     const city = {
         weather_id: data.id,
         name: data.name,

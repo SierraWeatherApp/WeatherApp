@@ -9,8 +9,8 @@ const categories = {
         third: 'Sneakers'
     },
     Pants: {
-        first: 'Jeans',
-        second: 'Cargo Pants',
+        first: 'Pants',
+        second: 'Snow-pants',
         third: 'Shorts'
     },
     Shirt: {
@@ -25,8 +25,8 @@ const categories = {
     },
     Hat: {
         first: 'Cap',
-        second: 'Hat',
-        third: 'Top Hat'
+        second: 'Beanie',
+        third: ''
     },
     Body: {
         first: 'Umbrella',

@@ -29,7 +29,6 @@ const WeatherScreen = ( { city} ) => {
 
   return (
     <LinearGradient
-      style={[]}
       locations={[0, 1]}
       colors={["#95b2c2", "rgba(105, 184, 228, 0)"]}
     >

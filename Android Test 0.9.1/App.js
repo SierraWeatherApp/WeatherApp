@@ -75,7 +75,7 @@ const App = () => {
           weather: getWeather(weather['weathercode']),
           weathercode: weather['weathercode'],
           unit: jsonData['user_temp_unit'],
-          humidity: weather['relativehumidity_2m'],
+          humidity: weather['humidity'],
           windspeed: weather['windspeed']
         })
       }
