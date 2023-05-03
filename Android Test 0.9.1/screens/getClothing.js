@@ -9,6 +9,7 @@ const sneakers = [require('../assets/shoes/sneakers/v1.png')]
 const rain = [require('../assets/shoes/rain/v1.png')]
 const sandals = [require('../assets/shoes/sandals/v1.png')]
 const umbrella = [require('../assets/accessories/umbrella/v1.png')]
+const shorts = [require('../assets/pants/shorts/v1.png')]
 export function getWinterJackets(){
     return winter;
 }
@@ -35,4 +36,7 @@ export function getSandals(){
 }
 export function getUmbrella(){
     return umbrella;
+}
+export function getShorts(){
+    return shorts;
 }

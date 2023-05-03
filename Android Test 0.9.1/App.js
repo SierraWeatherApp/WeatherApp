@@ -80,8 +80,8 @@ const App = () => {
           head: 'empty',
           shirt: 'long-sleeved',
           jacket: 'winter-jacket',
-          pants: 'pants',
-          shoes: 'sneakers',
+          pants: 'shorts',
+          shoes: 'rain',
           umbrella: 'false',
         })
       }

@@ -15,7 +15,8 @@ import { getWinterJackets,
          getSandals,
          getUmbrella,
          getRainBoots,
-         getSneakers, } from "./getClothing";
+         getSneakers,
+         getShorts, } from "./getClothing";
 
 //For scaling [default dimension: 360x800]
 const { width, height } = Dimensions.get('window');
@@ -69,8 +70,8 @@ const WeatherScreen = ( { city} ) => {
   if(city.pants === 'pants'){
     pants = getPants()[0]
   }
-  else if(city.pants){
-
+  else if(city.pants === 'shorts'){
+    pants = getShorts()[0]
   }
   else{
 
