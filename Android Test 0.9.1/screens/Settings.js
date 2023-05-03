@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from "react";
-import { Image, StyleSheet, Pressable, Text, View, Modal } from "react-native";
+import { Image, StyleSheet, Pressable, Text, View, Modal, AsyncStorage } from "react-native";
 import { useNavigation, useRoute  } from "@react-navigation/native";
 import FrameComponent from "../components/FrameComponent";
+
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 
 const Settings = () => {
@@ -10,13 +11,14 @@ const Settings = () => {
   const navigation = useNavigation();
   
   const route = useRoute();
+
+
   const temperatureUnit = route.params?.temperatureUnit ?? 'Celcius °C'; // set a default value if temperatureUnit is undefined
 
+  
   const openTemperatureCelciusC = useCallback(() => {
     setTemperatureCelciusCVisible(true);
   }, []);
-  
-  
 
   const closeTemperatureCelciusC = useCallback(() => {
     setTemperatureCelciusCVisible(false);
@@ -24,17 +26,28 @@ const Settings = () => {
 
   return (
     <>
-      <View style={[styles.settings, styles.iconLayout]}>
+      
+    
+      <View style={[styles.settings]}>
+
+
+      <View style={styles.topbar}> 
+
         <Pressable
           style={styles.x}
           onPress={() => navigation.navigate("0")}
         >
           <Image
-            style={[styles.icon, styles.iconLayout]}
+            style={[styles.icon]}
             resizeMode="cover"
             source={require("../assets/x1.png")}
           />
+
+        
         </Pressable>
+        </View >
+        <View style={styles.SettingsBox1}
+>
         <View style={[styles.vectorParent, styles.frameChildLayout]}>
           <Image
             style={[styles.frameChild, styles.frameLayout1]}
@@ -98,6 +111,8 @@ const Settings = () => {
            </Text>
             </Pressable>
           </View>
+          </View>
+
         </View>
         <View style={[styles.vectorGroup, styles.frameItemLayout]}>
           <Image
@@ -149,6 +164,19 @@ const Settings = () => {
 };
 
 const styles = StyleSheet.create({
+
+  topbar:{
+    flexDirection: 'row',
+    marginTop: 0,
+    justifyContent:'flex-end',
+    marginRight:0,
+  },
+  SettingsBox1:{
+    flexDirection: 'column',
+    marginTop:0,
+    justifyContent:'space-around',
+    marginLeft: 0
+    },
   iconLayout: {
     overflow: "hidden",
     width: "100%",
@@ -368,9 +396,11 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   settings: {
-    backgroundColor: Color.gainsboro_100,
+    backgroundColor: "#dedede",
     flex: 1,
-    height: 800,
+    width: "100%",
+    height: 0,
+    overflow: "hidden",
   },
 });
 
