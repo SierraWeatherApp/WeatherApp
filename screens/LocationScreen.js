@@ -139,30 +139,30 @@ const LocationScreen = () => {
     }
     const getWeatherIcon = (weathercode) => {
       if(weathercode <= 1){
-        return (require("../assets/sunny.png"))
+        return (require("../assets/weatherIcons/sunny.png"))
       }
       else if(weathercode <= 2){
-        return (require("../assets/cloudy.png"))
+        return (require("../assets/weatherIcons/cloudy.png"))
       }
       else if(weathercode <= 5){
-        return (require("../assets/overcast.png"))
+        return (require("../assets/weatherIcons/overcast.png"))
       }
       else if(weathercode <= 7 || (weathercode >= 30 && weathercode <= 35)){
-        return (require("../assets/sandstorm.png"))
+        return (require("../assets/weatherIcons/sandstorm.png"))
       }
       else if((weathercode >= 70 && weathercode <= 79)||
         (weathercode >= 75 && weathercode <= 76)){
-        return (require("../assets/snow.png"))
+        return (require("../assets/weatherIcons/snow.png"))
       }
       else if((weathercode >= 95 && weathercode <= 99)||
         weathercode == 17 || weathercode == 29 || weathercode == 13){
-        return (require("../assets/thunder.png"))
+        return (require("../assets/weatherIcons/thunder.png"))
       }
       else if(weathercode <= 16 || (weathercode >= 40 && weathercode <= 49)){
-        return (require("../assets/overcast.png"))
+        return (require("../assets/weatherIcons/overcast.png"))
       }
       else{
-        return (require("../assets/rain.png"))
+        return (require("../assets/weatherIcons/rain.png"))
       }
     };
     const getUnit = (unit) =>{

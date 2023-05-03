@@ -1,6 +1,5 @@
 import React, { Suspense, memo } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import DayHomePage from "./DayHomePage";
 import SideScreen from "./SideScreen";
 import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from '@react-navigation/native';

@@ -3,7 +3,6 @@ import { LogBox } from 'react-native';
 import React, { useState, useCallback, useEffect } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import DayHomePage from "./screens/DayHomePage";
 import FAQ from "./screens/FAQ";
 import About from "./screens/About";
 import ContactUs from "./screens/ContactUs";
@@ -11,11 +10,8 @@ import HelpSupport from "./screens/HelpSupport";
 import Privacy from "./screens/Privacy";
 import RecommendationsFeedback from "./screens/RecommendationsFeedback";
 import AvatarChangeClothing from "./screens/AvatarChangeClothing";
-import WeatherReport from "./screens/WeatherReport";
 import ResetWindow from "./screens/ResetWindow";
-import SwitchCity from "./screens/SwitchCity";
 import Settings from "./screens/Settings";
-import ClothingRecommendation from "./screens/ClothingRecommendation";
 import LocationScreen from "./screens/LocationScreen";
 import AddCity from "./screens/AddCity";
 import ClothingScreen from "./screens/ClothingScreen";
@@ -177,29 +173,14 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="WeatherReport"
-              component={WeatherReport}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
               name="ResetWindow"
               component={ResetWindow}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="SwitchCity"
-              component={SwitchCity}
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Settings"
               component={Settings}
               options={{ headerShown: false, animation: "slide_from_right" }}
-            />
-            <Stack.Screen
-              name="ClothingRecommendation"
-              component={ClothingRecommendation}
-              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="LocationScreen"

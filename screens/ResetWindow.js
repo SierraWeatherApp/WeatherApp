@@ -10,7 +10,7 @@ const ResetWindow = () => {
     <View style={[styles.resetWindow, styles.iconLayout]}>
       <Pressable
         style={styles.x}
-        onPress={() => navigation.navigate("DayHomePage")}
+        onPress={() => navigation.navigate("Settings")}
       >
         <Image
           style={[styles.icon, styles.iconLayout]}

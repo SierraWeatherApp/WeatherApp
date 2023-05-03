@@ -3,9 +3,6 @@ import { Image, StyleSheet, Text, View, Pressable, Dimensions, PixelRatio} from 
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Color, FontSize, FontFamily } from "../GlobalStyles";
-import {
-  getAllData,
-} from "./ApiToString";
 import { getWeather } from "./CodeToWeather";
 import { getWinterJackets, 
          getlongSleeved,
@@ -122,7 +119,7 @@ const WeatherScreen = ( { city} ) => {
               <Image
                 style={[]}
                 resizeMode="cover"
-                source={require("../assets/cloudy.png")}
+                source={require("../assets/weatherIcons/cloudy.png")}
               />
               <View style={[styles.weatherInfoTempBox]}>
                 <Text style={[styles.weatherText, styles.temperature]}>{tempString}</Text>
@@ -186,7 +183,7 @@ const WeatherScreen = ( { city} ) => {
         <View style={[styles.botBar]}>
           <Pressable
             style={[]}
-            onPress={() => navigation.navigate("ClothingRecommendation")}
+            onPress={() => navigation.navigate("Settings")}
           >
             <Image
               style={[styles.botBarIcon]}
