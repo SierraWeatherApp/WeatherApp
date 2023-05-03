@@ -3,145 +3,171 @@ import { Image, StyleSheet, Pressable, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, Border, FontFamily, Padding } from "../GlobalStyles";
 
-const FAQ = () => {
-  const navigation = useNavigation();
+import { useEffect, useState } from 'react';
+import {
+  SafeAreaView,
+  LayoutAnimation,
+  ScrollView,
+  UIManager,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
+
+const ExpandableComponent = ({ item, onClickFunction }) => {
+  //Custom Component for the Expandable List
+  const [layoutHeight, setLayoutHeight] = useState(0);
+
+  useEffect(() => {
+    if (item.isExpanded) {
+      setLayoutHeight(null);
+    } else {
+      setLayoutHeight(0);
+    }
+  }, [item.isExpanded]);
 
   return (
-    <View style={styles.faq}>
-      <Pressable
-        style={styles.arrow}
-        onPress={() => navigation.navigate("Settings")}
-      >
-        <Image
-          style={styles.icon}
-          resizeMode="cover"
-          source={require("../assets/arrow.png")}
-        />
-      </Pressable>
-      <View style={styles.faqInner}>
-        <View style={styles.vectorParent}>
-          <Image
-            style={styles.frameChild}
-            resizeMode="cover"
-            source={require("../assets/rectangle-8.png")}
-          />
-          <View style={styles.accordionParent}>
-            <View style={styles.accordion}>
-              <View style={styles.headlineAndIcon}>
-                <Text style={styles.question1}>Test</Text>
-                <Text style={[styles.text, styles.textTypo]}>+</Text>
-              </View>
-              <Text style={[styles.ipsumMethodSomething, styles.textTypo]}>
-                Ipsum Method something something
-              </Text>
-            </View>
-            <View style={styles.accordion}>
-              <View style={styles.headlineAndIcon}>
-                <Text style={styles.question1}>Test</Text>
-                <Text style={[styles.text, styles.textTypo]}>+</Text>
-              </View>
-              <Text style={[styles.ipsumMethodSomething, styles.textTypo]}>
-                Ipsum Method something something
-              </Text>
-            </View>
-            <View style={styles.frameItem} />
-            <View style={styles.frameItem} />
-            <View style={styles.frameItem} />
-            <View style={styles.frameItem} />
-            <View style={styles.frameItem} />
-          </View>
-        </View>
+    <View>
+      {/*Header of the Expandable List Item*/}
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={onClickFunction}
+        style={styles.header}>
+        <Text style={styles.headerText}>{item.category_name}</Text>
+      </TouchableOpacity>
+      <View
+        style={{
+          height: layoutHeight,
+          overflow: 'hidden',
+        }}>
+        {/*Content under the header of the Expandable List Item*/}
+        {item.subcategory.map((item, key) => (
+          <TouchableOpacity
+            key={key}
+            style={styles.content}
+            >
+            <Text style={styles.text}>
+              {item.val}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
     </View>
   );
 };
 
+const FAQ = () => {
+  const [listDataSource, setListDataSource] = useState(CONTENT);
+  const [multiSelect, setMultiSelect] = useState(true);
+
+  if (Platform.OS === 'android') {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+
+  const updateLayout = (index) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    const array = [...listDataSource];
+    if (multiSelect) {
+      // If multiple select is enabled
+      array[index]['isExpanded'] = !array[index]['isExpanded'];
+    } else {
+      // If single select is enabled
+      array.map((value, placeindex) =>
+        placeindex === index
+          ? (array[placeindex]['isExpanded'] = !array[placeindex]['isExpanded'])
+          : (array[placeindex]['isExpanded'] = false)
+      );
+    }
+    setListDataSource(array);
+  };
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={{ flexDirection: 'row', padding: 12 }}>
+          <Text style={styles.titleText}>FAQ</Text>
+        </View>
+        <ScrollView>
+          {listDataSource.map((item, key) => (
+            <ExpandableComponent
+              key={item.category_name}
+              onClickFunction={() => {
+                updateLayout(key);
+              }}
+              item={item}
+            />
+          ))}
+        </ScrollView>
+      </View>
+    </SafeAreaView>
+  );
+};
+
 const styles = StyleSheet.create({
-  textTypo: {
-    fontSize: FontSize.heading1Medium_size,
-    color: Color.black,
-    alignSelf: "stretch",
-  },
-  icon: {
-    height: "100%",
-    width: "100%",
-  },
-  arrow: {
-    left: 27,
-    top: 45,
-    width: 49,
-    height: 40,
-    position: "absolute",
-  },
-  frameChild: {
-    top: 0,
-    left: 0,
-    borderRadius: Border.br_4xl,
-    width: 320,
-    height: 484,
-    position: "absolute",
-  },
-  question1: {
-    fontSize: FontSize.size_base,
-    textAlign: "left",
-    color: Color.black,
-    fontFamily: FontFamily.montserratBold,
-    fontWeight: "700",
+  container: {
     flex: 1,
+  },
+  titleText: {
+    flex: 1,
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    alignSelf: 'center',
+    fontFamily: FontFamily.heading1Medium,
+  },
+  header: {
+    backgroundColor: '#F5FCFF',
+    padding: 20,
+  },
+  headerText: {
+    fontSize: 16,
+    fontWeight: '500',
+    fontFamily: FontFamily.montserratBold,
+    fontWeight: 'bold',
+  },
+  separator: {
+    height: 0.5,
+    backgroundColor: '#808080',
+    width: '95%',
+    marginLeft: 16,
+    marginRight: 16,
   },
   text: {
-    textAlign: "right",
-    fontFamily: FontFamily.montserratBold,
-    fontWeight: "700",
-    fontSize: FontSize.heading1Medium_size,
-    flex: 1,
-  },
-  headlineAndIcon: {
-    flexDirection: "row",
-    alignSelf: "stretch",
-    alignItems: "center",
-  },
-  ipsumMethodSomething: {
+    fontSize: 16,
+    color: '#606070',
+    padding: 10,
     fontFamily: FontFamily.heading1Medium,
-    height: 65,
-    display: "none",
-    marginTop: 20,
-    textAlign: "left",
   },
-  accordion: {
-    width: 299,
-    padding: Padding.p_xl,
-    alignItems: "flex-end",
-  },
-  frameItem: {
-    backgroundColor: Color.red,
-    width: 142,
-    height: 130,
-  },
-  accordionParent: {
-    top: 14,
-    left: 10,
-    height: 465,
-    position: "absolute",
-  },
-  vectorParent: {
-    width: 319,
-    height: 484,
-    overflow: "hidden",
-  },
-  faqInner: {
-    top: 93,
-    left: 21,
-    alignItems: "center",
-    position: "absolute",
-  },
-  faq: {
-    backgroundColor: Color.gainsboro_100,
-    height: 800,
-    overflow: "hidden",
-    width: "100%",
-    flex: 1,
+  content: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: '#fff',
   },
 });
+
+const CONTENT = [
+  {
+    isExpanded: false,
+    category_name: 'What is Wea(the)r it?',
+    subcategory: [
+      { id: 0, val: 'It\'s more than a weather app.' },
+    ],
+  },
+  {
+    isExpanded: false,
+    category_name: 'How do I use this app?',
+    subcategory: [
+      { id: 1, val: 'Choose your city and get clothing recommendations.' },
+      { id: 2, val: 'Choose your trip destination and get packing recommendations.' },
+    ],
+  },
+  {
+    isExpanded: false,
+    category_name: 'Is it free?',
+    subcategory: [
+      { id: 3, val: 'Yep.' },
+    ],
+  },
+];
+
 
 export default FAQ;
