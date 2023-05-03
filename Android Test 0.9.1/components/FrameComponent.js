@@ -27,11 +27,17 @@ async function setUnit(unit, dID) {
   });
 }
 
+import { useNavigation } from '@react-navigation/native';
+
 const FrameComponent = ({ onClose, temperatureUnit, onToggleTemperatureUnit }) => {
   const [dID, setdID] = useState('123');
   const [isFahrenheitPressed, setIsFahrenheitPressed] = React.useState(
     temperatureUnit === "fahrenheit"
   );
+  const navigation = useNavigation();
+
+
+
   useEffect(() => {
       const getUsername = async () => {
         var id = await AsyncStorage.getItem('key');
@@ -49,11 +55,13 @@ const FrameComponent = ({ onClose, temperatureUnit, onToggleTemperatureUnit }) =
   
   const handleFahrenheitPress = () => {
     setIsFahrenheitPressed(true);
+    navigation.navigate('Settings', { temperatureUnit: 'Fahrenheit' });
     setUnit('fahrenheit', dID)
   };
 
   const handleCelciusPress = () => {
     setIsFahrenheitPressed(false);
+    navigation.navigate('Settings', { temperatureUnit: 'Celsius' });
     setUnit('celsius', dID)
   };
 
