@@ -91,6 +91,34 @@ const WeatherScreen = ( { city} ) => {
   else{
     umbrella = require('../assets/empty.png')
   }
+  const getWeatherIcon = (weathercode) => {
+    if(weathercode <= 1){
+      return (require("../assets/weatherIcons/sunny.png"))
+    }
+    else if(weathercode <= 2){
+      return (require("../assets/weatherIcons/cloudy.png"))
+    }
+    else if(weathercode <= 5){
+      return (require("../assets/weatherIcons/overcast.png"))
+    }
+    else if(weathercode <= 7 || (weathercode >= 30 && weathercode <= 35)){
+      return (require("../assets/weatherIcons/sandstorm.png"))
+    }
+    else if((weathercode >= 70 && weathercode <= 79)||
+      (weathercode >= 75 && weathercode <= 76)){
+      return (require("../assets/weatherIcons/snow.png"))
+    }
+    else if((weathercode >= 95 && weathercode <= 99)||
+      weathercode == 17 || weathercode == 29 || weathercode == 13){
+      return (require("../assets/weatherIcons/thunder.png"))
+    }
+    else if(weathercode <= 16 || (weathercode >= 40 && weathercode <= 49)){
+      return (require("../assets/weatherIcons/overcast.png"))
+    }
+    else{
+      return (require("../assets/weatherIcons/rain.png"))
+    }
+  };
   return (
     <LinearGradient
       locations={[0, 1]}
@@ -117,9 +145,9 @@ const WeatherScreen = ( { city} ) => {
           <View style={[styles.weatherInfo]}>
             <View style={[]}>
               <Image
-                style={[]}
+                style={[styles.weatherIcon]}
                 resizeMode="cover"
-                source={require("../assets/weatherIcons/cloudy.png")}
+                source={getWeatherIcon(city.weathercode)}
               />
               <View style={[styles.weatherInfoTempBox]}>
                 <Text style={[styles.weatherText, styles.temperature]}>{tempString}</Text>
@@ -215,6 +243,9 @@ const WeatherScreen = ( { city} ) => {
 };
 
 const styles = StyleSheet.create({
+  weatherIcon:{
+    margin: 5
+  },
   upperBox:{
     marginHorizontal: 10,
   },
