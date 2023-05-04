@@ -28,8 +28,9 @@ import { getWeather } from "./screens/CodeToWeather";
 import rootReducer from './reducers/root';
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setCities } from './actions/cities';
+import { setDeviceID } from './actions/deviceID';
 import { setCelcius, setFahrenheit } from './actions/unit';
 
 const store = configureStore({reducer: rootReducer});
@@ -95,11 +96,10 @@ const AppWrapper = () => {
       setIsLoading(false)
     };
     if(isLoading && dID != '123'){
+      dispatch(setDeviceID(dID))
       fetchCities();
     }
     else{
-      console.log('hi' + dID)
-      console.log(isLoading)
     }
   }, [dID, isLoading]);
 
@@ -126,15 +126,15 @@ const AppWrapper = () => {
   else{
     dispatch(setCelcius())
   }
-  console.log(data)
-  // Create a memoized callback function that updates the state
   dispatch(setCities(data.cities))
+  //const stateCities = useSelector(state => state.cities)
+  // Create a memoized callback function that updates the state
   return (
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Home" options={{ headerShown: false }}>
+          <Stack.Screen name="Home" options={{ headerShown: false}}>
           {() => <HomeTabs cities={data.cities} />}
           </Stack.Screen>
             <Stack.Screen

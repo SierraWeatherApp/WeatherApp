@@ -33,41 +33,24 @@ async function setUnit(unit, dID) {
 
 const FrameComponent = ({ onClose, temperatureUnit, onToggleTemperatureUnit }) => {
   const dispatch = useDispatch()
-  const [dID, setdID] = useState('123');
+  const deviceID = useSelector(state => state.deviceID)
   const [isFahrenheitPressed, setIsFahrenheitPressed] = React.useState(
     temperatureUnit === "fahrenheit"
   );
   const navigation = useNavigation();
-
-
-
-  useEffect(() => {
-      const getUsername = async () => {
-        var id = await AsyncStorage.getItem('key');
-        if(id){
-          setdID(id)
-        }
-        else{
-          const newID = uuid.v4();
-          await AsyncStorage.setItem('key', newID);
-          setdID(newID)
-        }
-      };
-      getUsername();
-  }, []);
   
   const handleFahrenheitPress = () => {
     setIsFahrenheitPressed(true);
     dispatch(setFahrenheit())
     navigation.navigate('Settings', { temperatureUnit: 'Fahrenheit' });
-    setUnit('fahrenheit', dID)
+    setUnit('fahrenheit', deviceID)
   };
 
   const handleCelciusPress = () => {
     setIsFahrenheitPressed(false);
     dispatch(setCelcius())
     navigation.navigate('Settings', { temperatureUnit: 'Celsius' });
-    setUnit('celsius', dID)
+    setUnit('celsius', deviceID)
   };
 
   return (

@@ -3,7 +3,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import SideScreen from "./SideScreen";
 import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from '@react-navigation/native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 
 const Tab = createMaterialTopTabNavigator();
@@ -23,8 +23,7 @@ const getC = (city, i) => {
       <Tab.Screen
         key={id}
         name={name}
-        component={React.useCallback(
-          () => (
+        component={React.memo(() => (
             <CityScreen city={city}/>
           ),
           [city]
@@ -34,19 +33,18 @@ const getC = (city, i) => {
   }
 }
 const getAllC = (cities) => {
-  var array = []
-  for(var i = 0; i < cities.length; i++){
-    array.push(getC(cities[i], i))
-  }
-  return array
+  const [tabList, setTabList] = useState(cities);
+  useEffect(() => {
+    setTabList(cities);
+  }, [cities]);
+  return <Tab.Navigator tabBar={() => null}>
+  {tabList.map((city, index) => getC(city,index))}
+</Tab.Navigator>
 }
 const HomeTabs = ({ cities }) => {
-  const s = useSelector(state => state.cities)
-  console.log(s)
+  const data = useSelector(state => state.cities)
   return (
-    <Tab.Navigator tabBar={() => null}>
-      {getAllC(s.cities)}
-    </Tab.Navigator>
+    getAllC(data.cities)
   );
 };
 

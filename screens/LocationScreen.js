@@ -9,100 +9,36 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux'
-import { setCities } from '../actions/cities';
+import { setCities, deleteCity as delC } from '../actions/cities';
 
+const changeOrder = async (cities, deviceID) => {
+  const url = `http://${getIP()}:8080/api/v1/user/cities/change_order`;
+  const device_id = deviceID
+  const headers = {
+    'Content-Type': 'application/json',
+    'x-device-id': device_id,
+  };
+  var cityArray = []
+  for(var i = 0; i < cities.length; i++){
+    cityArray.push(cities[i].id)
+  }
+  const params = {cities_ids: cityArray}
+  fetch(url, {
+    method: 'PATCH',
+    headers: headers,
+    body: JSON.stringify(params),
+  });
+};
 
 const LocationScreen = () => {
   const dispatch = useDispatch()
   const unit = useSelector(state => state.unit)
-  const [dID, setdID] = useState('123');
-  const [updated, setUpdated] = useState(false)
-  useEffect(() => {
-      const getUsername = async () => {
-        var id = await AsyncStorage.getItem('key');
-        if(id){
-          setdID(id)
-        }
-        else{
-          const newID = uuid.v4();
-          await AsyncStorage.setItem('key', newID);
-          setdID(newID)
-        }
-      };
-      getUsername();
-  }, []);
-  const [data, setData] = useState([{}]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [dragged, setDragged] = useState(false);
+  const data = useSelector(state => state.cities)
+  const deviceID = useSelector(state => state.deviceID)
   const navigation = useNavigation();
-  useEffect(() => {
-    const fetchCities = async () => {
-      const response = await fetch(
-        `http://${getIP()}:8080/api/v1/user?temperature=true&weathercode=true`, {
-            method: 'GET',
-            headers: {'x-device-id': dID}
-          }
-      );
-      const jsonData = await response.json();
-      var cityArray = []
-      for(var i = 0; i < jsonData['cities'].length; i++){
-        weather = jsonData['cities'][i]['weather']
-        //weather = await fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
-        cityArray.push({city_name: jsonData['cities'][i]['city_name'], 
-        key: i + 1, 
-        country: jsonData['cities'][i]['country'],
-        id: jsonData['cities'][i]['id'], 
-        temperature: weather['temperature'], 
-        weather: getWeather(weather['weathercode']),
-        weathercode: weather['weathercode'],
-        humidity: weather['humidity'],
-        windspeed: weather['windspeed'],
-        head: 'empty',
-        shirt: 'long-sleeved',
-        jacket: 'light-jacket',
-        pants: 'shorts',
-        shoes: 'rain',
-        umbrella: 'true',
-        })
-      }
-      setData(cityArray)
-      setIsLoading(false);
-      setUpdated(true)
-    };
-    const changeOrder = async (cities) => {
-      const url = `http://${getIP()}:8080/api/v1/user/cities/change_order`;
-      const device_id = dID
-      const headers = {
-        'Content-Type': 'application/json',
-        'x-device-id': device_id,
-      };
-      var cityArray = []
-      for(var i = 0; i < cities.length; i++){
-        cityArray.push(cities[i].id)
-      }
-      const params = {cities_ids: cityArray}
-      fetch(url, {
-        method: 'PATCH',
-        headers: headers,
-        body: JSON.stringify(params),
-      });
-    };
-    if(isLoading && dID != '123'){
-      fetchCities();
-    }
-    else if(dragged){
-      changeOrder(data)
-      setDragged(false)
-    }
-  }, [isLoading, dragged, dID]);
-  useFocusEffect(
-    React.useCallback(() => {
-      setIsLoading(true);
-    }, [])
-  );
   
   const deleteCity = async (cityId) => {
-    const device_id = dID
+    const device_id = deviceID
     const response = await fetch(`http://${getIP()}:8080/api/v1/user/cities/destroy`, {
       method: 'PATCH',
       headers: {
@@ -117,7 +53,7 @@ const LocationScreen = () => {
       console.log(`Error deleting city with ID ${cityId}: ${response.status}`);
       return;
     }
-    setUpdated(true)
+    //setUpdated(true)
     // Success! City was deleted.
   };
 
@@ -140,13 +76,14 @@ const LocationScreen = () => {
     };
     const deleteItem = (item) => {
       const id = item['id']
-      const oldData = data
+      const oldData = data.cities
       var newData = []
       oldData.forEach((element) => {
         if(element['id'] != id)
           newData.push(element)
       });
-      setData(newData)
+      //setData(newData)
+      dispatch(delC(id))
       deleteCity(item['id'])
     }
     const getWeatherIcon = (weathercode) => {
@@ -214,8 +151,10 @@ const LocationScreen = () => {
     );
   };
   const onDragEnd = ({ data }) => {
-    setData(data);
-    setDragged(true)
+    dispatch(setCities(data))
+    changeOrder(data, deviceID)
+    //setData(data);
+    //setDragged(true)
   };
   return (
      <View style={[styles.locationScreen]}>
@@ -245,7 +184,7 @@ const LocationScreen = () => {
           <View style={[styles.cityList]}>
             <GestureHandlerRootView>
               <DraggableFlatList
-                data={data}
+                data={data.cities}
                 renderItem={createCityList}
                 keyExtractor={(item) => item.key}
                 onDragEnd={onDragEnd}
