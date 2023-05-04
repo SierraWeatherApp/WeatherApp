@@ -8,8 +8,13 @@ import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useSelector, useDispatch } from 'react-redux'
+import { setCities } from '../actions/cities';
+
 
 const LocationScreen = () => {
+  const dispatch = useDispatch()
+  const unit = useSelector(state => state.unit)
   const [dID, setdID] = useState('123');
   const [updated, setUpdated] = useState(false)
   useEffect(() => {
@@ -44,13 +49,20 @@ const LocationScreen = () => {
         weather = jsonData['cities'][i]['weather']
         //weather = await fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
         cityArray.push({city_name: jsonData['cities'][i]['city_name'], 
-          key: i + 1, 
-          country: jsonData['cities'][i]['country'],
-          id: jsonData['cities'][i]['id'], 
-          temp: weather['temperature'], 
-          weather: getWeather(weather['weathercode']),
-          weathercode: weather['weathercode'],
-          unit: jsonData['user_temp_unit']
+        key: i + 1, 
+        country: jsonData['cities'][i]['country'],
+        id: jsonData['cities'][i]['id'], 
+        temperature: weather['temperature'], 
+        weather: getWeather(weather['weathercode']),
+        weathercode: weather['weathercode'],
+        humidity: weather['humidity'],
+        windspeed: weather['windspeed'],
+        head: 'empty',
+        shirt: 'long-sleeved',
+        jacket: 'light-jacket',
+        pants: 'shorts',
+        shoes: 'rain',
+        umbrella: 'true',
         })
       }
       setData(cityArray)
@@ -165,7 +177,7 @@ const LocationScreen = () => {
         return (require("../assets/weatherIcons/rain.png"))
       }
     };
-    const getUnit = (unit) =>{
+    const getUnit = () =>{
       if(unit === 'fahrenheit'){
         return ('F')
       }
@@ -188,7 +200,7 @@ const LocationScreen = () => {
               <Text style={[styles.cityListCond]}>{item.weather}</Text>
             </View>
             <View style={[styles.cityListLeft]}>
-              <Text style={[styles.cityListTemp]}>{item.temp}°{getUnit(item.unit)}</Text>
+              <Text style={[styles.cityListTemp]}>{item.temperature}°{getUnit()}</Text>
               <Image
                 style={[styles.cityListIcon]}
                 resizeMode="cover"
@@ -205,7 +217,6 @@ const LocationScreen = () => {
     setData(data);
     setDragged(true)
   };
-  console.log(updated)
   return (
      <View style={[styles.locationScreen]}>
         <View style={[styles.topBar]}>

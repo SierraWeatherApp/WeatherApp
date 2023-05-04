@@ -15,23 +15,33 @@ import { getWinterJackets,
          getSneakers,
          getShorts,
          getLightJacket } from "./getClothing";
+import { useSelector } from 'react-redux'
 
 //For scaling [default dimension: 360x800]
 const { width, height } = Dimensions.get('window');
 
 const WeatherScreen = ( { city} ) => {
+  const unit = useSelector(state => state.unit)
+  const getUnit = () =>{
+    if(unit === 'fahrenheit'){
+      return ('F')
+    }
+    else{
+      return ('C')
+    }
+  }
   const navigation = useNavigation();
   const positionString = city.city_name;
   const weatherString = getWeather(city.weathercode);
   const tempString = Math.round(city.temperature);
   const windString = city.windspeed;
   const humidityString = city.humidity;
-  useFocusEffect(
+  /*useFocusEffect(
     React.useCallback(() => {
       console.log('asdsa')
         //updateParent();
     }, [])
-  );
+  );*/
   var hat
   var shirt
   var jacket
@@ -152,7 +162,7 @@ const WeatherScreen = ( { city} ) => {
               />
               <View style={[styles.weatherInfoTempBox]}>
                 <Text style={[styles.weatherText, styles.temperature]}>{tempString}</Text>
-                <Text style={[styles.weatherText, styles.tempUnit]}>°{'C'}</Text>
+                <Text style={[styles.weatherText, styles.tempUnit]}>°{getUnit()}</Text>
                 <Text style={[styles.weatherText, styles.weatherCond]}>{weatherString}</Text>
               </View>
               <Text style={[styles.weatherText]}>Humidity: {humidityString}% {"\n"}
@@ -212,7 +222,7 @@ const WeatherScreen = ( { city} ) => {
         <View style={[styles.botBar]}>
           <Pressable
             style={[]}
-            onPress={() => navigation.navigate("Settings")}
+            onPress={() => navigation.navigate("Test")}
           >
             <Image
               style={[styles.botBarIcon]}
@@ -344,5 +354,6 @@ const styles = StyleSheet.create({
     backgroundColor: Color.gainsboro_100,
   },
 });
+
 
 export default WeatherScreen;

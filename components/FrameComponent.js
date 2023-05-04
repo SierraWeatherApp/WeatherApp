@@ -4,6 +4,10 @@ import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getIP } from "../screens/fetchIP" 
+import { setFahrenheit, setCelcius } from '../actions/unit';
+import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+
 async function setUnit(unit, dID) {
   const url = `http://${getIP()}:8080/api/v1/user`;
   const device_id = dID
@@ -27,9 +31,8 @@ async function setUnit(unit, dID) {
   });
 }
 
-import { useNavigation } from '@react-navigation/native';
-
 const FrameComponent = ({ onClose, temperatureUnit, onToggleTemperatureUnit }) => {
+  const dispatch = useDispatch()
   const [dID, setdID] = useState('123');
   const [isFahrenheitPressed, setIsFahrenheitPressed] = React.useState(
     temperatureUnit === "fahrenheit"
@@ -55,12 +58,14 @@ const FrameComponent = ({ onClose, temperatureUnit, onToggleTemperatureUnit }) =
   
   const handleFahrenheitPress = () => {
     setIsFahrenheitPressed(true);
+    dispatch(setFahrenheit())
     navigation.navigate('Settings', { temperatureUnit: 'Fahrenheit' });
     setUnit('fahrenheit', dID)
   };
 
   const handleCelciusPress = () => {
     setIsFahrenheitPressed(false);
+    dispatch(setCelcius())
     navigation.navigate('Settings', { temperatureUnit: 'Celsius' });
     setUnit('celsius', dID)
   };

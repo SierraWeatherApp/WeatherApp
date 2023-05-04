@@ -14,6 +14,7 @@ import ResetWindow from "./screens/ResetWindow";
 import Settings from "./screens/Settings";
 import LocationScreen from "./screens/LocationScreen";
 import AddCity from "./screens/AddCity";
+import CounterContainer from './screens/test';
 import ClothingScreen from "./screens/ClothingScreen";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import SideScreen from "./screens/SideScreen";
@@ -24,10 +25,18 @@ import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getIP } from "./screens/fetchIP" 
 import { getWeather } from "./screens/CodeToWeather";
+import rootReducer from './reducers/root';
+import { configureStore } from '@reduxjs/toolkit'
+import { Provider } from 'react-redux';
+import { useDispatch } from 'react-redux'
+import { setCities } from './actions/cities';
+import { setCelcius, setFahrenheit } from './actions/unit';
 
+const store = configureStore({reducer: rootReducer});
 LogBox.ignoreAllLogs(true)
 
-const App = () => {
+const AppWrapper = () => {
+  const dispatch = useDispatch()
   const [dID, setdID] = useState('123');
   const [parentState, setParentState] = useState(false);
   useEffect(() => {
@@ -70,7 +79,6 @@ const App = () => {
           temperature: weather['temperature'], 
           weather: getWeather(weather['weathercode']),
           weathercode: weather['weathercode'],
-          unit: jsonData['user_temp_unit'],
           humidity: weather['humidity'],
           windspeed: weather['windspeed'],
           head: 'empty',
@@ -81,7 +89,9 @@ const App = () => {
           umbrella: 'true',
         })
       }
-      setData(cityArray)
+      const data = {unit: jsonData['user_temp_unit'],
+                    cities: cityArray}
+      setData(data)
       setIsLoading(false)
     };
     if(isLoading && dID != '123'){
@@ -110,14 +120,22 @@ const App = () => {
   if ((!fontsLoaded && !error )|| isLoading) {
     return null;
   }
+  if(data.unit == 'fahrenheit'){
+    dispatch(setFahrenheit())
+  }
+  else{
+    dispatch(setCelcius())
+  }
+  console.log(data)
   // Create a memoized callback function that updates the state
+  dispatch(setCities(data.cities))
   return (
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" options={{ headerShown: false }}>
-          {() => <HomeTabs cities={data} />}
+          {() => <HomeTabs cities={data.cities} />}
           </Stack.Screen>
             <Stack.Screen
               name="AddCity"
@@ -127,6 +145,11 @@ const App = () => {
                 animationEnabled: false,
                 animation: "none",
               }}
+            />
+            <Stack.Screen
+              name="Test"
+              component={CounterContainer}
+              options={{ title: () => <CounterContainer /> }}
             />
             <Stack.Screen
               name="FAQ"
@@ -193,4 +216,12 @@ const App = () => {
     </>
   );
 };
+
+const App = () => {
+  return(
+    <Provider store={store}>
+      <AppWrapper/>
+    </Provider>
+  )
+}
 export default App;

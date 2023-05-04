@@ -4,6 +4,7 @@ import SideScreen from "./SideScreen";
 import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from '@react-navigation/native';
 import { useState } from 'react';
+import { useSelector } from "react-redux";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -40,9 +41,11 @@ const getAllC = (cities) => {
   return array
 }
 const HomeTabs = ({ cities }) => {
+  const s = useSelector(state => state.cities)
+  console.log(s)
   return (
     <Tab.Navigator tabBar={() => null}>
-      {getAllC(cities)}
+      {getAllC(s.cities)}
     </Tab.Navigator>
   );
 };
