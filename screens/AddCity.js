@@ -81,7 +81,7 @@ const AddCity = () => {
         temperature: weather['temperature'], 
         weather: getWeather(weather['weathercode']),
         weathercode: weather['weathercode'],
-        humidity: weather['humidity'],
+        humidity: weather['relativehumidity_2m'],
         windspeed: weather['windspeed'],
         head: 'empty',
         shirt: 'long-sleeved',

@@ -69,6 +69,7 @@ const AppWrapper = () => {
           }
       );
       const jsonData = await response.json();
+      console.log(jsonData['cities'][0]['weather'])
       var cityArray = []
       for(var i = 0; i < jsonData['cities'].length; i++){
         weather = jsonData['cities'][i]['weather']
@@ -80,7 +81,7 @@ const AppWrapper = () => {
           temperature: weather['temperature'], 
           weather: getWeather(weather['weathercode']),
           weathercode: weather['weathercode'],
-          humidity: weather['humidity'],
+          humidity: weather['relativehumidity_2m'],
           windspeed: weather['windspeed'],
           head: 'empty',
           shirt: 'long-sleeved',
