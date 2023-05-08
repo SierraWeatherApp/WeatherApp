@@ -97,7 +97,7 @@ const AppWrapper = () => {
       setData(data)
       setIsLoading(false)
     };
-    if(isLoading && dID != '123'){
+    if(isLoading && dID !== '123'){
       dispatch(setDeviceID(dID))
       fetchCities();
     }
@@ -122,7 +122,7 @@ const AppWrapper = () => {
   if ((!fontsLoaded && !error )|| isLoading) {
     return null;
   }
-  if(data.unit == 'fahrenheit'){
+  if(data.unit === 'fahrenheit'){
     dispatch(setFahrenheit())
   }
   else{
