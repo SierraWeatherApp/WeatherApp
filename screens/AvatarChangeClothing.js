@@ -2,10 +2,33 @@ import * as React from "react";
 import { Image, StyleSheet, View, Text, Pressable, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
+import { getClothing } from "./getClothingMale";
+import { useDispatch, useSelector } from 'react-redux';
+import { getClothing as getClothingMale } from "./getClothingMale";
+import { getClothing as getClothingFemale } from "./getClothingFemale";
 
-const AvatarChangeClothing = () => {
+const AvatarChangeClothing = ({route}) => {
   const navigation = useNavigation();
-
+  const gender = useSelector(state => state.clothing).Gender
+  const clothingRec = gender === 'male' ? getClothingMale(route.params.city) : getClothingFemale(route.params.city);
+  const bodyImage = (type) => {
+    if(gender == 'male'){
+      if(type === 'upper'){
+        return require("../assets/male-body/male-upper-body.png")
+      }
+      else if(type === 'lower'){
+        return require("../assets/male-body/male-lower-body.png")
+      }
+    }
+    else if(gender == 'female'){
+      if(type === 'upper'){
+        return require("../assets/female-body/female-upper-body.png")
+      }
+      else if(type === 'lower'){
+        return require("../assets/female-body/female-lower-body.png")
+      }
+    }
+  }
   return (
     <View style={[styles.avatarChangeClothing]}>
       <View style={[styles.topBar]}>
@@ -37,6 +60,7 @@ const AvatarChangeClothing = () => {
           <Pressable style={[styles.clothingBox]}
             onPress={() => {
               // Pass and merge params back to home screen
+              
               navigation.navigate({
                 name: 'ClothingScreen',
                 params: { type: 'Shirt' },
@@ -46,9 +70,9 @@ const AvatarChangeClothing = () => {
           >
             <Text style={[styles.clothingBoxText]}>Shirt</Text>
             <Image
-              style={[styles.clothingImage]}
+              style={[styles.clothingImage, styles.clothingImageShirt]}
               resizeMode="cover"
-              source={require("../assets/upper-limb1-square.png")}
+              source={clothingRec.shirt}
             />
           </Pressable>
           <Pressable style={[styles.clothingBox]}
@@ -63,23 +87,56 @@ const AvatarChangeClothing = () => {
           >
             <Text style={[styles.clothingBoxText]}>Pants</Text>
             <Image
-              style={[styles.clothingImage]}
+              style={[styles.clothingImage, styles.clothingImagePants]}
               resizeMode="cover"
-              source={require("../assets/pants1-square.png")}
+              source={clothingRec.pants}
             />
           </Pressable>
         </View>
-        <View style={[styles.avatar]}>
-          <Image
-            resizeMode="cover"
-            source={require("../assets/avatar.png")}
-          />
-          <Image
-            style={[styles.sunGlassesAvatar]}
-            resizeMode="cover"
-            source={require("../assets/sun-glasses.png")}
-          />
-      </View>
+        <View style={[styles.avatarOuterBox]}>
+              <View style={[styles.avatarBody]}>
+                <Image
+                  style={[styles.avatarBodyHead]}
+                  resizeMode="cover"
+                  source={clothingRec.skin}
+                />
+                <Image
+                  style={[styles.avatarBodyUpperBody]}
+                  resizeMode="cover"
+                  source={bodyImage('upper')}
+                />
+                <Image
+                    style={[[styles.avatarBodyLowerBody]]}
+                    resizeMode="cover"
+                    source={bodyImage('lower')}
+                />
+                <Image
+                    style={[styles.clothes, styles.jacket]}
+                    resizeMode="cover"
+                    source={clothingRec.jacket}
+                />
+                <Image
+                    style={[styles.clothes, styles.shirt]}
+                    resizeMode="cover"
+                    source={clothingRec.shirt}
+                />
+                <Image
+                    style={[styles.clothes, styles.pants]}
+                    resizeMode="cover"
+                    source={clothingRec.pants}
+                />
+                <Image
+                    style={[styles.clothes, styles.shoes]}
+                    resizeMode="cover"
+                    source={clothingRec.shoes}
+                />
+                <Image
+                    style={[styles.clothes, styles.umbrella]}
+                    resizeMode="cover"
+                    source={clothingRec.umbrella}
+                />
+              </View>
+          </View>
         <View style={[styles.columnBoxes]}>
           <Pressable style={[styles.clothingBox]}
             onPress={() => {
@@ -110,9 +167,9 @@ const AvatarChangeClothing = () => {
           >
             <Text style={[styles.clothingBoxText]}>Jacket</Text>
             <Image
-              style={[styles.clothingImage]}
+              style={[styles.clothingImage, styles.clothingImageJacket]}
               resizeMode="cover"
-              source={require("../assets/upper-limb3-square.png")}
+              source={clothingRec.jacket}
             />
           </Pressable>
           <Pressable style={[styles.clothingBox]}
@@ -127,9 +184,9 @@ const AvatarChangeClothing = () => {
           >
             <Text style={[styles.clothingBoxText]}>Shoes</Text>
             <Image
-              style={[styles.clothingImage]}
+              style={[styles.clothingImage, styles.clothingImageShoes]}
               resizeMode="cover"
-              source={require("../assets/shoes-square.png")}
+              source={clothingRec.shoes}
             />
           </Pressable>
         </View>
@@ -146,10 +203,19 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
   },
   clothingImage:{
-    marginTop: 8,
-    height:50,
-    aspectRatio:1,
-
+    margin:0,
+  },
+  clothingImageJacket:{
+    transform: [{scale: 0.5}, {translateY: -45},],
+  },
+  clothingImageShirt:{
+    transform: [{scale: 0.5}, {translateY: -53},],
+  },
+  clothingImagePants:{
+    transform: [{scale: 0.5}, {translateY: -45},],
+  },
+  clothingImageShoes:{
+    transform: [{scale: 0.7}, {translateY: 20},],
   },
   sunGlassesAvatar:{
     position: 'absolute',
@@ -172,25 +238,64 @@ const styles = StyleSheet.create({
     marginTop: 2,
     color: Color.black,
     fontFamily: FontFamily.montserratBold,
+
   },
   text: {
     fontSize: FontSize.heading1Medium_size,
     textAlign: "left",
     color: Color.black,
     fontFamily: FontFamily.heading1Medium,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   clothingBox:{
-    margin: 20,
+    marginVertical: 20,
     width: 80,
     height: 80,
     backgroundColor: Color.light_gray,
+    overflow: 'hidden',
     borderRadius: 7,
     alignItems: 'center',
   },
-  avatar:{
-    marginTop: 40,
+  avatarOuterBox:{
+    alignSelf: 'center'
+  },
+  avatarBody:{
+    alignItems: 'center',
     position: 'relative',
+    transform: [{scale: 1}],
+  },
+  avatarBodyUpperBody:{
+    marginTop: -5,
+  },
+  avatarBodyLowerBody:{
+    marginTop: -5,
+  },
+  avatarBodyHead:{
+    zIndex: 100,
+  },
+  clothes:{
+    position: 'absolute',
+  },
+  shirt:{
+    zIndex: 1,
+    top: 63,
+  },
+  jacket:{
+    zIndex: 2,
+    top: 64,
+  },
+  pants:{
+    top: 150,
+    zIndex: 0,
+  },
+  shoes:{
+    bottom: -8,
+    zIndex: 1,
+  },
+  umbrella:{
+    zIndex: 100,
+    top: 152,
+    right: 70
   },
   columnBoxes:{
     flexDirection: 'column',

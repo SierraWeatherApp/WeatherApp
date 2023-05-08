@@ -4,17 +4,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Color, FontSize, FontFamily } from "../GlobalStyles";
 import { getWeather } from "./CodeToWeather";
-import { getWinterJackets, 
-         getlongSleeved,
-         getPants,
-         getHoodie,
-         getBoots,
-         getSandals,
-         getUmbrella,
-         getRainBoots,
-         getSneakers,
-         getShorts,
-         getLightJacket } from "./getClothing";
+import { getClothing as getClothingMale } from "./getClothingMale";
+import { getClothing as getClothingFemale } from "./getClothingFemale";
 import { useSelector } from 'react-redux'
 
 //For scaling [default dimension: 360x800]
@@ -36,71 +27,25 @@ const WeatherScreen = ( { city} ) => {
   const tempString = Math.round(city.temperature);
   const windString = city.windspeed;
   const humidityString = city.humidity;
-  /*useFocusEffect(
-    React.useCallback(() => {
-      console.log('asdsa')
-        //updateParent();
-    }, [])
-  );*/
-  var hat
-  var shirt
-  var jacket
-  var pants
-  var shoes
-  var umbrella
-  if(city.hat){
-
-  }
-  else if(city.hat){
-
-  }
-  else{
-    hat = require('../assets/empty.png')
-  }
-  if(city.shirt === 'long-sleeved'){
-    shirt = getlongSleeved()[0]
-  }
-  else if(city.shirt === 'hoodie'){
-    shirt = getHoodie()[0]
-  }
-  else{
-
-  }
-  if(city.jacket === 'winter-jacket'){
-    jacket = getWinterJackets()[0]
-  }
-  else if(city.jacket === 'light-jacket'){
-    jacket = getLightJacket()[0]
-  }
-  else{
-    jacket = require('../assets/empty.png')
-  }
-  if(city.pants === 'pants'){
-    pants = getPants()[0]
-  }
-  else if(city.pants === 'shorts'){
-    pants = getShorts()[0]
-  }
-  else{
-
-  }
-  if(city.shoes === 'boots'){
-    shoes = getBoots()[0]
-  }
-  else if(city.shoes === 'sandals'){
-    shoes = getSandals()[0]
-  }
-  else if(city.shoes === 'rain'){
-    shoes = getRainBoots()[0]
-  }
-  else{
-    shoes = getSneakers()[0]
-  }
-  if(city.umbrella === 'true'){
-    umbrella = getUmbrella()[0]
-  }
-  else{
-    umbrella = require('../assets/empty.png')
+  const gender = useSelector(state => state.clothing).Gender
+  const clothingRec = gender === 'male' ? getClothingMale(city) : getClothingFemale(city);
+  const bodyImage = (type) => {
+    if(gender == 'male'){
+      if(type === 'upper'){
+        return require("../assets/male-body/male-upper-body.png")
+      }
+      else if(type === 'lower'){
+        return require("../assets/male-body/male-lower-body.png")
+      }
+    }
+    else if(gender == 'female'){
+      if(type === 'upper'){
+        return require("../assets/female-body/female-upper-body.png")
+      }
+      else if(type === 'lower'){
+        return require("../assets/female-body/female-lower-body.png")
+      }
+    }
   }
   const getWeatherIcon = (weathercode) => {
     if(weathercode <= 1){
@@ -151,7 +96,7 @@ const WeatherScreen = ( { city} ) => {
             </Pressable>
             <Text style={[styles.cityName]}>{positionString}</Text>
           </View>
-          <Text style={[styles.appName]}>Wea(the)r it</Text>
+          <Text style={[styles.appName]}>Wea(the)r It</Text>
           </View>
           <View style={[styles.weatherInfo]}>
             <View style={[]}>
@@ -172,48 +117,57 @@ const WeatherScreen = ( { city} ) => {
           <View style={[styles.avatarOuterBox]}>
             <Pressable
               style={[]}
-              onPress={() => navigation.push("AvatarChangeClothing", {screenName: "AvatarChangeClothing"})}
+              onPress={() => navigation.push("AvatarChangeClothing", 
+                {
+                  city: city,
+              }
+              )}
             >
               <View style={[styles.avatarBody]}>
                 <Image
                   style={[styles.avatarBodyHead]}
                   resizeMode="cover"
-                  source={require("../assets/male-body/male-head.png")}
+                  source={clothingRec.skin}
                 />
                 <Image
                   style={[styles.avatarBodyUpperBody]}
                   resizeMode="cover"
-                  source={require("../assets/male-body/male-upper-body.png")}
+                  source={bodyImage('upper')}
                 />
                 <Image
                     style={[]}
                     resizeMode="cover"
-                    source={require("../assets/male-body/male-lower-body.png")}
+                    source={bodyImage('lower')}
+                />
+                <Image
+                    style={[styles.clothes, styles.hat]}
+                    resizeMode="cover"
+                    source={clothingRec.hat}
                 />
                 <Image
                     style={[styles.clothes, styles.jacket]}
                     resizeMode="cover"
-                    source={jacket}
+                    source={clothingRec.jacket}
                 />
                 <Image
                     style={[styles.clothes, styles.shirt]}
                     resizeMode="cover"
-                    source={shirt}
+                    source={clothingRec.shirt}
                 />
                 <Image
                     style={[styles.clothes, styles.pants]}
                     resizeMode="cover"
-                    source={pants}
+                    source={clothingRec.pants}
                 />
                 <Image
                     style={[styles.clothes, styles.shoes]}
                     resizeMode="cover"
-                    source={shoes}
+                    source={clothingRec.shoes}
                 />
                 <Image
                     style={[styles.clothes, styles.umbrella]}
                     resizeMode="cover"
-                    source={umbrella}
+                    source={clothingRec.umbrella}
                 />
               </View>
             </Pressable>
@@ -326,6 +280,10 @@ const styles = StyleSheet.create({
   },
   clothes:{
     position: 'absolute',
+  },
+  hat:{
+    zIndex: 100,
+    marginTop: -12,
   },
   shirt:{
     zIndex: 1,
