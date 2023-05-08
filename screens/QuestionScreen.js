@@ -1,87 +1,127 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Pressable, Slider } from 'react-native';
+import { getIP, getDevice } from "./fetchIP"
 
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Image,Pressable,
-} from 'react-native';
 
-const QuestionScreen = ({navigation}) => {
-  const [questions, setQuestions] = useState([
-    {
-      id: 1,
-      text: 'Sandles?',
-    },
-    {
-      id: 2,
-      text: 'Who?',
-    },
-    {
-      id: 3,
-      text: 'When?',
-    },
-    {
-      id: 4,
-      text: 'Where?',
-    },
-  ]);
+const QuestionScreen = ({ navigation }) => {
+  const [questions, setQuestions] = useState([]);
+  const deviceID = useSelector(state => state.deviceID)
+  const device_id = deviceID
 
-  const [responses, setResponses] = useState({});
+  useEffect(() => {
+    const device_id = deviceID;
+    fetch(`http://${getIP()}:8080/api/v1/user/questions/all`, {
+      headers: {
+        'x-device-id': device_id,
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setQuestions(data.questions);
+      })
+      .catch(error => console.error(error));
+  }, []);
 
   const handleResponse = (questionId, answer) => {
-    console.log(`Question ${questionId}  ${answer} `);
-    setResponses({...responses, [questionId]: answer});
+    console.log(`Question ${questionId} received ${answer} response`);
+  
+    const updatedQuestions = questions.map((question) => {
+      if (question.question_id === questionId) {
+        return {
+          ...question,
+          selected_answer: answer,
+        };
+      }
+      return question;
+    });
+      setQuestions(updatedQuestions);
+  
+    if (questionId === 4) {
+      const updatedQuestions = questions.map((question) => {
+        if (question.question_id === questionId) {
+          return {
+            ...question,
+            selected_answer: answer,
+            slider_value: answer,
+          };
+        }
+        return question;
+      });
+      setQuestions(updatedQuestions);
+    }   // Send the answer to the backend API
+    fetch(`http://${getIP()}:8080/api/v1/user/questions/answer`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        question_id: questionId,
+        answer: answer,
+        device_id: device_id,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => console.error(error));
   };
 
-  const getButtonStyle = (questionId, answer) => {
-    if (responses[questionId] === answer) {
-      return styles.buttonSelected;
-    } else {
-      return styles.button;
-    }
-  };
 
-  const handleConfirm = () => {
-    navigation.navigate('SlideScreen');
-  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Pressable onPress={() => navigation.navigate('Home')}>
-          <Image
-            style={styles.arrow}
-            resizeMode="contain"
-            source={require('../assets/arrow1.png')}
-          />
+          <Image style={styles.arrow} resizeMode="contain" source={require('../assets/arrow1.png')} />
         </Pressable>
       </View>
       <ScrollView>
-        {questions.map((question) => (
-          <View key={question.id} style={styles.questionBox}>
-            <Text style={styles.questionText}>{question.text}</Text>
-            <View style={styles.buttonsContainer}>
-              <TouchableOpacity
-                style={getButtonStyle(question.id, 'yes')}
-                onPress={() => handleResponse(question.id, 'yes')}>
-                <Text style={styles.buttonText}>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={getButtonStyle(question.id, 'no')}
-                onPress={() => handleResponse(question.id, 'no')}>
-                <Text style={styles.buttonText}>No</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
+      {questions && questions.map((question) => (
+  <View key={question.question_id} style={styles.questionBox}>
+    <Text style={styles.questionText}>{question.question}</Text>
+    {question.question_id === 4 ? (
+      <Slider
+        style={{ width: '100%', height: 40 }}
+        minimumValue={-10}
+        maximumValue={10}
+        step={1}
+        value={question.slider_value}
+        onValueChange={(value) => handleResponse(question.question_id, value)}
+      />
+    ) : (
+    
+    <View style={styles.buttonsContainer}>
+  {/* "Yes" button */}
+  <TouchableOpacity
+    style={[
+      styles.button,
+      question.selected_answer === 1 && styles.selected,
+    ]}
+    onPress={() => handleResponse(question.question_id, 1)}
+  >
+    <Text style={styles.buttonText}>Yes</Text>
+  </TouchableOpacity>
+  
+  {/* "No" button */}
+  <TouchableOpacity
+    style={[
+      styles.button,
+      question.selected_answer === 0 && styles.selected,
+    ]}
+    onPress={() => handleResponse(question.question_id, 0)}
+  >
+    <Text style={styles.buttonText}>No</Text>
+  </TouchableOpacity>
+</View>
+    )}
+  </View>
+))}
+
       </ScrollView>
-      <TouchableOpacity
-        style={styles.confirmButton}
-        onPress={() => navigation.navigate('Home')}>
+      <TouchableOpacity style={styles.confirmButton} onPress={() => navigation.navigate('Home')}>
         <Text style={styles.confirmButtonText}>Confirm</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -95,19 +135,16 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'relative',
-    top: 20,
+    top: 10,
     left: 0,
     padding: 10,
-    margin: 10,
-    flexDirection: 'row',
+    margin: 20,
+    flexDirection: 'column',
     justifyContent: 'flex-start',
   },
   arrow: {
     width: 30,
     height: 30,
-    marginLeft: 20,
-    marginBottom: 20,
-
   },
   questionBox: {
     backgroundColor: 'white',
@@ -139,12 +176,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '45%',
   },
-  buttonSelected: {
-    backgroundColor: 'yellow',
-    padding: 10,
-    borderRadius: 20,
-    width: '45%',
-  },
   buttonText: {
     color: '#FFF',
     textAlign: 'center',
@@ -163,6 +194,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
+  selected: {
+    backgroundColor: '#FCD200',
+  }
 });
 
 export default QuestionScreen;
