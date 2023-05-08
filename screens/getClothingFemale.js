@@ -27,55 +27,55 @@ export function getClothing(JSONOfClothing){
     let shoes;
     let umbrellaTemp;
     let skinTemp = skin[clothing['Skin']]
-    if(JSONOfClothing.hat === 'beanie'){
+    if(JSONOfClothing.hat === 'head_beanie'){
         hat = beanie[clothing['Beanie']]
     }
-    else if(JSONOfClothing.hat === 'cap'){
+    else if(JSONOfClothing.hat === 'head_cap'){
         hat = cap[clothing['Cap']]
     }
     else{
       hat = require('../assets/empty.png')
     }
-    if(JSONOfClothing.shirt === 'long-sleeved'){
+    if(JSONOfClothing.shirt === 'shirt_long_sleeve'){
       shirt = longSleeved[clothing['Long Sleeved']]
     }
-    else if(JSONOfClothing.shirt === 'hoodie'){
+    else if(JSONOfClothing.shirt === 'shirt_hoodie'){
       shirt = hoodie[clothing['Hoodie']]
     }
     else{
         shirt = tshirt[clothing['T-Shirt']]
     }
-    if(JSONOfClothing.jacket === 'winter-jacket'){
+    if(JSONOfClothing.jacket === 'jacket_winter'){
       jacket = winter[clothing['Winter Jacket']]
     }
-    else if(JSONOfClothing.jacket === 'light-jacket'){
+    else if(JSONOfClothing.jacket === 'jacket_light'){
       jacket = light[clothing['Light Jacket']]
     }
     else{
       jacket = require('../assets/empty.png')
     }
-    if(JSONOfClothing.pants === 'pants'){
+    if(JSONOfClothing.pants === 'pants_pants'){
         pantsTemp = pants[clothing['Pants']]
     }
-    else if(JSONOfClothing.pants === 'shorts'){
+    else if(JSONOfClothing.pants === 'pants_shorts'){
         pantsTemp = shorts[clothing['Shorts']]
     }
     else{
         pantsTemp = snowpants[clothing['Snow-pants']]
     }
-    if(JSONOfClothing.shoes === 'boots'){
+    if(JSONOfClothing.shoes === 'shoes_boots'){
       shoes = boots[clothing['Boots']]
     }
-    else if(JSONOfClothing.shoes === 'sandals'){
+    else if(JSONOfClothing.shoes === 'shoes_sandals'){
       shoes = sandals[clothing['Sandals']]
     }
-    else if(JSONOfClothing.shoes === 'rain'){
+    else if(JSONOfClothing.shoes === 'shoes_rain'){
       shoes = rain[clothing['Rain Boots']]
     }
     else{
       shoes = sneakers[clothing['Sneakers']]
     }
-    if(JSONOfClothing.umbrella === 'true'){
+    if(JSONOfClothing.umbrella === 'umbrella_True'){
       umbrellaTemp = umbrella[clothing['Umbrella']]
     }
     else{
