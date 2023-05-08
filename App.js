@@ -84,10 +84,10 @@ const AppWrapper = () => {
           humidity: weather['relativehumidity_2m'],
           windspeed: weather['windspeed'],
           head: 'empty',
-          shirt: 'long-sleeved',
-          jacket: 'light-jacket',
-          pants: 'shorts',
-          shoes: 'rain',
+          shirt: 'emtpy',
+          jacket: 'winter-jacket',
+          pants: 'pants',
+          shoes: 'sneakers',
           umbrella: 'true',
         })
       }
