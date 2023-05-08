@@ -44,7 +44,7 @@ const AvatarChangeClothing = ({route}) => {
   const setImage = (index, type) =>{
     clothing[type] = index 
     dispatch(setClothing(clothing))
-    navigation.navigate("AvatarChangeClothing")
+    navigation.pop()
   }
   const getImageScrollView = (images, type) =>{
     return(images.map((image, index)=> 
@@ -74,7 +74,7 @@ const AvatarChangeClothing = ({route}) => {
         <View style={[styles.topBar]}>
         <Pressable
           style={styles.arrow}
-          onPress={() => navigation.navigate("AvatarChangeClothing")}
+          onPress={() => navigation.pop()}
         >
           <Image
             resizeMode="cover"

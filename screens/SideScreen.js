@@ -107,7 +107,7 @@ const WeatherScreen = ( { city} ) => {
                 <Image
                   style={[styles.avatarBodyHead]}
                   resizeMode="cover"
-                  source={require("../assets/male-body/male-head.png")}
+                  source={clothingRec.skin}
                 />
                 <Image
                   style={[styles.avatarBodyUpperBody]}

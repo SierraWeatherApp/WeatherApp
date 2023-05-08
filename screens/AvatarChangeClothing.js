@@ -38,6 +38,7 @@ const AvatarChangeClothing = ({route}) => {
           <Pressable style={[styles.clothingBox]}
             onPress={() => {
               // Pass and merge params back to home screen
+              
               navigation.navigate({
                 name: 'ClothingScreen',
                 params: { type: 'Shirt' },
@@ -47,9 +48,9 @@ const AvatarChangeClothing = ({route}) => {
           >
             <Text style={[styles.clothingBoxText]}>Shirt</Text>
             <Image
-              style={[styles.clothingImage]}
+              style={[styles.clothingImage, styles.clothingImageShirt]}
               resizeMode="cover"
-              source={require("../assets/upper-limb1-square.png")}
+              source={clothingRec.shirt}
             />
           </Pressable>
           <Pressable style={[styles.clothingBox]}
@@ -64,9 +65,9 @@ const AvatarChangeClothing = ({route}) => {
           >
             <Text style={[styles.clothingBoxText]}>Pants</Text>
             <Image
-              style={[styles.clothingImage]}
+              style={[styles.clothingImage, styles.clothingImagePants]}
               resizeMode="cover"
-              source={require("../assets/pants1-square.png")}
+              source={clothingRec.pants}
             />
           </Pressable>
         </View>
@@ -75,7 +76,7 @@ const AvatarChangeClothing = ({route}) => {
                 <Image
                   style={[styles.avatarBodyHead]}
                   resizeMode="cover"
-                  source={require("../assets/male-body/male-head.png")}
+                  source={clothingRec.skin}
                 />
                 <Image
                   style={[styles.avatarBodyUpperBody]}
@@ -114,7 +115,6 @@ const AvatarChangeClothing = ({route}) => {
                 />
               </View>
           </View>
-        </View>
         <View style={[styles.columnBoxes]}>
           <Pressable style={[styles.clothingBox]}
             onPress={() => {
@@ -145,9 +145,9 @@ const AvatarChangeClothing = ({route}) => {
           >
             <Text style={[styles.clothingBoxText]}>Jacket</Text>
             <Image
-              style={[styles.clothingImage]}
+              style={[styles.clothingImage, styles.clothingImageJacket]}
               resizeMode="cover"
-              source={require("../assets/upper-limb3-square.png")}
+              source={clothingRec.jacket}
             />
           </Pressable>
           <Pressable style={[styles.clothingBox]}
@@ -162,13 +162,14 @@ const AvatarChangeClothing = ({route}) => {
           >
             <Text style={[styles.clothingBoxText]}>Shoes</Text>
             <Image
-              style={[styles.clothingImage]}
+              style={[styles.clothingImage, styles.clothingImageShoes]}
               resizeMode="cover"
-              source={require("../assets/shoes-square.png")}
+              source={clothingRec.shoes}
             />
           </Pressable>
         </View>
       </View>
+    </View>
   );
 };
 const screenWidth = Dimensions.get('window').width;
@@ -180,9 +181,19 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
   },
   clothingImage:{
-    marginTop: 8,
-    height:50,
-    aspectRatio:1,
+    margin:0,
+  },
+  clothingImageJacket:{
+    transform: [{scale: 0.5}, {translateY: -45},],
+  },
+  clothingImageShirt:{
+    transform: [{scale: 0.5}, {translateY: -53},],
+  },
+  clothingImagePants:{
+    transform: [{scale: 0.5}, {translateY: -45},],
+  },
+  clothingImageShoes:{
+    transform: [{scale: 0.7}, {translateY: 20},],
   },
   sunGlassesAvatar:{
     position: 'absolute',
@@ -205,28 +216,31 @@ const styles = StyleSheet.create({
     marginTop: 2,
     color: Color.black,
     fontFamily: FontFamily.montserratBold,
+
   },
   text: {
     fontSize: FontSize.heading1Medium_size,
     textAlign: "left",
     color: Color.black,
     fontFamily: FontFamily.heading1Medium,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   clothingBox:{
     marginVertical: 20,
     width: 80,
     height: 80,
     backgroundColor: Color.light_gray,
+    overflow: 'hidden',
     borderRadius: 7,
     alignItems: 'center',
   },
   avatarOuterBox:{
+    alignSelf: 'center'
   },
   avatarBody:{
     alignItems: 'center',
     position: 'relative',
-    transform: [{scale: 0.5}],
+    transform: [{scale: 1}],
   },
   avatarBodyUpperBody:{
     marginTop: -5,
