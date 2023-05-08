@@ -9,6 +9,7 @@ import ContactUs from "./screens/ContactUs";
 import HelpSupport from "./screens/HelpSupport";
 import Privacy from "./screens/Privacy";
 import RecommendationsFeedback from "./screens/RecommendationsFeedback";
+import QuestionScreen from "./screens/QuestionScreen";
 import AvatarChangeClothing from "./screens/AvatarChangeClothing";
 import ResetWindow from "./screens/ResetWindow";
 import Settings from "./screens/Settings";
@@ -152,6 +153,7 @@ const AppWrapper = () => {
               component={CounterContainer}
               options={{ title: () => <CounterContainer /> }}
             />
+             <Stack.Screen name="QuestionScreen" component={QuestionScreen} />
             <Stack.Screen
               name="FAQ"
               component={FAQ}
