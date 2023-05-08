@@ -4,17 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Color, FontSize, FontFamily } from "../GlobalStyles";
 import { getWeather } from "./CodeToWeather";
-import { getWinterJackets, 
-         getlongSleeved,
-         getPants,
-         getHoodie,
-         getBoots,
-         getSandals,
-         getUmbrella,
-         getRainBoots,
-         getSneakers,
-         getShorts,
-         getLightJacket } from "./getClothing";
+import { getClothing } from "./getClothing";
 import { useSelector } from 'react-redux'
 
 //For scaling [default dimension: 360x800]
@@ -36,72 +26,7 @@ const WeatherScreen = ( { city} ) => {
   const tempString = Math.round(city.temperature);
   const windString = city.windspeed;
   const humidityString = city.humidity;
-  /*useFocusEffect(
-    React.useCallback(() => {
-      console.log('asdsa')
-        //updateParent();
-    }, [])
-  );*/
-  var hat
-  var shirt
-  var jacket
-  var pants
-  var shoes
-  var umbrella
-  if(city.hat){
-
-  }
-  else if(city.hat){
-
-  }
-  else{
-    hat = require('../assets/empty.png')
-  }
-  if(city.shirt === 'long-sleeved'){
-    shirt = getlongSleeved()[0]
-  }
-  else if(city.shirt === 'hoodie'){
-    shirt = getHoodie()[0]
-  }
-  else{
-
-  }
-  if(city.jacket === 'winter-jacket'){
-    jacket = getWinterJackets()[0]
-  }
-  else if(city.jacket === 'light-jacket'){
-    jacket = getLightJacket()[0]
-  }
-  else{
-    jacket = require('../assets/empty.png')
-  }
-  if(city.pants === 'pants'){
-    pants = getPants()[0]
-  }
-  else if(city.pants === 'shorts'){
-    pants = getShorts()[0]
-  }
-  else{
-
-  }
-  if(city.shoes === 'boots'){
-    shoes = getBoots()[0]
-  }
-  else if(city.shoes === 'sandals'){
-    shoes = getSandals()[0]
-  }
-  else if(city.shoes === 'rain'){
-    shoes = getRainBoots()[0]
-  }
-  else{
-    shoes = getSneakers()[0]
-  }
-  if(city.umbrella === 'true'){
-    umbrella = getUmbrella()[0]
-  }
-  else{
-    umbrella = require('../assets/empty.png')
-  }
+  const clothingRec = getClothing(city);
   const getWeatherIcon = (weathercode) => {
     if(weathercode <= 1){
       return (require("../assets/weatherIcons/sunny.png"))
@@ -172,7 +97,11 @@ const WeatherScreen = ( { city} ) => {
           <View style={[styles.avatarOuterBox]}>
             <Pressable
               style={[]}
-              onPress={() => navigation.push("AvatarChangeClothing", {screenName: "AvatarChangeClothing"})}
+              onPress={() => navigation.push("AvatarChangeClothing", 
+                {
+                  city: city,
+              }
+              )}
             >
               <View style={[styles.avatarBody]}>
                 <Image
@@ -193,27 +122,27 @@ const WeatherScreen = ( { city} ) => {
                 <Image
                     style={[styles.clothes, styles.jacket]}
                     resizeMode="cover"
-                    source={jacket}
+                    source={clothingRec.jacket}
                 />
                 <Image
                     style={[styles.clothes, styles.shirt]}
                     resizeMode="cover"
-                    source={shirt}
+                    source={clothingRec.shirt}
                 />
                 <Image
                     style={[styles.clothes, styles.pants]}
                     resizeMode="cover"
-                    source={pants}
+                    source={clothingRec.pants}
                 />
                 <Image
                     style={[styles.clothes, styles.shoes]}
                     resizeMode="cover"
-                    source={shoes}
+                    source={clothingRec.shoes}
                 />
                 <Image
                     style={[styles.clothes, styles.umbrella]}
                     resizeMode="cover"
-                    source={umbrella}
+                    source={clothingRec.umbrella}
                 />
               </View>
             </Pressable>

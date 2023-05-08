@@ -2,10 +2,11 @@ import * as React from "react";
 import { Image, StyleSheet, View, Text, Pressable, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
+import { getClothing } from "./getClothing";
 
-const AvatarChangeClothing = () => {
+const AvatarChangeClothing = ({route}) => {
   const navigation = useNavigation();
-
+  const clothingRec = getClothing(route.params.city);
   return (
     <View style={[styles.avatarChangeClothing]}>
       <View style={[styles.topBar]}>
@@ -69,17 +70,51 @@ const AvatarChangeClothing = () => {
             />
           </Pressable>
         </View>
-        <View style={[styles.avatar]}>
-          <Image
-            resizeMode="cover"
-            source={require("../assets/avatar.png")}
-          />
-          <Image
-            style={[styles.sunGlassesAvatar]}
-            resizeMode="cover"
-            source={require("../assets/sun-glasses.png")}
-          />
-      </View>
+        <View style={[styles.avatarOuterBox]}>
+              <View style={[styles.avatarBody]}>
+                <Image
+                  style={[styles.avatarBodyHead]}
+                  resizeMode="cover"
+                  source={require("../assets/male-body/male-head.png")}
+                />
+                <Image
+                  style={[styles.avatarBodyUpperBody]}
+                  resizeMode="cover"
+                  source={require("../assets/male-body/male-upper-body.png")}
+                />
+                <Image
+                    style={[]}
+                    resizeMode="cover"
+                    source={require("../assets/male-body/male-lower-body.png")}
+                />
+                <Image
+                    style={[styles.clothes, styles.jacket]}
+                    resizeMode="cover"
+                    source={clothingRec.jacket}
+                />
+                <Image
+                    style={[styles.clothes, styles.shirt]}
+                    resizeMode="cover"
+                    source={clothingRec.shirt}
+                />
+                <Image
+                    style={[styles.clothes, styles.pants]}
+                    resizeMode="cover"
+                    source={clothingRec.pants}
+                />
+                <Image
+                    style={[styles.clothes, styles.shoes]}
+                    resizeMode="cover"
+                    source={clothingRec.shoes}
+                />
+                <Image
+                    style={[styles.clothes, styles.umbrella]}
+                    resizeMode="cover"
+                    source={clothingRec.umbrella}
+                />
+              </View>
+          </View>
+        </View>
         <View style={[styles.columnBoxes]}>
           <Pressable style={[styles.clothingBox]}
             onPress={() => {
@@ -134,7 +169,6 @@ const AvatarChangeClothing = () => {
           </Pressable>
         </View>
       </View>
-    </View>
   );
 };
 const screenWidth = Dimensions.get('window').width;
@@ -149,7 +183,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     height:50,
     aspectRatio:1,
-
   },
   sunGlassesAvatar:{
     position: 'absolute',
@@ -181,16 +214,49 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   clothingBox:{
-    margin: 20,
+    marginVertical: 20,
     width: 80,
     height: 80,
     backgroundColor: Color.light_gray,
     borderRadius: 7,
     alignItems: 'center',
   },
-  avatar:{
-    marginTop: 40,
+  avatarOuterBox:{
+  },
+  avatarBody:{
+    alignItems: 'center',
     position: 'relative',
+    transform: [{scale: 0.5}],
+  },
+  avatarBodyUpperBody:{
+    marginTop: -5,
+  },
+  avatarBodyHead:{
+    zIndex: 10,
+  },
+  clothes:{
+    position: 'absolute',
+  },
+  shirt:{
+    zIndex: 1,
+    top: 63,
+  },
+  jacket:{
+    zIndex: 2,
+    top: 64,
+  },
+  pants:{
+    top: 150,
+    zIndex: 0,
+  },
+  shoes:{
+    bottom: -8,
+    zIndex: 1,
+  },
+  umbrella:{
+    zIndex: 100,
+    top: 152,
+    right: 70
   },
   columnBoxes:{
     flexDirection: 'column',

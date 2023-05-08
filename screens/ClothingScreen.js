@@ -1,43 +1,74 @@
 import * as React from "react";
-import { Image, StyleSheet, View, Text, Pressable, Dimensions } from "react-native";
+import { Image, StyleSheet, View, ScrollView, Text, Pressable, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
+import { getClothingArray } from "./getClothing";
+import { useDispatch, useSelector } from 'react-redux';
+import { setClothing } from "../actions/clothing";
 const categories = {
-    Shoes: {
-        first: 'Sandals',
-        second: 'Boots',
-        third: 'Sneakers'
-    },
-    Pants: {
-        first: 'Pants',
-        second: 'Snow-pants',
-        third: 'Shorts'
-    },
-    Shirt: {
-        first: 'Long Sleeved',
-        second: 'T-Shirt',
-        third: 'Hoodie'
-    },
-    Jacket: {
-        first: 'Winter Jacket',
-        second: 'Light Jacket',
-        third: ''
-    },
-    Hat: {
-        first: 'Cap',
-        second: 'Beanie',
-        third: ''
-    },
-    Body: {
-        first: 'Umbrella',
-        second: 'Glasses',
-        third: 'Skin'
-    },
+    Shoes: [
+      'Sandals',
+      'Boots',
+      'Sneakers',
+      'Rain Boots',
+    ],
+    Pants: [
+      'Pants',
+      'Snow-pants',
+      'Shorts',
+    ],
+    Shirt: [
+      'Long Sleeved',
+      'T-Shirt',
+      'Hoodie',
+    ],
+    Jacket: [
+      'Winter Jacket',
+      'Light Jacket',
+    ],
+    Hat: [
+      'Cap',
+      'Beanie',
+    ],
+    Body: [
+      'Umbrella',
+      'Glasses',
+      'Skin',
+    ],
 }
 
 const AvatarChangeClothing = ({route}) => {
+  const dispatch = useDispatch()
   const navigation = useNavigation();
-
+  const clothing = { ...useSelector(state => state.clothing)}
+  const setImage = (index, type) =>{
+    clothing[type] = index 
+    dispatch(setClothing(clothing))
+    navigation.navigate("AvatarChangeClothing")
+  }
+  const getImageScrollView = (images, type) =>{
+    return(images.map((image, index)=> 
+      <Pressable
+      onPress={()=> setImage(index, type)}
+      >
+        <Image 
+          style={[styles.clothingImage]}
+          resizeMode="cover"
+          source={image}
+        />
+      </Pressable>
+    ))
+  }
+  const categoriesComponent = (categories, type) =>{
+    const clothing = getClothingArray(type)
+    return (categories.map((category) => <View style={[styles.categories]}>
+        <Text style={[styles.categoriesHeader]}>{category}</Text>
+        <ScrollView horizontal>
+          {getImageScrollView(clothing[category], category)}
+        </ScrollView>
+      </View>
+    ))
+  }
   return (
     <View style={[styles.clothingScreen]}>
         <View style={[styles.topBar]}>
@@ -52,15 +83,9 @@ const AvatarChangeClothing = ({route}) => {
         </Pressable>
         <Text style={[styles.text]}>{route.params.type}</Text>
       </View>
-        <View style={[styles.categories]}>
-            <Text style={[styles.categoriesHeader]}>{categories[route.params.type]['first']}</Text>
-        </View>
-        <View style={[styles.categories]}>
-            <Text style={[styles.categoriesHeader]}>{categories[route.params.type]['second']}</Text>
-        </View>
-        <View style={[styles.categories]}>
-            <Text style={[styles.categoriesHeader]}>{categories[route.params.type]['third']}</Text>
-        </View>
+        <ScrollView>
+          {categoriesComponent(categories[route.params.type], route.params.type)}
+        </ScrollView>
     </View>
   );
 };
@@ -88,6 +113,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     height: screenHeight,
     backgroundColor: Color.white,
+  },
+  clothingImage:{
+    marginHorizontal: 10,
+    marginVertical: 5,
   },
   arrow: {
     width: 28,
