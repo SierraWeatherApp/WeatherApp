@@ -2,9 +2,12 @@ import * as React from "react";
 import { Image, StyleSheet, View, ScrollView, Text, Pressable, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
-import { getClothingArray } from "./getClothing";
+import { getClothingArray as  getClothingArrayMale} from "./getClothingMale";
+import { getClothingArray as  getClothingArrayFemale} from "./getClothingFemale";
 import { useDispatch, useSelector } from 'react-redux';
 import { setClothing } from "../actions/clothing";
+import { frontToApi } from './ApiClothingStrings'
+import { getIP } from "./fetchIP" 
 const categories = {
     Shoes: [
       'Sandals',
@@ -36,13 +39,64 @@ const categories = {
       'Skin',
     ],
 }
+async function setLookAPI(index, dID) {
+  const url = `http://${getIP()}:8080//api/v1/user?look=${index}`;
+  const device_id = dID
+  const headers = {
+    'Content-Type': 'application/json',
+    'x-device-id': device_id,
+  };
+  
+  fetch(url, {
+    method: 'PATCH',
+    headers: headers,
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+async function setClothingAPI(clothing, index, dID) {
+  const url = `http://${getIP()}:8080/api/v1/user/cloth/change_cloth`;
+  const device_id = dID
+  const headers = {
+    'Content-Type': 'application/json',
+    'x-device-id': device_id,
+  };
+  
+  fetch(url, {
+    method: 'PATCH',
+    headers: headers,
+    body: `{"preferences":{"${clothing}":${index}}}`,
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
 
 const AvatarChangeClothing = ({route}) => {
+  const deviceID = useSelector(state => state.deviceID)
+  const gender = useSelector(state => state.clothing).Gender
   const dispatch = useDispatch()
   const navigation = useNavigation();
   const clothing = { ...useSelector(state => state.clothing)}
   const setImage = (index, type) =>{
-    clothing[type] = index 
+    clothing[type] = index
+    if(type !== 'Glasses' && type !== 'Skin'){
+      setClothingAPI(frontToApi(type),index, deviceID)
+    }
+    else if(type === 'Skin') {
+      setLookAPI(index, deviceID)
+    }
     dispatch(setClothing(clothing))
     navigation.pop()
   }
@@ -60,7 +114,7 @@ const AvatarChangeClothing = ({route}) => {
     ))
   }
   const categoriesComponent = (categories, type) =>{
-    const clothing = getClothingArray(type)
+    const clothing = gender === 'male' ? getClothingArrayMale(type) : getClothingArrayFemale(type);
     return (categories.map((category) => <View style={[styles.categories]}>
         <Text style={[styles.categoriesHeader]}>{category}</Text>
         <ScrollView horizontal>

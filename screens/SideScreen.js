@@ -4,7 +4,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Color, FontSize, FontFamily } from "../GlobalStyles";
 import { getWeather } from "./CodeToWeather";
-import { getClothing } from "./getClothing";
+import { getClothing as getClothingMale } from "./getClothingMale";
+import { getClothing as getClothingFemale } from "./getClothingFemale";
 import { useSelector } from 'react-redux'
 
 //For scaling [default dimension: 360x800]
@@ -26,7 +27,26 @@ const WeatherScreen = ( { city} ) => {
   const tempString = Math.round(city.temperature);
   const windString = city.windspeed;
   const humidityString = city.humidity;
-  const clothingRec = getClothing(city);
+  const gender = useSelector(state => state.clothing).Gender
+  const clothingRec = gender === 'male' ? getClothingMale(city) : getClothingFemale(city);
+  const bodyImage = (type) => {
+    if(gender == 'male'){
+      if(type === 'upper'){
+        return require("../assets/male-body/male-upper-body.png")
+      }
+      else if(type === 'lower'){
+        return require("../assets/male-body/male-lower-body.png")
+      }
+    }
+    else if(gender == 'female'){
+      if(type === 'upper'){
+        return require("../assets/female-body/female-upper-body.png")
+      }
+      else if(type === 'lower'){
+        return require("../assets/female-body/female-lower-body.png")
+      }
+    }
+  }
   const getWeatherIcon = (weathercode) => {
     if(weathercode <= 1){
       return (require("../assets/weatherIcons/sunny.png"))
@@ -76,7 +96,7 @@ const WeatherScreen = ( { city} ) => {
             </Pressable>
             <Text style={[styles.cityName]}>{positionString}</Text>
           </View>
-          <Text style={[styles.appName]}>Wea(the)r it</Text>
+          <Text style={[styles.appName]}>Wea(the)r It</Text>
           </View>
           <View style={[styles.weatherInfo]}>
             <View style={[]}>
@@ -112,12 +132,17 @@ const WeatherScreen = ( { city} ) => {
                 <Image
                   style={[styles.avatarBodyUpperBody]}
                   resizeMode="cover"
-                  source={require("../assets/male-body/male-upper-body.png")}
+                  source={bodyImage('upper')}
                 />
                 <Image
                     style={[]}
                     resizeMode="cover"
-                    source={require("../assets/male-body/male-lower-body.png")}
+                    source={bodyImage('lower')}
+                />
+                <Image
+                    style={[styles.clothes, styles.hat]}
+                    resizeMode="cover"
+                    source={clothingRec.hat}
                 />
                 <Image
                     style={[styles.clothes, styles.jacket]}
@@ -255,6 +280,10 @@ const styles = StyleSheet.create({
   },
   clothes:{
     position: 'absolute',
+  },
+  hat:{
+    zIndex: 100,
+    marginTop: -12,
   },
   shirt:{
     zIndex: 1,

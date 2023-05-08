@@ -17,6 +17,7 @@ const initialState = {
     'Umbrella':0,
     'Glasses':0,
     'Skin':0,
+    'Gender': 'male'
 }
 const clothingReducer = (state = initialState, action) => {
     switch (action.type) {

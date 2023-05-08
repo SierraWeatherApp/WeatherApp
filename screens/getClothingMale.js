@@ -1,36 +1,33 @@
 import * as React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 
-const winter = [require('../assets/jacket/winter/v1.png')]
-const light = [require('../assets/jacket/light/v1.png')]
-const pants = [require('../assets/pants/pants/v1.png'),require('../assets/pants/pants/v2.png')]
-const shorts = [require('../assets/pants/shorts/v1.png')]
-const snowpants = []
-const hoodie = [require('../assets/shirt/hoodie/v1.png'), require('../assets/shirt/hoodie/v2.png'),
-require('../assets/shirt/hoodie/v1.png'), require('../assets/shirt/hoodie/v2.png'),
-require('../assets/shirt/hoodie/v1.png'), require('../assets/shirt/hoodie/v2.png')
-]
-const longSleeved = [require('../assets/shirt/long/v1.png')]
-const tshirt = []
-const boots = [require('../assets/shoes/boots/v1.png')]
-const sneakers = [require('../assets/shoes/sneakers/v1.png')]
-const rain = [require('../assets/shoes/rain/v1.png')]
-const sandals = [require('../assets/shoes/sandals/v1.png')]
+const winter = [require('../assets/male/jacket/winter/v1.png')]
+const light = [require('../assets/male/jacket/light/v1.png')]
+const pants = [require('../assets/male/pants/pants/v1.png'),require('../assets/male/pants/pants/v2.png')]
+const shorts = [require('../assets/male/pants/shorts/v1.png')]
+const snowpants = [require('../assets/male/pants/snow/v1.png')]
+const hoodie = [require('../assets/male/shirt/hoodie/v1.png'), require('../assets/male/shirt/hoodie/v2.png'),]
+const longSleeved = [require('../assets/male/shirt/long/v1.png')]
+const tshirt = [require('../assets/male/shirt/tshirt/v1.png')]
+const boots = [require('../assets/male/shoes/boots/v1.png')]
+const sneakers = [require('../assets/male/shoes/sneakers/v1.png')]
+const rain = [require('../assets/male/shoes/rain/v1.png')]
+const sandals = [require('../assets/male/shoes/sandals/v1.png')]
 const skin = [require('../assets/male-body/skin/v1.png'), require('../assets/male-body/skin/v2.png'),
             require('../assets/male-body/skin/v3.png'), require('../assets/male-body/skin/v4.png')]
 const umbrella = [require('../assets/accessories/umbrella/v1.png')]
 const glasses = []
-const beanie = []
-const cap = []
+const beanie = [require('../assets/male/hats/beanie/v1.png')]
+const cap = [require('../assets/male/hats/cap/v1.png'),require('../assets/male/hats/cap/v2.png')]
 export function getClothing(JSONOfClothing){
     const clothing = useSelector(state => state.clothing)
-    var hat;
-    var shirt;
-    var jacket;
-    var pantsTemp;
-    var shoes;
-    var umbrellaTemp;
-    var skinTemp = skin[clothing['Skin']]
+    let hat;
+    let shirt;
+    let jacket;
+    let pantsTemp;
+    let shoes;
+    let umbrellaTemp;
+    let skinTemp = skin[clothing['Skin']]
     if(JSONOfClothing.hat === 'beanie'){
         hat = beanie[clothing['Beanie']]
     }

@@ -2,11 +2,33 @@ import * as React from "react";
 import { Image, StyleSheet, View, Text, Pressable, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
-import { getClothing } from "./getClothing";
+import { getClothing } from "./getClothingMale";
+import { useDispatch, useSelector } from 'react-redux';
+import { getClothing as getClothingMale } from "./getClothingMale";
+import { getClothing as getClothingFemale } from "./getClothingFemale";
 
 const AvatarChangeClothing = ({route}) => {
   const navigation = useNavigation();
-  const clothingRec = getClothing(route.params.city);
+  const gender = useSelector(state => state.clothing).Gender
+  const clothingRec = gender === 'male' ? getClothingMale(route.params.city) : getClothingFemale(route.params.city);
+  const bodyImage = (type) => {
+    if(gender == 'male'){
+      if(type === 'upper'){
+        return require("../assets/male-body/male-upper-body.png")
+      }
+      else if(type === 'lower'){
+        return require("../assets/male-body/male-lower-body.png")
+      }
+    }
+    else if(gender == 'female'){
+      if(type === 'upper'){
+        return require("../assets/female-body/female-upper-body.png")
+      }
+      else if(type === 'lower'){
+        return require("../assets/female-body/female-lower-body.png")
+      }
+    }
+  }
   return (
     <View style={[styles.avatarChangeClothing]}>
       <View style={[styles.topBar]}>
@@ -81,12 +103,12 @@ const AvatarChangeClothing = ({route}) => {
                 <Image
                   style={[styles.avatarBodyUpperBody]}
                   resizeMode="cover"
-                  source={require("../assets/male-body/male-upper-body.png")}
+                  source={bodyImage('upper')}
                 />
                 <Image
-                    style={[]}
+                    style={[[styles.avatarBodyLowerBody]]}
                     resizeMode="cover"
-                    source={require("../assets/male-body/male-lower-body.png")}
+                    source={bodyImage('lower')}
                 />
                 <Image
                     style={[styles.clothes, styles.jacket]}
@@ -245,8 +267,11 @@ const styles = StyleSheet.create({
   avatarBodyUpperBody:{
     marginTop: -5,
   },
+  avatarBodyLowerBody:{
+    marginTop: -5,
+  },
   avatarBodyHead:{
-    zIndex: 10,
+    zIndex: 100,
   },
   clothes:{
     position: 'absolute',

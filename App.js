@@ -32,6 +32,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setCities } from './actions/cities';
 import { setDeviceID } from './actions/deviceID';
 import { setCelcius, setFahrenheit } from './actions/unit';
+import { setClothing } from './actions/clothing';
+import { apiToFront } from './screens/ApiClothingStrings';
 
 const store = configureStore({reducer: rootReducer});
 LogBox.ignoreAllLogs(true)
@@ -69,7 +71,7 @@ const AppWrapper = () => {
           }
       );
       const jsonData = await response.json();
-      console.log(jsonData['cities'][0]['weather'])
+      //console.log(jsonData)
       var cityArray = []
       for(var i = 0; i < jsonData['cities'].length; i++){
         weather = jsonData['cities'][i]['weather']
@@ -83,16 +85,20 @@ const AppWrapper = () => {
           weathercode: weather['weathercode'],
           humidity: weather['relativehumidity_2m'],
           windspeed: weather['windspeed'],
-          head: 'Beanie',
-          shirt: 'hoodie',
-          jacket: 'winter-jacket',
+          hat: 'cap',
+          shirt: 'tshirt',
+          jacket: 'empty',
           pants: 'pants',
           shoes: 'sneakers',
           umbrella: 'true',
         })
       }
       const data = {unit: jsonData['user_temp_unit'],
-                    cities: cityArray}
+                    cities: cityArray,
+                    preferences: jsonData['preferences'],
+                    gender: jsonData['gender'],
+                    look: jsonData['look']
+                    }
       setData(data)
       setIsLoading(false)
     };
@@ -128,6 +134,7 @@ const AppWrapper = () => {
     dispatch(setCelcius())
   }
   dispatch(setCities(data.cities))
+  dispatch(setClothing(apiToFront(data.preferences, data.look, data.gender)))
   //const stateCities = useSelector(state => state.cities)
   // Create a memoized callback function that updates the state
   return (
