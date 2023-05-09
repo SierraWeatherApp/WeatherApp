@@ -56,6 +56,11 @@ const AvatarChangeClothing = ({route}) => {
             }}
           >
             <Text style={[styles.clothingBoxText]}>Hat</Text>
+            <Image
+              style={[styles.clothingImage, styles.clothingImageHat]}
+              resizeMode="cover"
+              source={clothingRec.hat}
+            />
           </Pressable>
           <Pressable style={[styles.clothingBox]}
             onPress={() => {
@@ -111,6 +116,11 @@ const AvatarChangeClothing = ({route}) => {
                     source={bodyImage('lower')}
                 />
                 <Image
+                    style={[styles.clothes, styles.hat]}
+                    resizeMode="cover"
+                    source={clothingRec.hat}
+                />
+                <Image
                     style={[styles.clothes, styles.jacket]}
                     resizeMode="cover"
                     source={clothingRec.jacket}
@@ -150,9 +160,9 @@ const AvatarChangeClothing = ({route}) => {
           >
             <Text style={[styles.clothingBoxText]}>Body</Text>
             <Image
-              style={[styles.clothingImage]}
+              style={[styles.clothingImage, styles.clothingImageSkin]}
               resizeMode="cover"
-              source={require("../assets/sun-glasses-square.png")}
+              source={clothingRec.skin}
             />
           </Pressable>
           <Pressable style={[styles.clothingBox]}
@@ -217,6 +227,12 @@ const styles = StyleSheet.create({
   clothingImageShoes:{
     transform: [{scale: 0.7}, {translateY: 20},],
   },
+  clothingImageSkin:{
+    transform: [{scale: 0.7}, {translateY: -15},],
+  },
+  clothingImageHat:{
+    transform: [{scale: 1}, {translateY: 5},],
+  },
   sunGlassesAvatar:{
     position: 'absolute',
     top: 37,
@@ -275,6 +291,10 @@ const styles = StyleSheet.create({
   },
   clothes:{
     position: 'absolute',
+  },
+  hat:{
+    zIndex: 100,
+    marginTop: -12,
   },
   shirt:{
     zIndex: 1,

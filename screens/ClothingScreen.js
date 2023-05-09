@@ -35,7 +35,6 @@ const categories = {
     ],
     Body: [
       'Umbrella',
-      'Glasses',
       'Skin',
     ],
 }
@@ -98,11 +97,19 @@ const AvatarChangeClothing = ({route}) => {
       setLookAPI(index, deviceID)
     }
     dispatch(setClothing(clothing))
-    navigation.pop()
+  }
+  const getIndicator = (index, type) =>{
+    if(clothing[type] === index){
+      return(<Text style={[styles.indicatorBar]}>----</Text>)
+    }
+    else{
+      return(<View></View>)
+    }
   }
   const getImageScrollView = (images, type) =>{
     return(images.map((image, index)=> 
       <Pressable
+      style={[styles.clothingImageContainer]}
       onPress={()=> setImage(index, type)}
       >
         <Image 
@@ -110,6 +117,9 @@ const AvatarChangeClothing = ({route}) => {
           resizeMode="cover"
           source={image}
         />
+        <View style={[styles.indicator]}>
+          {getIndicator(index, type)}
+        </View>
       </Pressable>
     ))
   }
@@ -146,7 +156,9 @@ const AvatarChangeClothing = ({route}) => {
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
-
+  indicatorBar:{
+    alignSelf: 'center'
+  },
   categoriesHeader:{
     fontSize: FontSize.heading1Medium_size,
     textAlign: "left",

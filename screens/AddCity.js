@@ -83,12 +83,12 @@ const AddCity = () => {
         weathercode: weather['weathercode'],
         humidity: weather['relativehumidity_2m'],
         windspeed: weather['windspeed'],
-        head: 'empty',
-        shirt: 'long-sleeved',
-        jacket: 'light-jacket',
-        pants: 'shorts',
-        shoes: 'rain',
-        umbrella: 'true',
+        hat: jsonData['cities'][i]['recommendation'][0],
+        shirt: jsonData['cities'][i]['recommendation'][1],
+        jacket: jsonData['cities'][i]['recommendation'][2],
+        pants: jsonData['cities'][i]['recommendation'][3],
+        shoes: jsonData['cities'][i]['recommendation'][4],
+        umbrella: jsonData['cities'][i]['recommendation'][5],
       })
     }
     dispatch(setCities(cityArray))
