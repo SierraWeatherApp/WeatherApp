@@ -4,10 +4,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import FAQ from "./screens/FAQ";
-import About from "./screens/About";
 import ContactUs from "./screens/ContactUs";
 import HelpSupport from "./screens/HelpSupport";
-import Privacy from "./screens/Privacy";
 import PrivacyScreen from "./screens/PrivacyScreen";
 import AboutScreen from './screens/AboutScreen';
 import QuestionScreen from "./screens/QuestionScreen";
@@ -199,11 +197,7 @@ const AppWrapper = () => {
               component={FAQ}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="About"
-              component={About}
-              options={{ headerShown: false }}
-            />
+
             <Stack.Screen
               name="ClothingScreen"
               component={ClothingScreen}
@@ -223,11 +217,7 @@ const AppWrapper = () => {
               component={HelpSupport}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="Privacy"
-              component={Privacy}
-              options={{ headerShown: false }}
-            />
+           
             <Stack.Screen
               name="AvatarChangeClothing"
               component={AvatarChangeClothing}
