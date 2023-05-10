@@ -4,6 +4,12 @@ import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getIP } from "../screens/fetchIP" 
+import { setFahrenheit, setCelcius } from '../actions/unit';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { getWeather } from "../screens/CodeToWeather";
+import { setCities, deleteCity as delC } from '../actions/cities';
+
 async function setUnit(unit, dID) {
   const url = `http://${getIP()}:8080/api/v1/user`;
   const device_id = dID
@@ -27,42 +33,58 @@ async function setUnit(unit, dID) {
   });
 }
 
-import { useNavigation } from '@react-navigation/native';
-
 const FrameComponent = ({ onClose, temperatureUnit, onToggleTemperatureUnit }) => {
-  const [dID, setdID] = useState('123');
+  const dispatch = useDispatch()
+  const deviceID = useSelector(state => state.deviceID)
   const [isFahrenheitPressed, setIsFahrenheitPressed] = React.useState(
     temperatureUnit === "fahrenheit"
   );
   const navigation = useNavigation();
-
-
-
-  useEffect(() => {
-      const getUsername = async () => {
-        var id = await AsyncStorage.getItem('key');
-        if(id){
-          setdID(id)
+  const fetchCities = async (dID) => {
+    const response = await fetch(
+      `http://${getIP()}:8080/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
+          method: 'GET',
+          headers: {'x-device-id': dID}
         }
-        else{
-          const newID = uuid.v4();
-          await AsyncStorage.setItem('key', newID);
-          setdID(newID)
-        }
-      };
-      getUsername();
-  }, []);
-  
+    );
+    const jsonData = await response.json();
+    var cityArray = []
+    for(var i = 0; i < jsonData['cities'].length; i++){
+      weather = jsonData['cities'][i]['weather']
+      //weather = await fetchWeather(jsonData['cities'][i]["latitude"],jsonData['cities'][i]["longitude"] )
+      cityArray.push({city_name: jsonData['cities'][i]['city_name'], 
+        key: i + 1, 
+        country: jsonData['cities'][i]['country'],
+        id: jsonData['cities'][i]['id'], 
+        temperature: weather['temperature'], 
+        weather: getWeather(weather['weathercode']),
+        weathercode: weather['weathercode'],
+        humidity: weather['relativehumidity_2m'],
+        windspeed: weather['windspeed'],
+        hat: jsonData['cities'][i]['recommendation'][0],
+        shirt: jsonData['cities'][i]['recommendation'][1],
+        jacket: jsonData['cities'][i]['recommendation'][2],
+        pants: jsonData['cities'][i]['recommendation'][3],
+        shoes: jsonData['cities'][i]['recommendation'][4],
+        umbrella: jsonData['cities'][i]['recommendation'][5],
+      })
+    }
+    dispatch(setCities(cityArray))
+  };
   const handleFahrenheitPress = () => {
     setIsFahrenheitPressed(true);
+    dispatch(setFahrenheit())
     navigation.navigate('Settings', { temperatureUnit: 'Fahrenheit' });
-    setUnit('fahrenheit', dID)
+    fetchCities(deviceID)
+    setUnit('fahrenheit', deviceID)
   };
 
   const handleCelciusPress = () => {
     setIsFahrenheitPressed(false);
+    dispatch(setCelcius())
     navigation.navigate('Settings', { temperatureUnit: 'Celsius' });
-    setUnit('celsius', dID)
+    fetchCities(deviceID)
+    setUnit('celsius', deviceID)
   };
 
   return (

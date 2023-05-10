@@ -4,33 +4,46 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import FAQ from "./screens/FAQ";
-import About from "./screens/About";
 import ContactUs from "./screens/ContactUs";
 import HelpSupport from "./screens/HelpSupport";
-import Privacy from "./screens/Privacy";
-import RecommendationsFeedback from "./screens/RecommendationsFeedback";
+import PrivacyScreen from "./screens/PrivacyScreen";
+import AboutScreen from './screens/AboutScreen';
+import QuestionScreen from "./screens/QuestionScreen";
 import AvatarChangeClothing from "./screens/AvatarChangeClothing";
-import ResetWindow from "./screens/ResetWindow";
 import Settings from "./screens/Settings";
 import LocationScreen from "./screens/LocationScreen";
 import AddCity from "./screens/AddCity";
+import QrCodeGen from './screens/qrcodeGenerator';
+import Scanner from './screens/qrCodeScanner';
 import ClothingScreen from "./screens/ClothingScreen";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import SideScreen from "./screens/SideScreen";
 import HomeTabs from "./screens/Hometabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getIP } from "./screens/fetchIP" 
 import { getWeather } from "./screens/CodeToWeather";
 import Forecast from "./screens/Forecast";
+import rootReducer from './reducers/root';
+import { configureStore } from '@reduxjs/toolkit'
+import { Provider } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'
+import { setCities } from './actions/cities';
+import { setDeviceID } from './actions/deviceID';
+import { setCelcius, setFahrenheit } from './actions/unit';
+import { setClothing } from './actions/clothing';
+import { apiToFront } from './screens/ApiClothingStrings';
+import * as Network from 'expo-network';
+import { Color, FontSize, FontFamily } from "./GlobalStyles";
 
+const store = configureStore({reducer: rootReducer});
 LogBox.ignoreAllLogs(true)
 
-const App = () => {
+const AppWrapper = () => {
+  const dispatch = useDispatch()
   const [dID, setdID] = useState('123');
-  const [parentState, setParentState] = useState(false);
   useEffect(() => {
       const getUsername = async () => {
         var id = await AsyncStorage.getItem('key');
@@ -45,10 +58,14 @@ const App = () => {
       };
       getUsername();
   }, [dID]);
-  const updateParent = () => {
-    // Update the parent state to trigger a re-render
-    setParentState(!parentState);
-  };
+  const [isOnline, setIsOnline] = useState(true);
+  useEffect(() => {
+    const net = async () => {
+      let network = (await Network.getNetworkStateAsync()).isConnected;
+      setIsOnline(network)
+    }
+    net()
+  }, []);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -60,6 +77,7 @@ const App = () => {
           }
       );
       const jsonData = await response.json();
+      //console.log(jsonData['cities'][0])
       var cityArray = []
       for(var i = 0; i < jsonData['cities'].length; i++){
         weather = jsonData['cities'][i]['weather']
@@ -71,26 +89,30 @@ const App = () => {
           temperature: weather['temperature'], 
           weather: getWeather(weather['weathercode']),
           weathercode: weather['weathercode'],
-          unit: jsonData['user_temp_unit'],
-          humidity: weather['humidity'],
+          humidity: weather['relativehumidity_2m'],
           windspeed: weather['windspeed'],
-          head: 'empty',
-          shirt: 'long-sleeved',
-          jacket: 'light-jacket',
-          pants: 'shorts',
-          shoes: 'rain',
-          umbrella: 'true',
+          hat: jsonData['cities'][i]['recommendation'][0],
+          shirt: jsonData['cities'][i]['recommendation'][1],
+          jacket: jsonData['cities'][i]['recommendation'][2],
+          pants: jsonData['cities'][i]['recommendation'][3],
+          shoes: jsonData['cities'][i]['recommendation'][4],
+          umbrella: jsonData['cities'][i]['recommendation'][5],
         })
       }
-      setData(cityArray)
+      const data = {unit: jsonData['user_temp_unit'],
+                    cities: cityArray,
+                    preferences: jsonData['preferences'],
+                    gender: jsonData['gender'],
+                    look: jsonData['look']
+                    }
+      setData(data)
       setIsLoading(false)
     };
-    if(isLoading && dID != '123'){
+    if(isLoading && dID !== '123'){
+      dispatch(setDeviceID(dID))
       fetchCities();
     }
     else{
-      console.log('hi' + dID)
-      console.log(isLoading)
     }
   }, [dID, isLoading]);
 
@@ -108,17 +130,38 @@ const App = () => {
     "Alegreya Sans_bold": require("./assets/fonts/Alegreya_Sans_bold.ttf"),
     "Montserrat Alternates_regular": require("./assets/fonts/Montserrat_Alternates_regular.ttf"),
   });
-  if ((!fontsLoaded && !error )|| isLoading) {
-    return null;
+  if ((!fontsLoaded && !error )|| isLoading || !isOnline) {
+    if(!isOnline){
+      alert('no internet connection')
+    }
+    return (
+      <View style={[styles.loadingContainer]}>
+        <Text style={[styles.loading]}>
+          loading...
+        </Text>
+      </View>);
   }
+  if(data.unit === 'fahrenheit'){
+    dispatch(setFahrenheit())
+  }
+  else{
+    dispatch(setCelcius())
+  }
+  if(data.cities !== undefined){
+    dispatch(setCities(data.cities))
+  }
+  if(data.preferences !== undefined){
+    dispatch(setClothing(apiToFront(data.preferences, data.look, data.gender)))
+  }
+  //const stateCities = useSelector(state => state.cities)
   // Create a memoized callback function that updates the state
   return (
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Home" options={{ headerShown: false }}>
-          {() => <HomeTabs cities={data} />}
+          <Stack.Screen name="Home" options={{ headerShown: false}}>
+          {() => <HomeTabs cities={data.cities} />}
           </Stack.Screen>
             <Stack.Screen
               name="AddCity"
@@ -129,6 +172,27 @@ const App = () => {
                 animation: "none",
               }}
             />
+            <Stack.Screen
+              name="QrCode"
+              component={QrCodeGen}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="PrivacyScreen"
+              component={PrivacyScreen}
+              options={{ headerShown: false }}
+            /> 
+            <Stack.Screen
+            name="AboutScreen"
+            component={AboutScreen}
+            options={{ headerShown: false }}
+          />
+            <Stack.Screen
+              name="QrCodeScanner"
+              component={Scanner}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen name="QuestionScreen" component={QuestionScreen} />
             <Stack.Screen
               name="FAQ"
               component={FAQ}
@@ -163,24 +227,10 @@ const App = () => {
               component={HelpSupport}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="Privacy"
-              component={Privacy}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="RecommendationsFeedback"
-              component={RecommendationsFeedback}
-              options={{ headerShown: false }}
-            />
+           
             <Stack.Screen
               name="AvatarChangeClothing"
               component={AvatarChangeClothing}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ResetWindow"
-              component={ResetWindow}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -199,4 +249,24 @@ const App = () => {
     </>
   );
 };
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+const styles = StyleSheet.create({
+  loadingContainer:{
+    height: screenHeight,
+    justifyContent: 'center'
+  },
+  loading:{
+    fontSize: 20,
+    alignSelf: 'center',
+  },
+  
+});
+const App = () => {
+  return(
+    <Provider store={store}>
+      <AppWrapper/>
+    </Provider>
+  )
+}
 export default App;

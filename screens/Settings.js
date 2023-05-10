@@ -1,20 +1,58 @@
 import React, { useState, useCallback } from "react";
-import { Image, StyleSheet, Pressable, Text, View, Modal, AsyncStorage } from "react-native";
+import { Image, StyleSheet, Pressable, Text, View, Modal, Alert, AsyncStorage, Dimensions } from "react-native";
 import { useNavigation, useRoute  } from "@react-navigation/native";
 import FrameComponent from "../components/FrameComponent";
+import ChangeGender from "../components/ChangeGender";
+import { useDispatch, useSelector } from 'react-redux';
+import { getIP } from "../screens/fetchIP" 
+import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
+import { resetCities } from "../actions/cities";
+import { resetClothing } from "../actions/clothing";
 
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 
 const Settings = () => {
-  const [temperatureCelciusCVisible, setTemperatureCelciusCVisible] =
-    useState(false);
+  const dispatch = useDispatch()
+  const deviceID = useSelector(state => state.deviceID)
+  const gender = useSelector(state => state.clothing).Gender
+  const unit = useSelector(state => state.unit)
+  const [temperatureCelciusCVisible, setTemperatureCelciusCVisible] = useState(false);
+  const [genderVisible, setGenderVisible] = useState(false);
   const navigation = useNavigation();
-  
+  const deleteUser = () =>{
+    deleteUserAPI()
+    console.log()
+    dispatch(resetCities())
+    dispatch(resetClothing())
+  }
+  const getTempUnit = () =>{
+    if(unit === 'celcius'){
+      return "Celcius °C"
+    }
+    else{
+      return "Fahrenheit °F"
+    }
+  }
+  const getGender= () =>{
+    if(gender === 'male'){
+      return "Male"
+    }
+    else{
+      return "Female"
+    }
+  }
   const route = useRoute();
-
-
-  const temperatureUnit = route.params?.temperatureUnit ?? 'Celcius °C'; // set a default value if temperatureUnit is undefined
-
+  const deleteAlert = () => {
+    Alert.alert(
+      'Warning!',
+      'All settings and values will be lost forever. ',
+      [
+        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        { text: 'OK', onPress: () => deleteUser(deviceID) },
+      ],
+      { cancelable: false }
+    );
+  };
   
   const openTemperatureCelciusC = useCallback(() => {
     setTemperatureCelciusCVisible(true);
@@ -23,129 +61,92 @@ const Settings = () => {
   const closeTemperatureCelciusC = useCallback(() => {
     setTemperatureCelciusCVisible(false);
   }, []);
+  const openGender = useCallback(() => {
+    setGenderVisible(true);
+  }, []);
+
+  const closeGender = useCallback(() => {
+    setGenderVisible(false);
+  }, []);
 
   return (
     <>
-      
-    
       <View style={[styles.settings]}>
-
-
-      <View style={styles.topbar}> 
-
-        <Pressable
-          style={styles.x}
-          onPress={() => navigation.navigate("0")}
-        >
-          <Image
-            style={[styles.icon]}
-            resizeMode="cover"
-            source={require("../assets/x1.png")}
-          />
-
-        
-        </Pressable>
-        </View >
-        <View style={styles.SettingsBox1}
->
-        <View style={[styles.vectorParent, styles.frameChildLayout]}>
-          <Image
-            style={[styles.frameChild, styles.frameLayout1]}
-            resizeMode="cover"
-            source={require("../assets/rectangle-82.png")}
-          />
+        <View style={styles.topbar}> 
           <Pressable
-            style={[styles.faqFrame, styles.frameLayout]}
-            onPress={() => navigation.navigate("FAQ")}
+            style={styles.x}
+            onPress={() => navigation.pop()}
           >
-            <Text style={[styles.faq, styles.faqTypo]}>FAQ</Text>
+            <Image
+              style={[styles.icon]}
+              resizeMode="cover"
+              source={require("../assets/x1.png")}
+            />
           </Pressable>
-          <View style={[styles.recommendationsFrame, styles.frameLayout]}>
-            <Pressable
-              style={styles.faqPosition}
-              onPress={() => navigation.navigate("RecommendationsFeedback")}
-            >
-              <Text style={[styles.recommendationsFeedback1, styles.faqTypo]}>
-                Recommendations feedback
-              </Text>
-            </Pressable>
-          </View>
-          <Pressable
-            style={[styles.resetFrame, styles.frameLayout]}
-            onPress={() => navigation.navigate("ResetWindow")}
-          >
-            <Text style={[styles.reset, styles.faqTypo]}>Reset</Text>
-          </Pressable>
-          <Pressable
-            style={[styles.transferFrame, styles.frameLayout]}
-            onPress={() => navigation.navigate("ResetWindow")}
-          >
-            <Text style={[styles.transferSettings, styles.faqTypo]}>
-              Transfer settings
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[styles.contanctUsFrame, styles.frameLayout]}
-            onPress={() => navigation.navigate("ContactUs")}
-          >
-            <Text style={[styles.contactUs, styles.faqTypo]}>Contact us</Text>
-          </Pressable>
-          <View style={[styles.temperatureFrame, styles.framePosition1]}>
-            <Pressable
-              style={styles.temperatureCelciusCContainer}
-              onPress={openTemperatureCelciusC}
-            >
-              <Text style={styles.text}>
-                <Text style={styles.temperature}>{`Temperature
-`}
-    <Text style={styles.celciusC}>
-
-      
-    
-        {`${temperatureUnit}`}
-      
-
-      </Text>        
-              </Text>
-
-           </Text>
-            </Pressable>
-          </View>
-          </View>
 
         </View>
-        <View style={[styles.vectorGroup, styles.frameItemLayout]}>
-          <Image
-            style={[styles.frameItem, styles.frameItemLayout]}
-            resizeMode="cover"
-            source={require("../assets/rectangle-9.png")}
-          />
+        <View style={[styles.settingsBox]}>
           <Pressable
-            style={[styles.helpFrame, styles.framePosition]}
-            onPress={() => navigation.navigate("HelpSupport")}
+            style={[styles.settingsPressable]}
+            onPress={() => openTemperatureCelciusC()}
+
           >
-            <Text
-              style={[styles.helpSupport, styles.privacyTypo]}
-            >{`Help & Support`}</Text>
+            <Text style={[styles.settingsText]}>Temperature Unit</Text>
+            <Text style={[styles.tempUnit]}>{getTempUnit()}</Text>
           </Pressable>
           <Pressable
-            style={[styles.aboutWeatherFrame, styles.framePosition1]}
-            onPress={() => navigation.navigate("About")}
+            style={[styles.settingsPressable]}
+            onPress={() => navigation.navigate("QrCode")}
           >
-            <Text style={[styles.aboutWeatherApp, styles.privacyTypo]}>
-              About Weather app
-            </Text>
+            <Text style={[styles.settingsText]}>Transfer Settings</Text>
           </Pressable>
           <Pressable
-            style={[styles.privacyFrame, styles.framePosition]}
-            onPress={() => navigation.navigate("Privacy")}
+            style={[styles.settingsPressable]}
+            onPress={() => deleteAlert()}
           >
-            
-            <Text style={[styles.privacy, styles.privacyTypo]}>Privacy</Text>
+            <Text style={[styles.settingsText]}>Reset Profile</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.settingsPressable]}
+            onPress={() => navigation.navigate("RecommendationsFeedback")}
+          >
+            <Text style={[styles.settingsText]}>Personalize Recommendations</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.settingsPressable]}
+            onPress={() => openGender()}
+          >
+            <Text style={[styles.settingsText]}>Change Gender</Text>
+            <Text style={[styles.tempUnit]}>{getGender()}</Text>
+          </Pressable>
+        </View>
+        <View style={[styles.settingsBox]}>
+          <Pressable
+            style={[styles.settingsPressable]}
+            onPress={() =>  navigation.navigate("Privacy")}
+          >
+            <Text style={[styles.settingsText]}>Privacy</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.settingsPressable]}
+            onPress={() =>  navigation.navigate("HelpSupport")}
+          >
+            <Text style={[styles.settingsText]}>Help and Support</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.settingsPressable]}
+            onPress={() => navigation.navigate("ContactUs")}            
+          >
+            <Text style={[styles.settingsText]}>Contact Us</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.settingsPressable]}
+            onPress={() => navigation.navigate("FAQ")}
+          >
+            <Text style={[styles.settingsText]}>FAQ</Text>
           </Pressable>
         </View>
       </View>
-
       <Modal
         animationType="fade"
         transparent
@@ -159,18 +160,62 @@ const Settings = () => {
           <FrameComponent onClose={closeTemperatureCelciusC} />
         </View>
       </Modal>
+      <Modal
+        animationType="fade"
+        transparent
+        visible={genderVisible}
+      >
+        <View style={styles.temperatureCelciusCOverlay}>
+          <Pressable
+            style={styles.temperatureCelciusCBg}
+            onPress={closeGender}
+          />
+          <ChangeGender onClose={closeGender} />
+        </View>
+      </Modal>
     </>
   );
 };
-
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
-
+  tempUnit:{
+    fontSize: FontSize.size_sm,
+    color: "#2c7900",
+  },
+  settingsText:{
+    textAlign: "left",
+    color: Color.black,
+    fontFamily: FontFamily.heading1Medium,
+    fontSize: FontSize.size_xl,
+  },
+  settingsPressable:{
+    paddingVertical: 10,
+  },
+  x: {
+    width: 40,
+    height: 40,
+  },
   topbar:{
     flexDirection: 'row',
-    marginTop: 0,
     justifyContent:'flex-end',
-    marginRight:0,
+    marginTop: 40,
   },
+  settings: {
+    backgroundColor: Color.white,
+    flex: 1,
+    height: screenHeight,
+    paddingHorizontal: 20,
+  },
+  settingsBox:{
+    marginVertical: 20,
+    backgroundColor: Color.light_gray,
+    paddingHorizontal: 10,
+    borderRadius: 20,
+    marginHorizontal: 5,
+  },
+
+
   SettingsBox1:{
     flexDirection: 'column',
     marginTop:0,
@@ -234,13 +279,7 @@ const styles = StyleSheet.create({
   icon: {
     height: "100%",
   },
-  x: {
-    left: 305,
-    top: 44,
-    width: 40,
-    height: 40,
-    position: "absolute",
-  },
+  
   frameChild: {
     height: 310,
     position: "absolute",
@@ -393,13 +432,6 @@ const styles = StyleSheet.create({
     },
     shadowColor: "rgba(0, 0, 0, 0.25)",
     height: 180,
-    overflow: "hidden",
-  },
-  settings: {
-    backgroundColor: "#dedede",
-    flex: 1,
-    width: "100%",
-    height: 0,
     overflow: "hidden",
   },
 });
