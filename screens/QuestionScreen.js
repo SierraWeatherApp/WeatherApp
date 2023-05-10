@@ -81,46 +81,63 @@ const QuestionScreen = ({ navigation }) => {
     <View key={question.question_label} style={styles.questionBox}>
     <Text style={styles.questionText}>{question.question}</Text>
     {question.question_label === 'userTemp' ? (
+  <View>
     <Slider
-    style={{ width: '100%', height: 40 }}
-    minimumValue={-10}
-    maximumValue={10}
-    step={0}
-    value={answers[question.question_label] || 0}
-    onValueChange={(value) => handleResponse('userTemp', value)}
-  />
-    ):question.question_label === 'userPlace' ? (
-      <Slider
-        style={{ width: '100%', height: 40 }}
-        minimumValue={-10}
-        maximumValue={10}
-        step={0}
-        value={answers[question.question_label] || 0}
-        onValueChange={(value) => handleResponse('userPlace', value)}
-        /> 
-    ) : (
-    
-    <View style={styles.buttonsContainer}>
-<TouchableOpacity
-  style={[
-    styles.button,
-    question.selected_answer === 1 && styles.selected,
-  ]}
-  onPress={() => handleResponse(question.question_label, 1)}
->
-  <Text style={styles.buttonText}>Yes</Text>
-</TouchableOpacity>
-<TouchableOpacity
-  style={[
-    styles.button,
-    question.selected_answer === 0 && styles.selected,
-  ]}
-  onPress={() => handleResponse(question.question_label, 0)}
->
-  <Text style={styles.buttonText}>No</Text>
-</TouchableOpacity>
-</View>
-    )}
+      style={{ width: '100%', height: 40 }}
+      minimumValue={-10}
+      maximumValue={10}
+      step={1}
+      value={answers[question.question_label] || 0}
+      onValueChange={(value) => handleResponse('userTemp', value)}
+    />
+    <View style={styles.sliderLabels}>
+      {[...Array(21)].map((_, i) => (
+        <Text key={i} style={styles.sliderLabel}>
+          {i - 10}
+        </Text>
+      ))}
+    </View>
+  </View>
+) : question.question_label === 'userPlace' ? (
+  <View>
+    <Slider
+      style={{ width: '100%', height: 40 }}
+      minimumValue={-10}
+      maximumValue={10}
+      step={1}
+      value={answers[question.question_label] || 0}
+      onValueChange={(value) => handleResponse('userPlace', value)}
+    />
+    <View style={styles.sliderLabels}>
+      {[...Array(21)].map((_, i) => (
+        <Text key={i} style={styles.sliderLabel}>
+          {i - 10}
+        </Text>
+      ))}
+    </View>
+  </View>
+) : (
+  <View style={styles.buttonsContainer}>
+    <TouchableOpacity
+      style={[
+        styles.button,
+        question.selected_answer === 1 && styles.selected,
+      ]}
+      onPress={() => handleResponse(question.question_label, 1)}
+    >
+      <Text style={styles.buttonText}>Yes</Text>
+    </TouchableOpacity>
+    <TouchableOpacity
+      style={[
+        styles.button,
+        question.selected_answer === 0 && styles.selected,
+      ]}
+      onPress={() => handleResponse(question.question_label, 0)}
+    >
+      <Text style={styles.buttonText}>No</Text>
+    </TouchableOpacity>
+  </View>
+)}
   </View>
 ))}
 
@@ -149,6 +166,19 @@ const styles = StyleSheet.create({
   arrow: {
     width: 30,
     height: 30,
+  },
+  sliderLabels: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 5,
+    paddingBottom: 10,
+    position: 'absolute',
+    bottom: -30,
+  },
+  sliderLabel: {
+    fontSize: 12,
+    color: '#444',
   },
   questionBox: {
     backgroundColor: 'white',
