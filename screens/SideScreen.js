@@ -176,7 +176,7 @@ const WeatherScreen = ( { city} ) => {
         <View style={[styles.botBar]}>
           <Pressable
             style={[]}
-            onPress={() => navigation.navigate("Test")}
+            onPress={() => navigation.navigate("QrCode")}
           >
             <Image
               style={[styles.botBarIcon]}
