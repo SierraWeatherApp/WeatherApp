@@ -88,6 +88,14 @@ export default function App( {route}) {
     else 
       return `${index -12} pm`
   }
+  const tempInCorrectUnit = (temp) =>{
+    if(unit === 'celcius'){
+      return temp
+    }
+    else{
+      return temp * 1.8 + 32
+    }
+  }
   const d7 = (forecast) => {
     let list = []
     for(let i = 0; i < forecast.temperature_2m_max.length; i++){
@@ -100,7 +108,7 @@ export default function App( {route}) {
           {indexToDay(i)}
         </Text>
         <Text style={styles.text}>
-          {Math.round(tempmin)} - {Math.round(tempmax)}°{getUnit()} 
+          {Math.round(tempInCorrectUnit(tempmin))} - {Math.round(tempInCorrectUnit(tempmax))}°{getUnit()} 
         </Text>
         </View>
         <Image

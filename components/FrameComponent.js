@@ -67,12 +67,12 @@ const FrameComponent = ({ onClose, temperatureUnit, onToggleTemperatureUnit }) =
   let cityArray = []
   for(let i = 0; i < cities.length; i++){
     let cityForecast = {}
-    let tf = await getFC(cities[i].lat, cities[i].long, 'tf&day=7')
+    let tf = await getFC(cities[i].lat, cities[i].long, 'tf')
     let fc = await getFC(cities[i].lat, cities[i].long, 'fc')
     cityForecast['city_name'] = cities[i].city_name
     cityForecast['id'] = cities[i].id
-    cityForecast['24h'] = tf
-    cityForecast['7d'] = fc
+    cityForecast['24h'] = fc
+    cityForecast['7d'] = tf
     cityArray.push(cityForecast)
   }
   dispatch(setWeather(cityArray))
