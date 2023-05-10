@@ -15,13 +15,14 @@ import ResetWindow from "./screens/ResetWindow";
 import Settings from "./screens/Settings";
 import LocationScreen from "./screens/LocationScreen";
 import AddCity from "./screens/AddCity";
-import CounterContainer from './screens/test';
+import QrCodeGen from './screens/qrcodeGenerator';
+import Scanner from './screens/qrCodeScanner';
 import ClothingScreen from "./screens/ClothingScreen";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import SideScreen from "./screens/SideScreen";
 import HomeTabs from "./screens/Hometabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getIP } from "./screens/fetchIP" 
@@ -35,6 +36,8 @@ import { setDeviceID } from './actions/deviceID';
 import { setCelcius, setFahrenheit } from './actions/unit';
 import { setClothing } from './actions/clothing';
 import { apiToFront } from './screens/ApiClothingStrings';
+import * as Network from 'expo-network';
+import { Color, FontSize, FontFamily } from "./GlobalStyles";
 
 const store = configureStore({reducer: rootReducer});
 LogBox.ignoreAllLogs(true)
@@ -42,7 +45,6 @@ LogBox.ignoreAllLogs(true)
 const AppWrapper = () => {
   const dispatch = useDispatch()
   const [dID, setdID] = useState('123');
-  const [parentState, setParentState] = useState(false);
   useEffect(() => {
       const getUsername = async () => {
         var id = await AsyncStorage.getItem('key');
@@ -57,10 +59,14 @@ const AppWrapper = () => {
       };
       getUsername();
   }, [dID]);
-  const updateParent = () => {
-    // Update the parent state to trigger a re-render
-    setParentState(!parentState);
-  };
+  const [isOnline, setIsOnline] = useState(true);
+  useEffect(() => {
+    const net = async () => {
+      let network = (await Network.getNetworkStateAsync()).isConnected;
+      setIsOnline(network)
+    }
+    net()
+  }, []);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -125,8 +131,16 @@ const AppWrapper = () => {
     "Alegreya Sans_bold": require("./assets/fonts/Alegreya_Sans_bold.ttf"),
     "Montserrat Alternates_regular": require("./assets/fonts/Montserrat_Alternates_regular.ttf"),
   });
-  if ((!fontsLoaded && !error )|| isLoading) {
-    return null;
+  if ((!fontsLoaded && !error )|| isLoading || !isOnline) {
+    if(!isOnline){
+      alert('no internet connection')
+    }
+    return (
+      <View style={[styles.loadingContainer]}>
+        <Text style={[styles.loading]}>
+          loading...
+        </Text>
+      </View>);
   }
   if(data.unit === 'fahrenheit'){
     dispatch(setFahrenheit())
@@ -156,9 +170,14 @@ const AppWrapper = () => {
               }}
             />
             <Stack.Screen
-              name="Test"
-              component={CounterContainer}
-              options={{ title: () => <CounterContainer /> }}
+              name="QrCode"
+              component={QrCodeGen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="QrCodeScanner"
+              component={Scanner}
+              options={{ headerShown: false }}
             />
              <Stack.Screen name="QuestionScreen" component={QuestionScreen} />
             <Stack.Screen
@@ -226,7 +245,19 @@ const AppWrapper = () => {
     </>
   );
 };
-
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+const styles = StyleSheet.create({
+  loadingContainer:{
+    height: screenHeight,
+    justifyContent: 'center'
+  },
+  loading:{
+    fontSize: 20,
+    alignSelf: 'center',
+  },
+  
+});
 const App = () => {
   return(
     <Provider store={store}>
