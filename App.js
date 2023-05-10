@@ -204,11 +204,6 @@ const AppWrapper = () => {
               options={{ headerShown: false, animation: "slide_from_bottom" }}
             />
             <Stack.Screen
-              name="About"
-              component={About}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
               name="ClothingScreen"
               component={ClothingScreen}
               options={{

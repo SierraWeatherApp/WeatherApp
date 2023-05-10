@@ -5,10 +5,8 @@ import FrameComponent from "../components/FrameComponent";
 import ChangeGender from "../components/ChangeGender";
 import { useDispatch, useSelector } from 'react-redux';
 import { getIP } from "../screens/fetchIP" 
-import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 import { resetCities } from "../actions/cities";
 import { resetClothing } from "../actions/clothing";
-
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 
 const Settings = () => {
