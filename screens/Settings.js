@@ -124,12 +124,7 @@ const Settings = () => {
           >
             <Text style={[styles.settingsText]}>Reset Profile</Text>
           </Pressable>
-          <Pressable
-            style={[styles.settingsPressable]}
-            onPress={() => navigation.navigate("RecommendationsFeedback")}
-          >
-            <Text style={[styles.settingsText]}>Personalize Recommendations</Text>
-          </Pressable>
+    
           <Pressable
             style={[styles.settingsPressable]}
             onPress={() => openGender()}
@@ -141,15 +136,15 @@ const Settings = () => {
         <View style={[styles.settingsBox]}>
           <Pressable
             style={[styles.settingsPressable]}
-            onPress={() =>  navigation.navigate("Privacy")}
+            onPress={() =>  navigation.navigate("PrivacyScreen")}
           >
             <Text style={[styles.settingsText]}>Privacy</Text>
           </Pressable>
           <Pressable
             style={[styles.settingsPressable]}
-            onPress={() =>  navigation.navigate("HelpSupport")}
+            onPress={() =>  navigation.navigate("AboutScreen")}
           >
-            <Text style={[styles.settingsText]}>Help and Support</Text>
+            <Text style={[styles.settingsText]}>About Us</Text>
           </Pressable>
           <Pressable
             style={[styles.settingsPressable]}

@@ -176,14 +176,14 @@ const WeatherScreen = ( { city} ) => {
         <View style={[styles.botBar]}>
           <Pressable
             style={[]}
-            onPress={() => navigation.navigate("QrCode")}
+            onPress={() => navigation.navigate("QuestionScreen")}
           >
             <Image
               style={[styles.botBarIcon]}
               resizeMode="cover"
               source={require("../assets/clothing-icon.png")}
             />
-            <Text style={[]}>Clothing</Text>
+            <Text style={[]}>Preference</Text>
           </Pressable>
           <Pressable
             style={[]}
