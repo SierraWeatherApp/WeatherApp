@@ -17,7 +17,7 @@ export function apiToFront(preferences, look, gender){
         'Umbrella': preferences.umbrella_true,
         'Glasses':0,
         'Skin': look,
-        'Gender': 'male'
+        'Gender': gender
     }
 }
 export function frontToApi(name){
