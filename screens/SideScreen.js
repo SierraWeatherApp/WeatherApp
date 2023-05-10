@@ -187,7 +187,12 @@ const WeatherScreen = ( { city} ) => {
           </Pressable>
           <Pressable
             style={[]}
-            onPress={() => navigation.navigate("Forecast")}
+            onPress={() =>
+            navigation.navigate({
+              name: 'Forecast',
+              params: { id: city.id },
+              merge: true,
+            })}
           >
             <Image
               style={[styles.botBarIcon]}

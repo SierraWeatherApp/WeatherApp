@@ -2,7 +2,7 @@ import * as React from "react";
 import { Image, StyleSheet, Pressable, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, Border, FontFamily, Padding } from "../GlobalStyles";
-
+import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react';
 import {
   SafeAreaView,
@@ -13,8 +13,17 @@ import {
   Platform,
 } from 'react-native';
 
-export default function App() {
+const findForecast = (id, forecast) =>{
+  for(let i = 0; i < forecast.length; i++){
+    if(forecast[i].id === id)
+      return forecast[i]
+  }
+}
 
+export default function App( {route}) {
+  const id = route.params.id
+  const forecasts = useSelector(state => state.weather)
+  console.log(findForecast(id, forecasts))
   return (
     <SafeAreaView style={{flex : 1}}>
     <View style={styles.container}>

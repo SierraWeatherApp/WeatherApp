@@ -37,10 +37,10 @@ import { setClothing } from './actions/clothing';
 import { apiToFront } from './screens/ApiClothingStrings';
 import * as Network from 'expo-network';
 import { Color, FontSize, FontFamily } from "./GlobalStyles";
+import { setWeather } from './actions/weather';
 
 const store = configureStore({reducer: rootReducer});
 LogBox.ignoreAllLogs(true)
-
 const AppWrapper = () => {
   const dispatch = useDispatch()
   const [dID, setdID] = useState('123');
@@ -77,7 +77,7 @@ const AppWrapper = () => {
           }
       );
       const jsonData = await response.json();
-      //console.log(jsonData['cities'][0])
+      console.log(jsonData['cities'][0])
       var cityArray = []
       for(var i = 0; i < jsonData['cities'].length; i++){
         weather = jsonData['cities'][i]['weather']
@@ -86,6 +86,8 @@ const AppWrapper = () => {
           key: i + 1, 
           country: jsonData['cities'][i]['country'],
           id: jsonData['cities'][i]['id'], 
+          lat: jsonData['cities'][i]['latitude'], 
+          long: jsonData['cities'][i]['longitude'], 
           temperature: weather['temperature'], 
           weather: getWeather(weather['weathercode']),
           weathercode: weather['weathercode'],
@@ -115,6 +117,43 @@ const AppWrapper = () => {
     else{
     }
   }, [dID, isLoading]);
+
+  const weatherForecast = async (cities) => {
+    const getFC = async (lat, long, mode) => {
+      if(mode === 'tf'){
+        const response = await fetch(
+          `http://${getIP()}:8080/api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true&temperature_2m_max=true&temperature_2m_min=true&mode=tf&day=7`, {
+              method: 'GET',
+              headers: {'x-device-id': dID}
+            }
+        );
+        const jsonData = await response.json();
+        return jsonData;
+      }
+      else{
+        const response = await fetch(
+          `http://${getIP()}:8080/api/v1/weather?latitude=${lat}&longitude=${long}&weathercode=true&mode=fc&temperature_2m=true`, {
+              method: 'GET',
+              headers: {'x-device-id': dID}
+            }
+        );
+        const jsonData = await response.json();
+        return jsonData;
+      }
+    }
+  let cityArray = []
+  for(let i = 0; i < cities.length; i++){
+    let cityForecast = {}
+    let tf = await getFC(cities[i].lat, cities[i].long, 'tf&day=7')
+    let fc = await getFC(cities[i].lat, cities[i].long, 'fc')
+    cityForecast['city_name'] = cities[i].city_name
+    cityForecast['id'] = cities[i].id
+    cityForecast['24h'] = tf
+    cityForecast['7d'] = fc
+    cityArray.push(cityForecast)
+  }
+  dispatch(setWeather(cityArray))
+}
 
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
   const [fontsLoaded, error] = useFonts({
@@ -153,6 +192,7 @@ const AppWrapper = () => {
   if(data.preferences !== undefined){
     dispatch(setClothing(apiToFront(data.preferences, data.look, data.gender)))
   }
+  weatherForecast(data.cities)
   //const stateCities = useSelector(state => state.cities)
   // Create a memoized callback function that updates the state
   return (

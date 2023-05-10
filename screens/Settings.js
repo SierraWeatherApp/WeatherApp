@@ -8,7 +8,27 @@ import { getIP } from "../screens/fetchIP"
 import { resetCities } from "../actions/cities";
 import { resetClothing } from "../actions/clothing";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
-
+async function deleteUserAPI(dID) {
+  const url = `http://${getIP()}:8080/api/v1/user`;
+  const device_id = dID
+  const headers = {
+    'Content-Type': 'application/json',
+    'x-device-id': device_id,
+  };
+  
+  fetch(url, {
+    method: 'DELETE',
+    headers: headers,
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
 const Settings = () => {
   const dispatch = useDispatch()
   const deviceID = useSelector(state => state.deviceID)
@@ -18,7 +38,7 @@ const Settings = () => {
   const [genderVisible, setGenderVisible] = useState(false);
   const navigation = useNavigation();
   const deleteUser = () =>{
-    deleteUserAPI()
+    deleteUserAPI(deviceID)
     console.log()
     dispatch(resetCities())
     dispatch(resetClothing())

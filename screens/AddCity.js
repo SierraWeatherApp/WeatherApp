@@ -7,6 +7,7 @@ import uuid from 'react-native-uuid';
 import { useSelector, useDispatch } from 'react-redux'
 import { getWeather } from "./CodeToWeather";
 import { setCities, deleteCity as delC } from '../actions/cities';
+import { setWeather } from '../actions/weather';
 
 const defaultCities = [{
         weather_id: 2673730,
@@ -62,6 +63,42 @@ async function addCity(data, dID) {
 const AddCity = () => {
   const deviceID = useSelector(state => state.deviceID)
   const dispatch = useDispatch()
+  const weatherForecast = async (cities, dID) => {
+    const getFC = async (lat, long, mode) => {
+      if(mode === 'tf'){
+        const response = await fetch(
+          `http://${getIP()}:8080/api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true&temperature_2m_max=true&temperature_2m_min=true&mode=tf&day=7`, {
+              method: 'GET',
+              headers: {'x-device-id': dID}
+            }
+        );
+        const jsonData = await response.json();
+        return jsonData;
+      }
+      else{
+        const response = await fetch(
+          `http://${getIP()}:8080/api/v1/weather?latitude=${lat}&longitude=${long}&weathercode=true&mode=fc&temperature_2m=true`, {
+              method: 'GET',
+              headers: {'x-device-id': dID}
+            }
+        );
+        const jsonData = await response.json();
+        return jsonData;
+      }
+    }
+  let cityArray = []
+  for(let i = 0; i < cities.length; i++){
+    let cityForecast = {}
+    let tf = await getFC(cities[i].lat, cities[i].long, 'tf&day=7')
+    let fc = await getFC(cities[i].lat, cities[i].long, 'fc')
+    cityForecast['city_name'] = cities[i].city_name
+    cityForecast['id'] = cities[i].id
+    cityForecast['24h'] = tf
+    cityForecast['7d'] = fc
+    cityArray.push(cityForecast)
+  }
+  dispatch(setWeather(cityArray))
+  }
   const fetchCities = async (dID) => {
     const response = await fetch(
       `http://${getIP()}:8080/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
@@ -83,6 +120,8 @@ const AddCity = () => {
         weathercode: weather['weathercode'],
         humidity: weather['relativehumidity_2m'],
         windspeed: weather['windspeed'],
+        lat: jsonData['cities'][i]['latitude'], 
+        long: jsonData['cities'][i]['longitude'], 
         hat: jsonData['cities'][i]['recommendation'][0],
         shirt: jsonData['cities'][i]['recommendation'][1],
         jacket: jsonData['cities'][i]['recommendation'][2],
@@ -91,6 +130,7 @@ const AddCity = () => {
         umbrella: jsonData['cities'][i]['recommendation'][5],
       })
     }
+    weatherForecast(cityArray, dID)
     dispatch(setCities(cityArray))
   };
     const [text, setText] = useState('');
