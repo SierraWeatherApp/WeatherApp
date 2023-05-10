@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Pressable, Slider } from 'react-native';
+import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Pressable } from 'react-native';
 import { getIP, getDevice } from "./fetchIP"
+import Slider from '@react-native-community/slider';
+
 
 
 const QuestionScreen = ({ navigation }) => {
   const [questions, setQuestions] = useState([]);
+  const [answers, setAnswers] = useState({});
   const deviceID = useSelector(state => state.deviceID)
-  const device_id = deviceID
 
   useEffect(() => {
     const device_id = deviceID;
@@ -19,57 +21,53 @@ const QuestionScreen = ({ navigation }) => {
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        setQuestions(data.questions);
+        if (data && data.questions) {
+          setQuestions(data.questions);
+        }
       })
       .catch(error => console.error(error));
   }, []);
 
-  const handleResponse = (questionId, answer) => {
-    console.log(`Question ${questionId} received ${answer} response`);
+  const handleResponse = (question_label, answer) => {
+    setAnswers(prevAnswers => ({
+      ...prevAnswers,
+      [question_label]: answer
+    }));
+  };
   
-    const updatedQuestions = questions.map((question) => {
-      if (question.question_id === questionId) {
-        return {
-          ...question,
-          selected_answer: answer,
-        };
-      }
-      return question;
-    });
-      setQuestions(updatedQuestions);
+  const handleConfirm = () => {
+    console.log('Test1',answers); 
   
-    if (questionId === 4) {
-      const updatedQuestions = questions.map((question) => {
-        if (question.question_id === questionId) {
-          return {
-            ...question,
-            selected_answer: answer,
-            slider_value: answer,
-          };
-        }
-        return question;
-      });
-      setQuestions(updatedQuestions);
-    }   // Send the answer to the backend API
-    fetch(`http://${getIP()}:8080/api/v1/user/questions/answer`, {
-      method: 'POST',
+    const formattedAnswers = {
+      questions: {},
+    };
+      for (const [key, value] of Object.entries(answers)) {
+      formattedAnswers.questions[key] = value.toString();
+    }
+    const device_id = deviceID
+
+    console.log('Test2',formattedAnswers);
+
+      fetch(`http://${getIP()}:8080/api/v1/user/questions/answer`, {
+      method: 'PATCH',
       headers: {
+        'x-device-id': device_id,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        question_id: questionId,
-        answer: answer,
-        device_id: device_id,
-      }),
+
+
+      body: JSON.stringify(formattedAnswers),
+
     })
-      .then(response => response.json())
+    .then(response => {
+      return response.json();
+    })
+
       .then(data => {
-        console.log(data);
+        navigation.navigate('Home');
       })
       .catch(error => console.error(error));
   };
-
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,50 +78,56 @@ const QuestionScreen = ({ navigation }) => {
       </View>
       <ScrollView>
       {questions && questions.map((question) => (
-  <View key={question.question_id} style={styles.questionBox}>
+    <View key={question.question_label} style={styles.questionBox}>
     <Text style={styles.questionText}>{question.question}</Text>
-    {question.question_id === 4 ? (
+    {question.question_label === 'userTemp' ? (
+    <Slider
+    style={{ width: '100%', height: 40 }}
+    minimumValue={-10}
+    maximumValue={10}
+    step={0}
+    value={answers[question.question_label] || 0}
+    onValueChange={(value) => handleResponse('userTemp', value)}
+  />
+    ):question.question_label === 'userPlace' ? (
       <Slider
         style={{ width: '100%', height: 40 }}
         minimumValue={-10}
         maximumValue={10}
-        step={1}
-        value={question.slider_value}
-        onValueChange={(value) => handleResponse(question.question_id, value)}
-      />
+        step={0}
+        value={answers[question.question_label] || 0}
+        onValueChange={(value) => handleResponse('userPlace', value)}
+        /> 
     ) : (
     
     <View style={styles.buttonsContainer}>
-  {/* "Yes" button */}
-  <TouchableOpacity
-    style={[
-      styles.button,
-      question.selected_answer === 1 && styles.selected,
-    ]}
-    onPress={() => handleResponse(question.question_id, 1)}
-  >
-    <Text style={styles.buttonText}>Yes</Text>
-  </TouchableOpacity>
-  
-  {/* "No" button */}
-  <TouchableOpacity
-    style={[
-      styles.button,
-      question.selected_answer === 0 && styles.selected,
-    ]}
-    onPress={() => handleResponse(question.question_id, 0)}
-  >
-    <Text style={styles.buttonText}>No</Text>
-  </TouchableOpacity>
+<TouchableOpacity
+  style={[
+    styles.button,
+    question.selected_answer === 1 && styles.selected,
+  ]}
+  onPress={() => handleResponse(question.question_label, 1)}
+>
+  <Text style={styles.buttonText}>Yes</Text>
+</TouchableOpacity>
+<TouchableOpacity
+  style={[
+    styles.button,
+    question.selected_answer === 0 && styles.selected,
+  ]}
+  onPress={() => handleResponse(question.question_label, 0)}
+>
+  <Text style={styles.buttonText}>No</Text>
+</TouchableOpacity>
 </View>
     )}
   </View>
 ))}
 
       </ScrollView>
-      <TouchableOpacity style={styles.confirmButton} onPress={() => navigation.navigate('Home')}>
-        <Text style={styles.confirmButtonText}>Confirm</Text>
-      </TouchableOpacity>
+      <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
+  <Text style={styles.confirmButtonText}>Confirm</Text>
+        </TouchableOpacity>   
     </SafeAreaView>
   );
 };
@@ -196,6 +200,8 @@ const styles = StyleSheet.create({
   },
   selected: {
     backgroundColor: '#FCD200',
+    borderWidth: 2,
+    borderColor: '#3a9def',
   }
 });
 
