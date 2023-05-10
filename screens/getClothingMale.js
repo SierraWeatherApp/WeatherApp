@@ -2,7 +2,7 @@ import * as React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 
 const winter = [require('../assets/male/jacket/winter/v1.png')]
-const light = [require('../assets/male/jacket/light/v1.png')]
+const light = [require('../assets/male/jacket/light/v1.png'),require('../assets/male/jacket/light/v2.png')]
 const pants = [require('../assets/male/pants/pants/v1.png'),require('../assets/male/pants/pants/v2.png')]
 const shorts = [require('../assets/male/pants/shorts/v1.png')]
 const snowpants = [require('../assets/male/pants/snow/v1.png')]
@@ -14,7 +14,8 @@ const sneakers = [require('../assets/male/shoes/sneakers/v1.png')]
 const rain = [require('../assets/male/shoes/rain/v1.png')]
 const sandals = [require('../assets/male/shoes/sandals/v1.png')]
 const skin = [require('../assets/male-body/skin/v1.png'), require('../assets/male-body/skin/v2.png'),
-            require('../assets/male-body/skin/v3.png'), require('../assets/male-body/skin/v4.png')]
+            require('../assets/male-body/skin/v3.png'), require('../assets/male-body/skin/v4.png'),
+            require('../assets/male-body/skin/v5.png'),require('../assets/male-body/skin/v6.png')]
 const umbrella = [require('../assets/accessories/umbrella/v1.png')]
 const glasses = []
 const beanie = [require('../assets/male/hats/beanie/v1.png')]

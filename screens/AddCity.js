@@ -193,7 +193,7 @@ const AddCity = () => {
   useEffect(() => {
     const fetchCities = async () => {
         const response = await fetch(
-          `https://geocoding-api.open-meteo.com/v1/search?name=${text}&count=100`, {
+          `https://geocoding-api.open-meteo.com/v1/search?name=${text}&count=10`, {
             method: 'GET',
             }
         );

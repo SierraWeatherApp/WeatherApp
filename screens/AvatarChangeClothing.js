@@ -34,7 +34,7 @@ const AvatarChangeClothing = ({route}) => {
       <View style={[styles.topBar]}>
         <Pressable
           style={styles.arrow}
-          onPress={() => navigation.navigate("0")}
+          onPress={() => navigation.pop()}
         >
           <Image
             resizeMode="cover"
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     transform: [{scale: 0.5}, {translateY: -53},],
   },
   clothingImagePants:{
-    transform: [{scale: 0.5}, {translateY: -45},],
+    transform: [{scale: 0.4}, {translateY: -60},],
   },
   clothingImageShoes:{
     transform: [{scale: 0.7}, {translateY: 20},],
