@@ -58,6 +58,7 @@ const ExpandableComponent = ({ item, onClickFunction }) => {
 const FAQ = () => {
   const [listDataSource, setListDataSource] = useState(CONTENT);
   const [multiSelect, setMultiSelect] = useState(true);
+  const navigation = useNavigation();
 
   if (Platform.OS === 'android') {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -84,6 +85,9 @@ const FAQ = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={{ flexDirection: 'row', padding: 12 }}>
+          <Pressable onPress={() => navigation.goBack()}>
+            <Image source={require('../assets/arrow1.png')} />
+          </Pressable>
           <Text style={styles.titleText}>FAQ</Text>
         </View>
         <ScrollView>
@@ -111,6 +115,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginTop: 50,
     alignSelf: 'center',
     fontFamily: FontFamily.heading1Medium,
   },

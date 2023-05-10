@@ -4,11 +4,10 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import FAQ from "./screens/FAQ";
-import About from "./screens/About";
 import ContactUs from "./screens/ContactUs";
 import HelpSupport from "./screens/HelpSupport";
-import Privacy from "./screens/Privacy";
-import RecommendationsFeedback from "./screens/RecommendationsFeedback";
+import PrivacyScreen from "./screens/PrivacyScreen";
+import AboutScreen from './screens/AboutScreen';
 import QuestionScreen from "./screens/QuestionScreen";
 import AvatarChangeClothing from "./screens/AvatarChangeClothing";
 import Settings from "./screens/Settings";
@@ -177,6 +176,16 @@ const AppWrapper = () => {
               component={QrCodeGen}
               options={{ headerShown: false }}
             />
+             <Stack.Screen
+              name="PrivacyScreen"
+              component={PrivacyScreen}
+              options={{ headerShown: false }}
+            /> 
+            <Stack.Screen
+            name="AboutScreen"
+            component={AboutScreen}
+            options={{ headerShown: false }}
+          />
             <Stack.Screen
               name="QrCodeScanner"
               component={Scanner}
@@ -188,11 +197,7 @@ const AppWrapper = () => {
               component={FAQ}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="About"
-              component={About}
-              options={{ headerShown: false }}
-            />
+
             <Stack.Screen
               name="ClothingScreen"
               component={ClothingScreen}
@@ -212,16 +217,7 @@ const AppWrapper = () => {
               component={HelpSupport}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="Privacy"
-              component={Privacy}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="RecommendationsFeedback"
-              component={RecommendationsFeedback}
-              options={{ headerShown: false }}
-            />
+           
             <Stack.Screen
               name="AvatarChangeClothing"
               component={AvatarChangeClothing}

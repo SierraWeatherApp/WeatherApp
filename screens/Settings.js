@@ -9,27 +9,7 @@ import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 import { resetCities } from "../actions/cities";
 import { resetClothing } from "../actions/clothing";
 
-async function deleteUserAPI(dID) {
-  const url = `http://${getIP()}:8080/api/v1/user`;
-  const device_id = dID
-  const headers = {
-    'Content-Type': 'application/json',
-    'x-device-id': device_id,
-  };
-  
-  fetch(url, {
-    method: 'DELETE',
-    headers: headers,
-  })
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-}
+import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 
 const Settings = () => {
   const dispatch = useDispatch()
@@ -103,11 +83,13 @@ const Settings = () => {
               source={require("../assets/x1.png")}
             />
           </Pressable>
+
         </View>
         <View style={[styles.settingsBox]}>
           <Pressable
             style={[styles.settingsPressable]}
             onPress={() => openTemperatureCelciusC()}
+
           >
             <Text style={[styles.settingsText]}>Temperature Unit</Text>
             <Text style={[styles.tempUnit]}>{getTempUnit()}</Text>
@@ -153,7 +135,8 @@ const Settings = () => {
           </Pressable>
           <Pressable
             style={[styles.settingsPressable]}
-            onPress={() => navigation.navigate("ContactUs")}            >
+            onPress={() => navigation.navigate("ContactUs")}            
+          >
             <Text style={[styles.settingsText]}>Contact Us</Text>
           </Pressable>
           <Pressable
