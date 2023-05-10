@@ -221,11 +221,16 @@ const WeatherScreen = ( { city} ) => {
             />
             <Text style={[]}>Clothing</Text>
           </Pressable>
-          <Image
+          <Pressable
             style={[]}
-            resizeMode="cover"
-            source={require("../assets/blue-shit.png")}
-          />
+            onPress={() => navigation.navigate("Forecast")}
+          >
+            <Image
+              style={[styles.botBarIcon]}
+              resizeMode="cover"
+              source={require("../assets/blue-shit.png")}
+            />
+          </Pressable>
           <Pressable
             style={[]}
             onPress={() => navigation.navigate("Settings")}

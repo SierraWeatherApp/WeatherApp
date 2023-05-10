@@ -24,6 +24,7 @@ import uuid from 'react-native-uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getIP } from "./screens/fetchIP" 
 import { getWeather } from "./screens/CodeToWeather";
+import Forecast from "./screens/Forecast";
 
 LogBox.ignoreAllLogs(true)
 
@@ -134,6 +135,11 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="Forecast"
+              component={Forecast}
+              options={{ headerShown: false, animation: "slide_from_bottom" }}
+            />
+            <Stack.Screen
               name="About"
               component={About}
               options={{ headerShown: false }}
@@ -180,7 +186,7 @@ const App = () => {
             <Stack.Screen
               name="Settings"
               component={Settings}
-              options={{ headerShown: false, animation: "slide_from_right" }}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="LocationScreen"
