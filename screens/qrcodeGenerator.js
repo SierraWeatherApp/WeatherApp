@@ -13,7 +13,7 @@ const QrCodeGen = () => {
     <View style={[styles.page]}>
       <Pressable
         style={[styles.topbar]}
-        onPress={() => navigation.navigate("0")}
+        onPress={() => navigation.pop()}
       >
         <Image
           style={[]}

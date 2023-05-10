@@ -1,4 +1,4 @@
-import { SET_CLOTHING } from "../constants/constants";
+import { SET_CLOTHING, RESET_STATE } from "../constants/constants";
 const initialState = {
     'Sandals':0,
     'Boots':0,
@@ -23,6 +23,8 @@ const clothingReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_CLOTHING: 
             return action.payload
+        case RESET_STATE:
+            return initialState
         default:
             return state;
     }

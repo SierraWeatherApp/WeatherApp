@@ -11,7 +11,6 @@ import Privacy from "./screens/Privacy";
 import RecommendationsFeedback from "./screens/RecommendationsFeedback";
 import QuestionScreen from "./screens/QuestionScreen";
 import AvatarChangeClothing from "./screens/AvatarChangeClothing";
-import ResetWindow from "./screens/ResetWindow";
 import Settings from "./screens/Settings";
 import LocationScreen from "./screens/LocationScreen";
 import AddCity from "./screens/AddCity";
@@ -78,7 +77,7 @@ const AppWrapper = () => {
           }
       );
       const jsonData = await response.json();
-      console.log(jsonData['cities'][0]['recommendation'])
+      //console.log(jsonData['cities'][0])
       var cityArray = []
       for(var i = 0; i < jsonData['cities'].length; i++){
         weather = jsonData['cities'][i]['weather']
@@ -148,8 +147,12 @@ const AppWrapper = () => {
   else{
     dispatch(setCelcius())
   }
-  dispatch(setCities(data.cities))
-  dispatch(setClothing(apiToFront(data.preferences, data.look, data.gender)))
+  if(data.cities !== undefined){
+    dispatch(setCities(data.cities))
+  }
+  if(data.preferences !== undefined){
+    dispatch(setClothing(apiToFront(data.preferences, data.look, data.gender)))
+  }
   //const stateCities = useSelector(state => state.cities)
   // Create a memoized callback function that updates the state
   return (
@@ -222,11 +225,6 @@ const AppWrapper = () => {
             <Stack.Screen
               name="AvatarChangeClothing"
               component={AvatarChangeClothing}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ResetWindow"
-              component={ResetWindow}
               options={{ headerShown: false }}
             />
             <Stack.Screen
