@@ -1,59 +1,17 @@
 import React, { useState, useCallback } from "react";
-import { Image, StyleSheet, Pressable, Text, View, Modal, Alert, AsyncStorage } from "react-native";
+import { Image, StyleSheet, Pressable, Text, View, Modal, AsyncStorage } from "react-native";
 import { useNavigation, useRoute  } from "@react-navigation/native";
 import FrameComponent from "../components/FrameComponent";
-import { useDispatch, useSelector } from 'react-redux';
-import { getIP } from "../screens/fetchIP" 
-import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
-import { resetCities } from "../actions/cities";
-import { resetClothing } from "../actions/clothing";
 
-async function deleteUserAPI(dID) {
-  const url = `http://${getIP()}:8080/api/v1/user`;
-  const device_id = dID
-  const headers = {
-    'Content-Type': 'application/json',
-    'x-device-id': device_id,
-  };
-  
-  fetch(url, {
-    method: 'DELETE',
-    headers: headers,
-  })
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-}
+import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 
 const Settings = () => {
-  const dispatch = useDispatch()
-  const deviceID = useSelector(state => state.deviceID)
   const [temperatureCelciusCVisible, setTemperatureCelciusCVisible] =
     useState(false);
   const navigation = useNavigation();
-  const deleteUser = () =>{
-    deleteUserAPI()
-    console.log()
-    dispatch(resetCities())
-    dispatch(resetClothing())
-  }
+  
   const route = useRoute();
-  const deleteAlert = () => {
-    Alert.alert(
-      'Warning!',
-      'All settings and values will be lost forever. ',
-      [
-        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-        { text: 'OK', onPress: () => deleteUser(deviceID) },
-      ],
-      { cancelable: false }
-    );
-  };
+
 
   const temperatureUnit = route.params?.temperatureUnit ?? 'Celcius °C'; // set a default value if temperatureUnit is undefined
 
@@ -105,22 +63,22 @@ const Settings = () => {
           <View style={[styles.recommendationsFrame, styles.frameLayout]}>
             <Pressable
               style={styles.faqPosition}
-              onPress={() => navigation.navigate("RecommendationsFeedback")}
+              onPress={() => navigation.navigate("AboutScreen")}
             >
               <Text style={[styles.recommendationsFeedback1, styles.faqTypo]}>
-                Recommendations feedback
+About us
               </Text>
             </Pressable>
           </View>
           <Pressable
             style={[styles.resetFrame, styles.frameLayout]}
-            onPress={() => deleteAlert()}
+            onPress={() => navigation.navigate("ResetWindow")}
           >
             <Text style={[styles.reset, styles.faqTypo]}>Reset</Text>
           </Pressable>
           <Pressable
             style={[styles.transferFrame, styles.frameLayout]}
-            onPress={() => navigation.navigate("QrCode")}
+            onPress={() => navigation.navigate("ResetWindow")}
           >
             <Text style={[styles.transferSettings, styles.faqTypo]}>
               Transfer settings
@@ -180,7 +138,7 @@ const Settings = () => {
           </Pressable>
           <Pressable
             style={[styles.privacyFrame, styles.framePosition]}
-            onPress={() => navigation.navigate("Privacy")}
+            onPress={() => navigation.navigate("PrivacyScreen")}
           >
             
             <Text style={[styles.privacy, styles.privacyTypo]}>Privacy</Text>
