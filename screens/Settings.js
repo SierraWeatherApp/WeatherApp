@@ -40,7 +40,7 @@ const Settings = () => {
     deleteUserAPI()
     console.log()
     dispatch(resetCities())
-    //dispatch(resetClothing())
+    dispatch(resetClothing())
   }
   const route = useRoute();
   const deleteAlert = () => {
