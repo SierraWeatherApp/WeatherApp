@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { setClothing } from "../actions/clothing";
 
 async function setGender(gender, dID) {
-  const url = `http://${getIP()}:8080/api/v1/user?gender=${gender}`;
+  const url = `http://${getIP()}/api/v1/user?gender=${gender}`;
   const device_id = dID
   const headers = {
     'Content-Type': 'application/json',

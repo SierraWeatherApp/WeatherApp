@@ -12,7 +12,7 @@ import { setCities, deleteCity as delC } from '../actions/cities';
 import { setWeather } from '../actions/weather';
 
 async function setUnit(unit, dID) {
-  const url = `http://${getIP()}:8080/api/v1/user`;
+  const url = `http://${getIP()}/api/v1/user`;
   const device_id = dID
   const headers = {
     'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const FrameComponent = ({ onClose, temperatureUnit, onToggleTemperatureUnit }) =
     const getFC = async (lat, long, mode) => {
       if(mode === 'tf'){
         const response = await fetch(
-          `http://${getIP()}:8080/api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true&temperature_2m_max=true&temperature_2m_min=true&mode=tf&day=7`, {
+          `http://${getIP()}/api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true&temperature_2m_max=true&temperature_2m_min=true&mode=tf&day=7`, {
               method: 'GET',
               headers: {'x-device-id': dID}
             }
@@ -55,7 +55,7 @@ const FrameComponent = ({ onClose, temperatureUnit, onToggleTemperatureUnit }) =
       }
       else{
         const response = await fetch(
-          `http://${getIP()}:8080/api/v1/weather?latitude=${lat}&longitude=${long}&weathercode=true&mode=fc&temperature_2m=true`, {
+          `http://${getIP()}/api/v1/weather?latitude=${lat}&longitude=${long}&weathercode=true&mode=fc&temperature_2m=true`, {
               method: 'GET',
               headers: {'x-device-id': dID}
             }
@@ -79,7 +79,7 @@ const FrameComponent = ({ onClose, temperatureUnit, onToggleTemperatureUnit }) =
   }
   const fetchCities = async (dID) => {
     const response = await fetch(
-      `http://${getIP()}:8080/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
+      `http://${getIP()}/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
           method: 'GET',
           headers: {'x-device-id': dID}
         }

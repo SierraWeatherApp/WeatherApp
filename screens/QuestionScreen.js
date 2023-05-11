@@ -13,7 +13,7 @@ const QuestionScreen = ({ navigation }) => {
 
   const fetchCities = async () => {
     const response = await fetch(
-      `http://${getIP()}:8080/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
+      `http://${getIP()}/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
           method: 'GET',
           headers: {'x-device-id': deviceID}
         }
@@ -46,7 +46,7 @@ const QuestionScreen = ({ navigation }) => {
   };
   useEffect(() => {
     const device_id = deviceID;
-    fetch(`http://${getIP()}:8080/api/v1/user/questions/all`, {
+    fetch(`http://${getIP()}/api/v1/user/questions/all`, {
       headers: {
         'x-device-id': device_id,
       }
@@ -81,7 +81,7 @@ const QuestionScreen = ({ navigation }) => {
 
     console.log('Test2',formattedAnswers);
 
-      fetch(`http://${getIP()}:8080/api/v1/user/questions/answer`, {
+      fetch(`http://${getIP()}/api/v1/user/questions/answer`, {
       method: 'PATCH',
       headers: {
         'x-device-id': device_id,
