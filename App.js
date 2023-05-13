@@ -70,14 +70,17 @@ const AppWrapper = () => {
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchCities = async () => {
+      console.log('start')
+      console.log(dID)
       const response = await fetch(
-        `http://${getIP()}/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
+        `${getIP()}/api/v1/user`, {
             method: 'GET',
-            headers: {'x-device-id': dID}
+            headers: {'x-device-id': dID.toString()}
           }
       );
-      const jsonData = await response.json();
-      console.log(jsonData['cities'][0])
+      try{
+      var jsonData = await response.json();
+      //console.log(jsonData['cities'][0])
       var cityArray = []
       for(var i = 0; i < jsonData['cities'].length; i++){
         weather = jsonData['cities'][i]['weather']
@@ -109,6 +112,11 @@ const AppWrapper = () => {
                     }
       setData(data)
       setIsLoading(false)
+                  }
+                  catch (error){
+                    console.log(error)
+                    console.log(response.status)
+                  }
     };
     if(isLoading && dID !== '123'){
       dispatch(setDeviceID(dID))
@@ -122,7 +130,7 @@ const AppWrapper = () => {
     const getFC = async (lat, long, mode) => {
       if(mode === 'tf'){
         const response = await fetch(
-          `http://${getIP()}/api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true&temperature_2m_max=true&temperature_2m_min=true&mode=tf&day=7`, {
+          `${getIP()}/api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true&temperature_2m_max=true&temperature_2m_min=true&mode=tf&day=7`, {
               method: 'GET',
               headers: {'x-device-id': dID}
             }
@@ -132,7 +140,7 @@ const AppWrapper = () => {
       }
       else{
         const response = await fetch(
-          `http://${getIP()}/api/v1/weather?latitude=${lat}&longitude=${long}&weathercode=true&mode=fc&temperature_2m=true`, {
+          `${getIP()}/api/v1/weather?latitude=${lat}&longitude=${long}&weathercode=true&mode=fc&temperature_2m=true`, {
               method: 'GET',
               headers: {'x-device-id': dID}
             }

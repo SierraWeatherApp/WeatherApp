@@ -9,7 +9,7 @@ import { resetCities } from "../actions/cities";
 import { resetClothing } from "../actions/clothing";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 async function deleteUserAPI(dID) {
-  const url = `http://${getIP()}/api/v1/user`;
+  const url = `${getIP()}/api/v1/user`;
   const device_id = dID
   const headers = {
     'Content-Type': 'application/json',

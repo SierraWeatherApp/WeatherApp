@@ -39,7 +39,7 @@ const categories = {
     ],
 }
 async function setLookAPI(index, dID) {
-  const url = `http://${getIP()}//api/v1/user?look=${index}`;
+  const url = `${getIP()}//api/v1/user?look=${index}`;
   const device_id = dID
   const headers = {
     'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ async function setLookAPI(index, dID) {
   });
 }
 async function setClothingAPI(clothing, index, dID) {
-  const url = `http://${getIP()}/api/v1/user/cloth/change_cloth`;
+  const url = `${getIP()}/api/v1/user/cloth/change_cloth`;
   const device_id = dID
   const headers = {
     'Content-Type': 'application/json',

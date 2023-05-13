@@ -18,7 +18,7 @@ const Scanner = () => {
     const navigation = useNavigation();
     const fetchCities = async (dID) => {
         const response = await fetch(
-          `http://${getIP()}/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
+          `${getIP()}/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
               method: 'GET',
               headers: {'x-device-id': dID}
             }

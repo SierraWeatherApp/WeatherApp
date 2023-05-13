@@ -105,7 +105,7 @@ export default function App( {route}) {
       list.push(<View style={[styles.box2]}>
         <View style={{flexDirection:'column'}}>
         <Text style={[styles.hour]}>
-          {indexToDay(i)}
+          {indexToDay(((i + 4) % 7))}
         </Text>
         <Text style={styles.text}>
           {Math.round(tempInCorrectUnit(tempmin))} - {Math.round(tempInCorrectUnit(tempmax))}°{getUnit()} 

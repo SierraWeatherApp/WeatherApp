@@ -39,7 +39,7 @@ const defaultCities = [{
     },
 ]
 async function addCity(data, dID) {
-    const url = `http://${getIP()}/api/v1/user/cities/add`;
+    const url = `${getIP()}/api/v1/user/cities/add`;
     const device_id = dID
     const headers = {
       'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const AddCity = () => {
     const getFC = async (lat, long, mode) => {
       if(mode === 'tf'){
         const response = await fetch(
-          `http://${getIP()}/api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true&temperature_2m_max=true&temperature_2m_min=true&mode=tf&day=7`, {
+          `${getIP()}/api/v1/weather?latitude=${lat}&longitude=${long}&temperature=true&weathercode=true&temperature_2m_max=true&temperature_2m_min=true&mode=tf&day=7`, {
               method: 'GET',
               headers: {'x-device-id': dID}
             }
@@ -77,7 +77,7 @@ const AddCity = () => {
       }
       else{
         const response = await fetch(
-          `http://${getIP()}/api/v1/weather?latitude=${lat}&longitude=${long}&weathercode=true&mode=fc&temperature_2m=true`, {
+          `${getIP()}/api/v1/weather?latitude=${lat}&longitude=${long}&weathercode=true&mode=fc&temperature_2m=true`, {
               method: 'GET',
               headers: {'x-device-id': dID}
             }
@@ -101,7 +101,7 @@ const AddCity = () => {
   }
   const fetchCities = async (dID) => {
     const response = await fetch(
-      `http://${getIP()}/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
+      `${getIP()}/api/v1/user?temperature=true&weathercode=true&windspeed=true&relativehumidity_2m=true`, {
           method: 'GET',
           headers: {'x-device-id': dID}
         }

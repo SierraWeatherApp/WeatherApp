@@ -12,7 +12,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setCities, deleteCity as delC } from '../actions/cities';
 
 const changeOrder = async (cities, deviceID) => {
-  const url = `http://${getIP()}/api/v1/user/cities/change_order`;
+  const url = `${getIP()}/api/v1/user/cities/change_order`;
   const device_id = deviceID
   const headers = {
     'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ const LocationScreen = () => {
   
   const deleteCity = async (cityId) => {
     const device_id = deviceID
-    const response = await fetch(`http://${getIP()}/api/v1/user/cities/destroy`, {
+    const response = await fetch(`${getIP()}/api/v1/user/cities/destroy`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
